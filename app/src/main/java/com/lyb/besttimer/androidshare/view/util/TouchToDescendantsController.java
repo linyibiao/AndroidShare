@@ -46,11 +46,13 @@ public class TouchToDescendantsController implements TouchController {
                 float _preY = preY;
                 preY = event.getY();
                 if (onReadyListener != null) {
-                    if (_preY < event.getY()) {
-                        return onReadyListener.onReadyDown(event) && handleTouchByChildren(event);
-                    } else if (_preY > event.getY()) {
-                        return onReadyListener.onReadyUp(event) && handleTouchByChildren(event);
+                    if (_preY < event.getY() && onReadyListener.onReadyDown(event)) {
+                        return handleTouchByChildren(event);
                     }
+                    if (_preY > event.getY() && onReadyListener.onReadyUp(event)) {
+                        return handleTouchByChildren(event);
+                    }
+                    setFirstDispatch(true);
                 }
                 break;
             default:
