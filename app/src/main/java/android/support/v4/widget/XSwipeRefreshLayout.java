@@ -758,18 +758,18 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
         return MotionEventCompat.getY(ev, index);
     }
 
-    @Override
-    public void requestDisallowInterceptTouchEvent(boolean b) {
-        // if this is a List < L or another view that doesn't support nested
-        // scrolling, ignore this request so that the vertical scroll event
-        // isn't stolen
-        if ((android.os.Build.VERSION.SDK_INT < 21 && mTarget instanceof AbsListView)
-                || (mTarget != null && !ViewCompat.isNestedScrollingEnabled(mTarget))) {
-            // Nope.
-        } else {
-            super.requestDisallowInterceptTouchEvent(b);
-        }
-    }
+//    @Override
+//    public void requestDisallowInterceptTouchEvent(boolean b) {
+//        // if this is a List < L or another view that doesn't support nested
+//        // scrolling, ignore this request so that the vertical scroll event
+//        // isn't stolen
+//        if ((android.os.Build.VERSION.SDK_INT < 21 && mTarget instanceof AbsListView)
+//                || (mTarget != null && !ViewCompat.isNestedScrollingEnabled(mTarget))) {
+//            // Nope.
+//        } else {
+//            super.requestDisallowInterceptTouchEvent(b);
+//        }
+//    }
 
     // NestedScrollingParent
 
@@ -1048,10 +1048,10 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
                 final float y = MotionEventCompat.getY(ev, pointerIndex);
 
                 if (!mIsBeingDragged) {
-                    if (y > mInitialMotionY) {
+                    if (y > mInitialMotionY && mode != MODE.BOTTOM_ONLY) {
                         direction = DIRECTION.TOP;
                         mIsBeingDragged = true;
-                    } else if (y < mInitialMotionY) {
+                    } else if (y < mInitialMotionY && mode != MODE.TOP_ONLY) {
                         direction = DIRECTION.BOTTOM;
                         mIsBeingDragged = true;
                     }
