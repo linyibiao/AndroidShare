@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ScrollViewControlActivity" />
-        <activity android:name=".activity.SwipeRefreshLayoutActivity"></activity>
+        <activity android:name=".activity.SwipeRefreshLayoutActivity" />
     </application>
 
 </manifest>

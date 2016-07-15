@@ -56,7 +56,7 @@ public class TouchToDescendantsController implements TouchController {
                 }
                 break;
             default:
-                setFirstDispatch(true);
+//                setFirstDispatch(true);
                 preY = null;
         }
         return false;

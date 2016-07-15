@@ -80,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(parent.getContext(), lvData.activityC));
+                    Intent intent = new Intent(parent.getContext(), lvData.activityC);
+                    intent.putExtra("title", lvData.itemShow);
+                    startActivity(intent);
                 }
             });
 
