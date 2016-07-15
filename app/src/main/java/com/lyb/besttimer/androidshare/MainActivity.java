@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
+import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.lv);
         List<LVData> lvDatas = new ArrayList<>();
         lvDatas.add(new LVData(ScrollViewControlActivity.class, "ScrollView触摸代理切换"));
+        lvDatas.add(new LVData(SwipeRefreshLayoutActivity.class, "SwipeRefreshLayout上下拉刷新"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 
