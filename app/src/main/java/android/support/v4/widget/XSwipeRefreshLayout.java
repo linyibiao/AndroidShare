@@ -782,11 +782,11 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
 
     // NestedScrollingParent
 
-    @Override
-    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return isEnabled() && !mReturningToStart && !mRefreshing
-                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-    }
+//    @Override
+//    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+//        return isEnabled() && !mReturningToStart && !mRefreshing
+//                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+//    }
 
     @Override
     public void onNestedScrollAccepted(View child, View target, int axes) {

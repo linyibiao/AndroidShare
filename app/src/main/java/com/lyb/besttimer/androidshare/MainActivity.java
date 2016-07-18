@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.lyb.besttimer.androidshare.activity.RecycleViewActivity;
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         List<LVData> lvDatas = new ArrayList<>();
         lvDatas.add(new LVData(ScrollViewControlActivity.class, "ScrollView触摸代理切换"));
         lvDatas.add(new LVData(SwipeRefreshLayoutActivity.class, "SwipeRefreshLayout上下拉刷新"));
+        lvDatas.add(new LVData(RecycleViewActivity.class, "RecycleView上下拉刷新"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 
