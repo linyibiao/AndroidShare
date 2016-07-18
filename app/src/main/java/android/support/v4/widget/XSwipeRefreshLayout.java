@@ -41,6 +41,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 
+import com.lyb.besttimer.androidshare.R;
+
+
 /**
  * The SwipeRefreshLayout should be used whenever the user can refresh the
  * contents of a view via a vertical swipe gesture. The activity that
@@ -326,6 +329,12 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
 
         mNestedScrollingChildHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
+
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.XSwipeRefreshLayout);
+        MODE mode = MODE.getFromInt(typedArray.getInt(R.styleable.XSwipeRefreshLayout_mode, 0));
+        setMode(mode);
+        typedArray.recycle();
+
     }
 
     protected int getChildDrawingOrder(int childCount, int i) {
@@ -1231,7 +1240,24 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
     }
 
     public enum MODE {
-        TOP_ONLY, BOTTOM_ONLY, BOTH
+
+        TOP_ONLY(1), BOTTOM_ONLY(2), BOTH(3);
+
+        private int mValue;
+
+        MODE(int mValue) {
+            this.mValue = mValue;
+        }
+
+        public static MODE getFromInt(int value) {
+            for (MODE mode : MODE.values()) {
+                if (mode.mValue == value) {
+                    return mode;
+                }
+            }
+            return TOP_ONLY;
+        }
+
     }
 
     private DIRECTION direction = DIRECTION.TOP;

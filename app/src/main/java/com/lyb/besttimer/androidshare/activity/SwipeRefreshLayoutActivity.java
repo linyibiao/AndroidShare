@@ -28,7 +28,6 @@ public class SwipeRefreshLayoutActivity extends AppCompatActivity {
         listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
 
         final BaseSwipeRefreshLayout baseSwipeRefreshLayout = (BaseSwipeRefreshLayout) findViewById(R.id.swipe);
-        baseSwipeRefreshLayout.setMode(XSwipeRefreshLayout.MODE.BOTH);
         baseSwipeRefreshLayout.setOnRefreshListener(new XSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(XSwipeRefreshLayout.DIRECTION direction) {

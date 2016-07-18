@@ -10,7 +10,8 @@ import com.lyb.besttimer.androidshare.view.util.TouchCombineController;
 
 
 /**
- * Created by Administrator on 2016/7/14.
+ * 通用的SwipeRefreshLayout
+ * Created by 林一彪 on 2016/7/12.
  */
 public class BaseSwipeRefreshLayout extends XSwipeRefreshLayout {
 
