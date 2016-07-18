@@ -331,7 +331,7 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
         setNestedScrollingEnabled(true);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.XSwipeRefreshLayout);
-        MODE mode = MODE.getFromInt(typedArray.getInt(R.styleable.XSwipeRefreshLayout_mode, 0));
+        MODE mode = MODE.getFromInt(typedArray.getInt(R.styleable.XSwipeRefreshLayout_swipeMode, 0));
         setMode(mode);
         typedArray.recycle();
 

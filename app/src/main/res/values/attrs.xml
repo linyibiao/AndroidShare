@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="XSwipeRefreshLayout">
-        <attr name="mode" format="enum">
+        <attr name="swipeMode" format="enum">
             <enum name="TOP_ONLY" value="1" />
             <enum name="BOTTOM_ONLY" value="2" />
             <enum name="BOTH" value="3" />
