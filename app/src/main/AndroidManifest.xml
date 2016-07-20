@@ -17,7 +17,8 @@
         </activity>
         <activity android:name=".activity.ScrollViewControlActivity" />
         <activity android:name=".activity.SwipeRefreshLayoutActivity" />
-        <activity android:name=".activity.RecycleViewActivity"></activity>
+        <activity android:name=".activity.RecycleViewActivity" />
+        <activity android:name=".activity.HeaderRecycleViewActivity"></activity>
     </application>
 
 </manifest>

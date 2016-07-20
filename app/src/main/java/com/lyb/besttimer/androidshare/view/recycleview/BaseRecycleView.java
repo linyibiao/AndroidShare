@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.view;
+package com.lyb.besttimer.androidshare.view.recycleview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

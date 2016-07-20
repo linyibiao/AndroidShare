@@ -11,35 +11,46 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.view.recycleview.HeaderFeature;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecycleViewActivity extends BaseActivity {
+public class HeaderRecycleViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycle_view);
-
+        setContentView(R.layout.activity_header_recycle_view);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<RVDate> rvDates = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            rvDates.add(new RVDate(i + ";;;"));
+            rvDates.add(new RVDate(i + ";;;", i % 2 == 0 ? 0 : 1));
         }
         recyclerView.setAdapter(new MyAdapter(rvDates));
+
+        new HeaderFeature(recyclerView, findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
+
+            @Override
+            public boolean isHeader(RecyclerView recyclerView, int position) {
+                int type = recyclerView.getAdapter().getItemViewType(position);
+                return type == 1;
+            }
+        }.applyFeature();
 
     }
 
     private static class RVDate {
         public String show;
 
-        public RVDate(String show) {
-            this.show = show;
-        }
+        public int type;
 
+        public RVDate(String show, int type) {
+            this.show = show;
+            this.type = type;
+        }
     }
 
     private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
@@ -59,14 +70,19 @@ public class RecycleViewActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(Holder holder, final int position) {
             TextView textView = holder.tv;
-            textView.setText(rvDates.get(position).show);
+            textView.setText(rvDates.get(position).type == 1 ? "标题" + rvDates.get(position).show : rvDates.get(position).show);
             Button btn = holder.btn;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), rvDates.get(position).show, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), rvDates.get(position).show + ";;" + rvDates.get(position).type, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return rvDates.get(position).type;
         }
 
         @Override
