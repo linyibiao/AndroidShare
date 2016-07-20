@@ -100,15 +100,10 @@ public class TouchToAncestorController implements TouchController {
             MotionEvent saveAfterMoveEvent = MotionEvent.obtainNoHistory(moveEvent);
 
             if (parent.onInterceptTouchEvent(moveEvent)) {
-                final MotionEvent downEvent = MotionEvent.obtainNoHistory(savePreMoveEvent);
+                MotionEvent downEvent = MotionEvent.obtainNoHistory(savePreMoveEvent);
                 downEvent.offsetLocation(deltaX, deltaY);
                 downEvent.setAction(MotionEvent.ACTION_DOWN);
-                parent.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        parent.dispatchTouchEvent(downEvent);
-                    }
-                });
+                parent.dispatchTouchEvent(downEvent);
                 return true;
             }
 
