@@ -1,6 +1,5 @@
 package com.lyb.besttimer.androidshare.view.recycleview;
 
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.util.SparseArray;
@@ -81,19 +80,19 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
             int position = recyclerView.getChildAdapterPosition(nextChild);
             if (isHeader(recyclerView, position)) {
                 if (position != headerPosition) {
-                    int translationX = 0;
-                    int translationY = 0;
+                    int ScrollX = 0;
+                    int ScrollY = 0;
                     if (HEADEROriention == HEADER_ORIENTION.HORIZONTAL) {
-                        translationX = nextChild.getLeft() - recyclerView.getPaddingLeft() - headerLayout.getChildAt(0).getWidth();
+                        ScrollX = headerLayout.getChildAt(0).getWidth() - (nextChild.getLeft() - recyclerView.getPaddingLeft());
                     } else if (HEADEROriention == HEADER_ORIENTION.VERTICAL) {
-                        translationY = nextChild.getTop() - recyclerView.getPaddingTop() - headerLayout.getChildAt(0).getHeight();
+                        ScrollY = headerLayout.getChildAt(0).getHeight() - (nextChild.getTop() - recyclerView.getPaddingTop());
                     }
-                    ViewCompat.setTranslationX(headerLayout, translationX < 0 ? translationX : 0);
-                    ViewCompat.setTranslationY(headerLayout, translationY < 0 ? translationY : 0);
+                    headerLayout.scrollTo(ScrollX > 0 ? ScrollX : 0, ScrollY > 0 ? ScrollY : 0);
+                    return;
                 }
-                break;
             }
         }
+        headerLayout.scrollTo(0, 0);
     }
 
     private int getTargetAdapterPosition() {
@@ -131,8 +130,7 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         if (targetHolder != null) {
             View view = headerLayout.getChildAt(0);
             headerLayout.removeView(view);
-            ViewCompat.setTranslationX(headerLayout, 0);
-            ViewCompat.setTranslationY(headerLayout, 0);
+            headerLayout.scrollTo(0, 0);
             ((ViewGroup) targetHolder.itemView).addView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             targetHolder.setIsRecyclable(true);
             targetHolder = null;
