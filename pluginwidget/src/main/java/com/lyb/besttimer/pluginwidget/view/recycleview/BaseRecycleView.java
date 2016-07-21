@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.view.recycleview;
+package com.lyb.besttimer.pluginwidget.view.recycleview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.lyb.besttimer.androidshare.view.util.OnReadySimpleListener;
-import com.lyb.besttimer.androidshare.view.util.TouchCombineController;
+import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
+import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 /**
  * RecycleView通用类

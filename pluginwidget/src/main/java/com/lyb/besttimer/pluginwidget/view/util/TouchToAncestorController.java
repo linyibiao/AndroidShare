@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.view.util;
+package com.lyb.besttimer.pluginwidget.view.util;
 
 import android.view.MotionEvent;
 import android.view.View;

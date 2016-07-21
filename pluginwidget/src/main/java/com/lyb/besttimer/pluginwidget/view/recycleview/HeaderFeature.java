@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.view.recycleview;
+package com.lyb.besttimer.pluginwidget.view.recycleview;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;

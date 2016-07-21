@@ -10,15 +10,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lyb.besttimer.androidshare.activity.RecycleViewActivity">
 
-    <com.lyb.besttimer.androidshare.view.BaseSwipeRefreshLayout
+    <com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:swipeMode="BOTH">
 
-        <com.lyb.besttimer.androidshare.view.recycleview.BaseRecycleView
+        <com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecycleView
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.lyb.besttimer.androidshare.view.BaseSwipeRefreshLayout>
+    </com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout>
 
 </RelativeLayout>

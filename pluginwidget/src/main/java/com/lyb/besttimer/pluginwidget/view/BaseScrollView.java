@@ -1,12 +1,12 @@
-package com.lyb.besttimer.androidshare.view;
+package com.lyb.besttimer.pluginwidget.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
-import com.lyb.besttimer.androidshare.view.util.OnReadySimpleListener;
-import com.lyb.besttimer.androidshare.view.util.TouchCombineController;
+import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
+import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 /**
  * 通用ScrollView

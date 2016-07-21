@@ -28,6 +28,9 @@ import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.CircleImageView;
+import android.support.v4.widget.MaterialProgressDrawable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,7 +44,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 
-import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.pluginwidget.R;
 
 
 /**

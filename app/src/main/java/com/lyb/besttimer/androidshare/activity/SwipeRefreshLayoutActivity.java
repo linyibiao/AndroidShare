@@ -7,7 +7,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.androidshare.view.BaseSwipeRefreshLayout;
+import com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;

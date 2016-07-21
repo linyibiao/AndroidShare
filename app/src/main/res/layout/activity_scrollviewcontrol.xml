@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity">
 
-    <com.lyb.besttimer.androidshare.view.BaseScrollView
+    <com.lyb.besttimer.pluginwidget.view.BaseScrollView
         android:layout_width="match_parent"
         android:layout_height="300dp">
 
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="start" />
 
-            <com.lyb.besttimer.androidshare.view.BaseScrollView
+            <com.lyb.besttimer.pluginwidget.view.BaseScrollView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_centerVertical="true"
@@ -39,7 +39,7 @@
                         android:text="start" />
 
 
-                    <com.lyb.besttimer.androidshare.view.BaseScrollView
+                    <com.lyb.besttimer.pluginwidget.view.BaseScrollView
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_centerVertical="true"
@@ -60,7 +60,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:text="end" />
                         </RelativeLayout>
-                    </com.lyb.besttimer.androidshare.view.BaseScrollView>
+                    </com.lyb.besttimer.pluginwidget.view.BaseScrollView>
 
                     <Button
                         android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                         android:layout_alignParentBottom="true"
                         android:text="end" />
                 </RelativeLayout>
-            </com.lyb.besttimer.androidshare.view.BaseScrollView>
+            </com.lyb.besttimer.pluginwidget.view.BaseScrollView>
 
             <Button
                 android:layout_width="wrap_content"
@@ -76,5 +76,5 @@
                 android:layout_alignParentBottom="true"
                 android:text="end" />
         </RelativeLayout>
-    </com.lyb.besttimer.androidshare.view.BaseScrollView>
+    </com.lyb.besttimer.pluginwidget.view.BaseScrollView>
 </RelativeLayout>

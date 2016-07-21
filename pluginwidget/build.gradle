@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+//ext {
+//    bintrayRepo = 'maven'
+//    bintrayName = 'plugin-widget'
+//
+//    publishedGroupId = 'com.lyb.besttimer'
+//    libraryName = 'PluginWidget'
+//    artifact = 'plugin-widget'
+//
+//    libraryDescription = 'To make widget plugable'
+//
+//    siteUrl = 'https://github.com/linyibiao/AndroidShare'
+//    gitUrl = 'https://github.com/linyibiao/AndroidShare.git'
+//
+//    libraryVersion = '0.1.0'
+//
+//    licenseName = 'The Apache Software License, Version 2.0'
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//    allLicenses = ["Apache-2.0"]
+//}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+}
+
+//apply from: 'https://raw.githubusercontent.com/besttimer/JCenter/master/installv1.gradle'
+//apply from: 'https://raw.githubusercontent.com/besttimer/JCenter/master/bintrayv1.gradle'

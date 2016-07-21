@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.androidshare.view.recycleview.HeaderFeature;
+import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
 
 import java.util.ArrayList;
 import java.util.List;
