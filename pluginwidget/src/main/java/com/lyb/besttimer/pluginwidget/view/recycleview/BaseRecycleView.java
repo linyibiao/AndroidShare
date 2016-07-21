@@ -11,8 +11,8 @@ import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
 import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 /**
- * RecycleView通用类
- * Created by 林一彪 on 2016/7/18.
+ * Common RecycleView
+ * Created by linyibiao on 2016/7/18.
  */
 public class BaseRecycleView extends RecyclerView {
 

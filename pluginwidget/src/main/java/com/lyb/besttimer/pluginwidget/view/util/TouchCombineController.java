@@ -4,8 +4,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * 管理切换触摸事件的工具类
- * Created by 林一彪 on 2016/7/12.
+ * Tools for managing switch touch events
+ * Created by linyibiao on 2016/7/12.
  */
 public class TouchCombineController {
 

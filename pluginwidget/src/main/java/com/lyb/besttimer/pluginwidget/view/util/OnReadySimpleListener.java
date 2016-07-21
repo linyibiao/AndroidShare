@@ -3,8 +3,8 @@ package com.lyb.besttimer.pluginwidget.view.util;
 import android.view.MotionEvent;
 
 /**
- * 是否准备检测触摸的监听器简单实现
- * Created by 林一彪 on 2016/7/13.
+ * Ready for the listener to achieve a simple touch detection
+ * Created by linyibiao on 2016/7/13.
  */
 public class OnReadySimpleListener implements TouchController.OnReadyListener {
 

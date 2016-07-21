@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * 切换触摸事件到子类及以下的工具类
- * Created by 林一彪 on 2016/7/11.
+ * Switch touch events to subclasses and below
+ * Created by linyibiao on 2016/7/11.
  */
 public class TouchToDescendantsController implements TouchController {
 

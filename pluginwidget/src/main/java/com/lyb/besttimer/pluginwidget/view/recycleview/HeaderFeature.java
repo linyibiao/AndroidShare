@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
- * 悬浮头部特性
- * Created by 林一彪 on 2016/7/19.
+ * Suspension head characteristics
+ * Created by linyibiao on 2016/7/19.
  */
 public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
 
@@ -30,11 +30,11 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     }
 
     /**
-     * 唯一构造函数
+     * Unique constructor
      *
-     * @param recyclerView    目标视图
-     * @param header          头视图，要求最外层加多一层
-     * @param HEADEROriention 头视图摆放方向
+     * @param recyclerView    Target view
+     * @param header          The first view, the outermost layer of extra requirements
+     * @param HEADEROriention Head view display direction
      */
     public HeaderFeature(RecyclerView recyclerView, View header, HEADER_ORIENTION HEADEROriention) {
         this.recyclerView = recyclerView;
@@ -105,7 +105,7 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
 
     private void setupHeader(int headerPosition) {
         RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(headerPosition);
-        //如果为空说明还没有显示出来，那我们就创建一个
+        //If an empty description is not displayed, then we create a
         if (viewHolder == null) {
             viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, recyclerView.getAdapter().getItemViewType(headerPosition));
             viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -150,7 +150,7 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     }
 
     /**
-     * 是否设置为悬浮头部
+     * Is set to a suspended head
      *
      * @param recyclerView
      * @param position

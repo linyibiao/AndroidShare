@@ -9,8 +9,8 @@ import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
 import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 /**
- * 通用ScrollView
- * Created by 林一彪 on 2016/7/12.
+ * Common ScrollView
+ * Created by linyibiao on 2016/7/12.
  */
 public class BaseScrollView extends ScrollView {
 

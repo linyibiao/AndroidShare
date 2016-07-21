@@ -10,8 +10,8 @@ import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 
 /**
- * 通用的SwipeRefreshLayout
- * Created by 林一彪 on 2016/7/12.
+ * Common SwipeRefreshLayout
+ * Created by linyibiao on 2016/7/12.
  */
 public class BaseSwipeRefreshLayout extends XSwipeRefreshLayout {
 
