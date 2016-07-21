@@ -1,13 +1,13 @@
 package com.lyb.besttimer.androidshare.activity;
 
 import android.os.Bundle;
-import android.support.v4.widget.XSwipeRefreshLayout;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout;
+import com.lyb.besttimer.pluginwidget.view.swiperefreshlayout.XSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;

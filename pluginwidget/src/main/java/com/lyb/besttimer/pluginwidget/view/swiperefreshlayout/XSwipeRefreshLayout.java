@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.support.v4.widget;
+package com.lyb.besttimer.pluginwidget.view.swiperefreshlayout;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -28,9 +28,6 @@ import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.CircleImageView;
-import android.support.v4.widget.MaterialProgressDrawable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -80,7 +77,7 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
     @VisibleForTesting
     static final int CIRCLE_DIAMETER_LARGE = 56;
 
-    private static final String LOG_TAG = SwipeRefreshLayout.class.getSimpleName();
+    private static final String LOG_TAG = XSwipeRefreshLayout.class.getSimpleName();
 
     private static final int MAX_ALPHA = 255;
     private static final int STARTING_PROGRESS_ALPHA = (int) (.3f * MAX_ALPHA);

@@ -1,10 +1,10 @@
 package com.lyb.besttimer.pluginwidget.view;
 
 import android.content.Context;
-import android.support.v4.widget.XSwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.lyb.besttimer.pluginwidget.view.swiperefreshlayout.XSwipeRefreshLayout;
 import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
 import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
