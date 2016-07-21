@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.activity.HeaderRecycleViewActivity;
+import com.lyb.besttimer.androidshare.activity.ItemTreeActivity;
 import com.lyb.besttimer.androidshare.activity.RecycleViewActivity;
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         lvDatas.add(new LVData(SwipeRefreshLayoutActivity.class, "SwipeRefreshLayout上下拉刷新"));
         lvDatas.add(new LVData(RecycleViewActivity.class, "RecycleView上下拉刷新"));
         lvDatas.add(new LVData(HeaderRecycleViewActivity.class, "RecycleView悬浮header"));
+        lvDatas.add(new LVData(ItemTreeActivity.class, "多层次RecycleView"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 
