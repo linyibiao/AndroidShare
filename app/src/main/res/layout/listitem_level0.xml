@@ -4,9 +4,11 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:background="#999999"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView

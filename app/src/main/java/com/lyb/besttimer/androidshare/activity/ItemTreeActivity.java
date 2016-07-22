@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.pluginwidget.data.ItemTree;
+import com.lyb.besttimer.pluginwidget.data.TreeData;
 import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
 
 import java.util.ArrayList;
@@ -26,43 +28,40 @@ public class ItemTreeActivity extends BaseActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setItemAnimator(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        List<RVDate> rvDates = new ArrayList<>();
+        List<ItemTree<RVData>> itemTrees = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            RVDate rvDate0 = new RVDate("层次0" + i, 0);
-            rvDates.add(rvDate0);
+            ItemTree<RVData> itemTree0 = new ItemTree<>(new RVData("层次0  index" + i, 0), true, null);
+            itemTrees.add(itemTree0);
             for (int j = 0; j < 3; j++) {
-                RVDate rvDate1 = new RVDate("层次1" + j, 1);
-                rvDate0.rvDates.add(rvDate1);
+                ItemTree<RVData> itemTree1 = new ItemTree<>(new RVData("层次1  index" + j, 1), true, itemTree0);
                 for (int k = 0; k < 3; k++) {
-                    RVDate rvDate2 = new RVDate("层次2" + k, 2);
-                    rvDate1.rvDates.add(rvDate2);
+                    new ItemTree<>(new RVData("层次2  index" + k, 2), true, itemTree1);
                 }
             }
         }
-        recyclerView.setAdapter(new MyAdapter(rvDates));
+        recyclerView.setAdapter(new MyAdapter(new TreeData<>(recyclerView, itemTrees)));
 
         new HeaderFeature(recyclerView, findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
 
             @Override
             public boolean isHeader(RecyclerView recyclerView, int position) {
                 int type = recyclerView.getAdapter().getItemViewType(position);
-                return type == 1;
+                return type != 2;
             }
         }.applyFeature();
 
     }
 
-    private static class RVDate {
-
-        public List<RVDate> rvDates = new ArrayList<>();
+    private static class RVData {
 
         public String show;
 
         public int type;
 
-        public RVDate(String show, int type) {
+        public RVData(String show, int type) {
             this.show = show;
             this.type = type;
         }
@@ -70,10 +69,10 @@ public class ItemTreeActivity extends BaseActivity {
 
     private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
 
-        private List<RVDate> rvDates = new ArrayList<>();
+        private TreeData<RVData> treeData;
 
-        public MyAdapter(List<RVDate> rvDates) {
-            this.rvDates = rvDates;
+        public MyAdapter(TreeData<RVData> treeData) {
+            this.treeData = treeData;
         }
 
         @Override
@@ -94,83 +93,47 @@ public class ItemTreeActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(Holder holder, int position) {
-            final RVDate rvDate = rvDates.get(position);
+        public void onBindViewHolder(Holder holder, final int position) {
+            final ItemTree<RVData> itemTree = treeData.getItem(position);
+            final RVData rvData = itemTree.getObject();
             TextView textView = holder.tv;
-            textView.setText(rvDate.show);
+            textView.setText(rvData.show);
             Button btn = holder.btn;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), rvDate.show, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }
             });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.contentView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changeOperation(rvDate);
+                    treeData.flex(treeData.indexOf(itemTree));
                 }
             });
-        }
-
-        private void changeOperation(RVDate rvDate) {
-            int position = rvDates.indexOf(rvDate);
-            if (rvDate.rvDates.size() > 0) {
-                RVDate endRvDate = rvDate.rvDates.get(rvDate.rvDates.size() - 1);
-                if (rvDates.size() > position + 1 && rvDate.rvDates.contains(rvDates.get(position + 1))) {
-                    int endCondition = position + rvDate.rvDates.indexOf(endRvDate) + 1;
-                    int startCondition = position + 1;
-                    for (int index = endCondition; index >= startCondition; index--) {
-                        rvDates.remove(index);
-                        notifyItemRemoved(index);
-                    }
-                } else if (rvDates.size() <= position + 1 || !rvDate.rvDates.contains(rvDates.get(position + 1))) {
-                    int startCondition = position + 1;
-                    int endCondition = position + rvDate.rvDates.size();
-                    for (int index = startCondition; index <= endCondition; index++) {
-                        rvDates.add(index, rvDate.rvDates.get(index - position - 1));
-                        notifyItemInserted(index);
-                    }
-                }
-            }
-//            itemTree.setExpand(!itemTree.isExpand());
-//            int changeCount = 0;
-//            for (ItemTree childTree : itemTree.getChilds()) {
-//                List<ItemTree> showTrees = ItemTree.getShowTreeList(childTree);
-//                changeCount += showTrees.size();
-//            }
-//            if (itemTree.isExpand()) {
-//                for (int insertPosition = position + 1; insertPosition <= position + 1 + changeCount; insertPosition++) {
-//                    notifyItemInserted(insertPosition);
-//                }
-////                notifyItemRangeInserted(position + 1, changeCount);
-//            } else {
-//                for (int removePosition = position + 1 + changeCount; removePosition >= position + 1; removePosition--) {
-//                    notifyItemRemoved(removePosition);
-//                }
-////                notifyItemRangeRemoved(position + 1, changeCount);
-//            }
         }
 
         @Override
         public int getItemViewType(int position) {
-            return rvDates.get(position).type;
+            return treeData.getItem(position).getObject().type;
         }
 
         @Override
         public int getItemCount() {
-            return rvDates.size();
+            return treeData.getItemCount();
         }
 
         protected class Holder extends RecyclerView.ViewHolder {
 
             public TextView tv;
             public Button btn;
+            public View contentView;
 
             public Holder(View itemView) {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
+                contentView = itemView.findViewById(R.id.ll);
             }
         }
 
