@@ -44,6 +44,37 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
 
     public void applyFeature() {
         recyclerView.addOnScrollListener(this);
+        recyclerView.getAdapter().registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                updateHeader();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+                onChanged();
+            }
+        });
     }
 
 
@@ -78,6 +109,9 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         for (int index = 0; index < recyclerView.getChildCount(); index++) {
             View nextChild = recyclerView.getChildAt(index);
             int position = recyclerView.getChildAdapterPosition(nextChild);
+            if (position < 0 || position >= recyclerView.getAdapter().getItemCount()) {
+                continue;
+            }
             if (isHeader(recyclerView, position)) {
                 if (position != headerPosition) {
                     int ScrollX = 0;
@@ -159,6 +193,11 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
             headerLayout.removeView(view);
             headerLayout.scrollTo(0, 0);
             ((ViewGroup) targetHolder.itemView).addView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+//            int widthSpec = View.MeasureSpec.makeMeasureSpec(targetHolder.itemView.getWidth(), View.MeasureSpec.EXACTLY);
+//            int heightSpec = View.MeasureSpec.makeMeasureSpec(targetHolder.itemView.getHeight(), View.MeasureSpec.EXACTLY);
+//            view.measure(widthSpec, heightSpec);
+
             targetHolder.setIsRecyclable(true);
             targetHolder = null;
         }
@@ -169,9 +208,9 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         View firstView = recyclerView.getChildAt(childIndex);
         int position = recyclerView.getChildAdapterPosition(firstView);
         for (int currPos = position; currPos >= 0; currPos--) {
-//            if (currPos < 0 || currPos >= recyclerView.getAdapter().getItemCount()) {
-//                continue;
-//            }
+            if (currPos < 0 || currPos >= recyclerView.getAdapter().getItemCount()) {
+                continue;
+            }
             if (isHeader(recyclerView, currPos)) {
                 return currPos;
             }

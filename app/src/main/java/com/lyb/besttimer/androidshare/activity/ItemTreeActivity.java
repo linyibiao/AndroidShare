@@ -1,7 +1,6 @@
 package com.lyb.besttimer.androidshare.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ public class ItemTreeActivity extends BaseActivity {
         setContentView(R.layout.activity_item_tree);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView.setItemAnimator(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 

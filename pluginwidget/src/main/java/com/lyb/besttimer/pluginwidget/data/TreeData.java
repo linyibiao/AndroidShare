@@ -30,6 +30,7 @@ public class TreeData<T> {
      */
     public void flex(int position) {
         if (position < 0 || position >= activedTrees.size() || recyclerView.isAnimating()) {
+            // TODO: 2016/7/22 I have to use recyclerView.isAnimating(),because the return of recyclerView.getChildAdapterPosition is not normal,what can I do?
             return;
         }
         ItemTree<T> targetTree = activedTrees.get(position);

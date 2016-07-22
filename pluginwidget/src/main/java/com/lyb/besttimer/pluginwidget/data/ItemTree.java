@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * element tree
- * <p/>
  * Created by linyibiao on 2016/7/14.
  */
 public class ItemTree<T> {
