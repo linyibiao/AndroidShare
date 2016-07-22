@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.pluginwidget.data.ItemTree;
-import com.lyb.besttimer.pluginwidget.data.TreeData;
+import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
 
 import java.util.ArrayList;
@@ -32,16 +32,16 @@ public class ItemTreeActivity extends BaseActivity {
 
         List<ItemTree<RVData>> itemTrees = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            ItemTree<RVData> itemTree0 = new ItemTree<>(new RVData("层次0  index" + i, 0), true, null);
+            ItemTree<RVData> itemTree0 = new ItemTree<>(new RVData("层次" + i, 0), true, null);
             itemTrees.add(itemTree0);
             for (int j = 0; j < 3; j++) {
-                ItemTree<RVData> itemTree1 = new ItemTree<>(new RVData("层次1  index" + j, 1), true, itemTree0);
+                ItemTree<RVData> itemTree1 = new ItemTree<>(new RVData("层次" + i + j, 1), true, itemTree0);
                 for (int k = 0; k < 3; k++) {
-                    new ItemTree<>(new RVData("层次2  index" + k, 2), true, itemTree1);
+                    new ItemTree<>(new RVData("层次" + i + j + k, 2), true, itemTree1);
                 }
             }
         }
-        recyclerView.setAdapter(new MyAdapter(new TreeData<>(recyclerView, itemTrees)));
+        recyclerView.setAdapter(new MyAdapter(new TreeDataManager<>(recyclerView, itemTrees)));
 
         new HeaderFeature(recyclerView, findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
 
@@ -68,10 +68,10 @@ public class ItemTreeActivity extends BaseActivity {
 
     private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
 
-        private TreeData<RVData> treeData;
+        private TreeDataManager<RVData> treeDataManager;
 
-        public MyAdapter(TreeData<RVData> treeData) {
-            this.treeData = treeData;
+        public MyAdapter(TreeDataManager<RVData> treeDataManager) {
+            this.treeDataManager = treeDataManager;
         }
 
         @Override
@@ -93,7 +93,7 @@ public class ItemTreeActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(Holder holder, final int position) {
-            final ItemTree<RVData> itemTree = treeData.getItem(position);
+            final ItemTree<RVData> itemTree = treeDataManager.getItem(position);
             final RVData rvData = itemTree.getObject();
             TextView textView = holder.tv;
             textView.setText(rvData.show);
@@ -104,35 +104,33 @@ public class ItemTreeActivity extends BaseActivity {
                     Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }
             });
-            holder.contentView.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    treeData.flex(treeData.indexOf(itemTree));
+                    treeDataManager.flex(treeDataManager.indexOf(itemTree));
                 }
             });
         }
 
         @Override
         public int getItemViewType(int position) {
-            return treeData.getItem(position).getObject().type;
+            return treeDataManager.getItem(position).getObject().type;
         }
 
         @Override
         public int getItemCount() {
-            return treeData.getItemCount();
+            return treeDataManager.getItemCount();
         }
 
         protected class Holder extends RecyclerView.ViewHolder {
 
             public TextView tv;
             public Button btn;
-            public View contentView;
 
             public Holder(View itemView) {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
-                contentView = itemView.findViewById(R.id.ll);
             }
         }
 

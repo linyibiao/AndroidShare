@@ -1,7 +1,6 @@
 package com.lyb.besttimer.pluginwidget.view.recycleview;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,13 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
 
     private RecyclerView recyclerView;
 
-    private RecyclerView.ViewHolder targetHolder = null;
-
     private int targetPosition = RecyclerView.NO_POSITION;
 
     private FrameLayout headerLayout;
 
-    private SparseArray<Pair<Integer, Integer>> positionSizeArray = new SparseArray<>();
+    private SparseArray<RecyclerView.ViewHolder> holderSparseArray = new SparseArray<>();
 
-    private HEADER_ORIENTION HEADEROriention = HEADER_ORIENTION.HORIZONTAL;
+    private HEADER_ORIENTION header_oriention = HEADER_ORIENTION.HORIZONTAL;
 
     public enum HEADER_ORIENTION {
         HORIZONTAL, VERTICAL,
@@ -32,49 +29,18 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     /**
      * Unique constructor
      *
-     * @param recyclerView    Target view
-     * @param header          The first view, the outermost layer of extra requirements
-     * @param HEADEROriention Head view display direction
+     * @param recyclerView     Target view
+     * @param header           The header view
+     * @param header_oriention Head view display direction
      */
-    public HeaderFeature(RecyclerView recyclerView, View header, HEADER_ORIENTION HEADEROriention) {
+    public HeaderFeature(RecyclerView recyclerView, View header, HEADER_ORIENTION header_oriention) {
         this.recyclerView = recyclerView;
         headerLayout = (FrameLayout) header;
-        this.HEADEROriention = HEADEROriention;
+        this.header_oriention = header_oriention;
     }
 
     public void applyFeature() {
         recyclerView.addOnScrollListener(this);
-        recyclerView.getAdapter().registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                updateHeader();
-            }
-
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                super.onItemRangeChanged(positionStart, itemCount);
-                onChanged();
-            }
-
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                onChanged();
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                super.onItemRangeRemoved(positionStart, itemCount);
-                onChanged();
-            }
-
-            @Override
-            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-                onChanged();
-            }
-        });
     }
 
 
@@ -89,10 +55,23 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         updateHeader();
     }
 
+    private Runnable postUpdateHeader = new Runnable() {
+        @Override
+        public void run() {
+            updateHeader();
+        }
+    };
+
     private void updateHeader() {
-        int headerPosition = showHeaderPosition(0);
+        if (recyclerView.isAnimating()) {
+            // TODO: 2016/7/22 I have to use recyclerView.isAnimating(),because the return of recyclerView.getChildAdapterPosition is not normal,what can I do?
+            recyclerView.removeCallbacks(postUpdateHeader);
+            recyclerView.post(postUpdateHeader);
+            return;
+        }
+        int headerPosition = showHeaderPosition();
         if (headerPosition != RecyclerView.NO_POSITION) {
-            if (targetHolder == null || getTargetAdapterPosition() != headerPosition) {
+            if (getTargetAdapterPosition() != headerPosition) {
                 releaseHeader();
                 setupHeader(headerPosition);
             }
@@ -116,9 +95,9 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
                 if (position != headerPosition) {
                     int ScrollX = 0;
                     int ScrollY = 0;
-                    if (HEADEROriention == HEADER_ORIENTION.HORIZONTAL) {
+                    if (header_oriention == HEADER_ORIENTION.HORIZONTAL) {
                         ScrollX = headerLayout.getChildAt(0).getMeasuredWidth() - (nextChild.getLeft() - recyclerView.getPaddingLeft());
-                    } else if (HEADEROriention == HEADER_ORIENTION.VERTICAL) {
+                    } else if (header_oriention == HEADER_ORIENTION.VERTICAL) {
                         ScrollY = headerLayout.getChildAt(0).getMeasuredHeight() - (nextChild.getTop() - recyclerView.getPaddingTop());
                     }
                     headerLayout.scrollTo(ScrollX > 0 ? ScrollX : 0, ScrollY > 0 ? ScrollY : 0);
@@ -130,82 +109,44 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     }
 
     private int getTargetAdapterPosition() {
-        int position = targetHolder.getAdapterPosition();
-        if (position != RecyclerView.NO_POSITION) {
-            return position;
-        }
         return targetPosition;
     }
 
     private void setupHeader(int headerPosition) {
-        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(headerPosition);
-        //If an empty description is not displayed, then we create one
+        int viewType = recyclerView.getAdapter().getItemViewType(headerPosition);
+        RecyclerView.ViewHolder viewHolder = holderSparseArray.get(viewType);
         if (viewHolder == null) {
             viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, recyclerView.getAdapter().getItemViewType(headerPosition));
-            viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            recyclerView.getAdapter().bindViewHolder(viewHolder, headerPosition);
+            holderSparseArray.put(viewType, viewHolder);
         }
-        View view = ((ViewGroup) viewHolder.itemView).getChildAt(0);
+        recyclerView.getAdapter().bindViewHolder(viewHolder, headerPosition);
 
-        int widthSpec = 0;
-        int heightSpec = 0;
+        View view = viewHolder.itemView;
 
-        Pair<Integer, Integer> sizePair = positionSizeArray.get(headerPosition);
-        if (sizePair == null) {
-            if (view.getWidth() != 0 && view.getHeight() != 0) {
-                sizePair = new Pair<>(view.getWidth(), view.getHeight());
-                positionSizeArray.put(headerPosition, sizePair);
-                widthSpec = View.MeasureSpec.makeMeasureSpec(sizePair.first, View.MeasureSpec.EXACTLY);
-                heightSpec = View.MeasureSpec.makeMeasureSpec(sizePair.second, View.MeasureSpec.EXACTLY);
-            } else {
-                if (HEADEROriention == HEADER_ORIENTION.VERTICAL) {
-                    sizePair = new Pair<>(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    widthSpec = View.MeasureSpec.makeMeasureSpec(headerLayout.getWidth(), View.MeasureSpec.EXACTLY);
-                    heightSpec = View.MeasureSpec.makeMeasureSpec(headerLayout.getHeight(), View.MeasureSpec.AT_MOST);
-                } else if (HEADEROriention == HEADER_ORIENTION.VERTICAL) {
-                    sizePair = new Pair<>(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    widthSpec = View.MeasureSpec.makeMeasureSpec(headerLayout.getWidth(), View.MeasureSpec.AT_MOST);
-                    heightSpec = View.MeasureSpec.makeMeasureSpec(headerLayout.getHeight(), View.MeasureSpec.EXACTLY);
-                }
-            }
-        } else {
-            widthSpec = View.MeasureSpec.makeMeasureSpec(sizePair.first, View.MeasureSpec.EXACTLY);
-            heightSpec = View.MeasureSpec.makeMeasureSpec(sizePair.second, View.MeasureSpec.EXACTLY);
-        }
+        ViewGroup.LayoutParams params = view.getLayoutParams();
 
-        if (view.getWidth() == 0 || view.getHeight() == 0) {
-            view.measure(widthSpec, heightSpec);
-            view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-        }
+        int widthSpec = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.EXACTLY), recyclerView.getPaddingLeft() + recyclerView.getPaddingRight(), params.width);
+        int heightSpec = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(recyclerView.getHeight(), View.MeasureSpec.EXACTLY), recyclerView.getPaddingTop() + recyclerView.getPaddingBottom(), params.height);
 
-        viewHolder.itemView.getLayoutParams().width = sizePair.first;
-        viewHolder.itemView.getLayoutParams().height = sizePair.second;
-        targetHolder = viewHolder;
-        ((ViewGroup) viewHolder.itemView).removeView(view);
-        viewHolder.setIsRecyclable(false);
-        headerLayout.addView(view, new FrameLayout.LayoutParams(sizePair.first, sizePair.second));
+        view.measure(widthSpec, heightSpec);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        headerLayout.addView(view, params);
         targetPosition = headerPosition;
     }
 
     private void releaseHeader() {
-        if (targetHolder != null) {
-            View view = headerLayout.getChildAt(0);
-            headerLayout.removeView(view);
-            headerLayout.scrollTo(0, 0);
-            ((ViewGroup) targetHolder.itemView).addView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-//            int widthSpec = View.MeasureSpec.makeMeasureSpec(targetHolder.itemView.getWidth(), View.MeasureSpec.EXACTLY);
-//            int heightSpec = View.MeasureSpec.makeMeasureSpec(targetHolder.itemView.getHeight(), View.MeasureSpec.EXACTLY);
-//            view.measure(widthSpec, heightSpec);
+        View view = headerLayout.getChildAt(0);
+        headerLayout.removeView(view);
+        headerLayout.scrollTo(0, 0);
 
-            targetHolder.setIsRecyclable(true);
-            targetHolder = null;
-        }
         targetPosition = RecyclerView.NO_POSITION;
+
     }
 
-    private int showHeaderPosition(int childIndex) {
-        View firstView = recyclerView.getChildAt(childIndex);
+    private int showHeaderPosition() {
+        View firstView = recyclerView.getChildAt(0);
         int position = recyclerView.getChildAdapterPosition(firstView);
         for (int currPos = position; currPos >= 0; currPos--) {
             if (currPos < 0 || currPos >= recyclerView.getAdapter().getItemCount()) {

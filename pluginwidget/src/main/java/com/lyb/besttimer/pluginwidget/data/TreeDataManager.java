@@ -9,7 +9,7 @@ import java.util.List;
  * tree data manager
  * Created by linyibiao on 2016/7/22.
  */
-public class TreeData<T> {
+public class TreeDataManager<T> {
 
     private RecyclerView recyclerView;
 
@@ -17,7 +17,7 @@ public class TreeData<T> {
 
     private List<ItemTree<T>> activedTrees = new ArrayList<>();
 
-    public TreeData(RecyclerView recyclerView, List<ItemTree<T>> itemTrees) {
+    public TreeDataManager(RecyclerView recyclerView, List<ItemTree<T>> itemTrees) {
         this.recyclerView = recyclerView;
         this.itemTrees = itemTrees;
         updateActivedData();
@@ -29,8 +29,7 @@ public class TreeData<T> {
      * @param position position
      */
     public void flex(int position) {
-        if (position < 0 || position >= activedTrees.size() || recyclerView.isAnimating()) {
-            // TODO: 2016/7/22 I have to use recyclerView.isAnimating(),because the return of recyclerView.getChildAdapterPosition is not normal,what can I do?
+        if (position < 0 || position >= activedTrees.size()) {
             return;
         }
         ItemTree<T> targetTree = activedTrees.get(position);
