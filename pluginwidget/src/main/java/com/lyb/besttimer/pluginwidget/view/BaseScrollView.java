@@ -1,18 +1,14 @@
 package com.lyb.besttimer.pluginwidget.view;
 
 import android.content.Context;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.widget.ScrollView;
-
-import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
-import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 /**
  * Common ScrollView
  * Created by linyibiao on 2016/7/12.
  */
-public class BaseScrollView extends ScrollView {
+public class BaseScrollView extends NestedScrollView {
 
     public BaseScrollView(Context context) {
         this(context, null);
@@ -28,64 +24,6 @@ public class BaseScrollView extends ScrollView {
     }
 
     private void init() {
-        touchCombineController = new TouchCombineController(this, new OnReadySimpleListener() {
-
-            @Override
-            public boolean onReadyDown(MotionEvent event) {
-                return getScrollY() <= 0;
-            }
-
-            @Override
-            public boolean onReadyUp(MotionEvent event) {
-                return getChildAt(0).getHeight() - getHeight() <= getScrollY();
-            }
-
-        }, new OnReadySimpleListener() {
-            @Override
-            public boolean onReadyDown(MotionEvent event) {
-                return getScrollY() <= 0;
-            }
-
-            @Override
-            public boolean onReadyUp(MotionEvent event) {
-                return getChildAt(0).getHeight() - getHeight() <= getScrollY();
-            }
-        });
     }
 
-
-    private TouchCombineController touchCombineController;
-
-    private float preY;
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (preY > ev.getY() && getChildAt(0).getHeight() - getHeight() <= getScrollY()) {
-                    return false;
-                } else if (preY < ev.getY() && getScrollY() <= 0) {
-                    return false;
-                }
-                break;
-        }
-        preY = ev.getY();
-        return super.onInterceptTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-
-        if (touchCombineController.onTouchEvent(ev)) {
-            return false;
-        }
-
-//        if (getScrollY() > 0 || (getChildCount() == 1 && getChildAt(0).getHeight() - getHeight() > getScrollY())) {
-//            getParent().requestDisallowInterceptTouchEvent(true);
-//        }
-
-        return super.onTouchEvent(ev);
-    }
 }

@@ -1,18 +1,17 @@
 package com.lyb.besttimer.pluginwidget.view;
 
 import android.content.Context;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.view.NestedScrollingChildHelper;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.ListView;
-
-import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
-import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 
 /**
- * Created by Administrator on 2016/7/14.
+ * Common ListView
+ * Created by linyibiao on 2016/7/14.
  */
-public class BaseListView extends ListView {
+public class BaseListView extends ListView implements NestedScrollingChild {
 
     public BaseListView(Context context) {
         this(context, null);
@@ -27,27 +26,48 @@ public class BaseListView extends ListView {
         init();
     }
 
+    private NestedScrollingChildHelper nestedScrollingChildHelper;
+
     private void init() {
-        touchCombineController = new TouchCombineController(this, new OnReadySimpleListener() {
-            @Override
-            public boolean onReadyDown(MotionEvent event) {
-                return getFirstVisiblePosition() == 0 && getChildAt(0).getTop() >= 0;
-            }
-
-            @Override
-            public boolean onReadyUp(MotionEvent event) {
-                return getLastVisiblePosition() == getCount() - 1 && getChildAt(getLastVisiblePosition() - getFirstVisiblePosition()).getBottom() <= getHeight();
-            }
-        }, new OnReadySimpleListener());
+        nestedScrollingChildHelper = new NestedScrollingChildHelper(this);
+        setNestedScrollingEnabled(true);
     }
 
-    private TouchCombineController touchCombineController;
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (touchCombineController.onTouchEvent(ev)) {
-            return false;
-        }
-        return super.onTouchEvent(ev);
+    public void setNestedScrollingEnabled(boolean enabled) {
+        nestedScrollingChildHelper.setNestedScrollingEnabled(enabled);
     }
+
+    public boolean isNestedScrollingEnabled() {
+        return nestedScrollingChildHelper.isNestedScrollingEnabled();
+    }
+
+    public boolean startNestedScroll(int axes) {
+        return nestedScrollingChildHelper.startNestedScroll(axes);
+    }
+
+    public void stopNestedScroll() {
+        nestedScrollingChildHelper.stopNestedScroll();
+    }
+
+    public boolean hasNestedScrollingParent() {
+        return nestedScrollingChildHelper.hasNestedScrollingParent();
+    }
+
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed,
+                                        int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        return nestedScrollingChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+    }
+
+    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+        return nestedScrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+    }
+
+    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+        return nestedScrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
+
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+        return nestedScrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY);
+    }
+
 }

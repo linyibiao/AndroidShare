@@ -697,7 +697,7 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
             mReturningToStart = false;
         }
 
-        if (!isEnabled() || mReturningToStart /*|| canChildScrollUp(direction)*/
+        if (!isEnabled() || mReturningToStart || (canChildScrollUp(DIRECTION.TOP) && canChildScrollUp(DIRECTION.BOTTOM))
                 || mRefreshing || mNestedScrollInProgress) {
             // Fail fast if we're not in a state where a swipe is possible
             return false;
@@ -767,26 +767,26 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
         return MotionEventCompat.getY(ev, index);
     }
 
-//    @Override
-//    public void requestDisallowInterceptTouchEvent(boolean b) {
-//        // if this is a List < L or another view that doesn't support nested
-//        // scrolling, ignore this request so that the vertical scroll event
-//        // isn't stolen
-//        if ((android.os.Build.VERSION.SDK_INT < 21 && mTarget instanceof AbsListView)
-//                || (mTarget != null && !ViewCompat.isNestedScrollingEnabled(mTarget))) {
-//            // Nope.
-//        } else {
-//            super.requestDisallowInterceptTouchEvent(b);
-//        }
-//    }
+    @Override
+    public void requestDisallowInterceptTouchEvent(boolean b) {
+        // if this is a List < L or another view that doesn't support nested
+        // scrolling, ignore this request so that the vertical scroll event
+        // isn't stolen
+        if ((android.os.Build.VERSION.SDK_INT < 21 && mTarget instanceof AbsListView)
+                || (mTarget != null && !ViewCompat.isNestedScrollingEnabled(mTarget))) {
+            // Nope.
+        } else {
+            super.requestDisallowInterceptTouchEvent(b);
+        }
+    }
 
     // NestedScrollingParent
 
-//    @Override
-//    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-//        return isEnabled() && !mReturningToStart && !mRefreshing
-//                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-//    }
+    @Override
+    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        return isEnabled() && !mReturningToStart && !mRefreshing
+                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+    }
 
     @Override
     public void onNestedScrollAccepted(View child, View target, int axes) {
@@ -802,16 +802,41 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         // If we are in the middle of consuming, a scroll, then we want to move the spinner back up
         // before allowing the list to scroll
-        if (dy > 0 && mTotalUnconsumed > 0) {
-            if (dy > mTotalUnconsumed) {
-                consumed[1] = dy - (int) mTotalUnconsumed;
-                mTotalUnconsumed = 0;
-            } else {
-                mTotalUnconsumed -= dy;
-                consumed[1] = dy;
+        if (mTotalUnconsumed > 0) {
+            if (direction == DIRECTION.TOP) {
+                if (dy > 0) {
+                    if (dy > mTotalUnconsumed) {
+                        consumed[1] = dy - (int) mTotalUnconsumed;
+                        mTotalUnconsumed = 0;
+                    } else {
+                        mTotalUnconsumed -= dy;
+                        consumed[1] = dy;
+                    }
+                    moveSpinner(mTotalUnconsumed);
+                }
+            } else if (direction == DIRECTION.BOTTOM) {
+                if (-dy > 0) {
+                    if (-dy > mTotalUnconsumed) {
+                        consumed[1] = -(int) mTotalUnconsumed;
+                        mTotalUnconsumed = 0;
+                    } else {
+                        mTotalUnconsumed -= -dy;
+                        consumed[1] = dy;
+                    }
+                    moveSpinner(mTotalUnconsumed);
+                }
             }
-            moveSpinner(mTotalUnconsumed);
         }
+//        if (dy > 0 && mTotalUnconsumed > 0) {
+//            if (dy > mTotalUnconsumed) {
+//                consumed[1] = dy - (int) mTotalUnconsumed;
+//                mTotalUnconsumed = 0;
+//            } else {
+//                mTotalUnconsumed -= dy;
+//                consumed[1] = dy;
+//            }
+//            moveSpinner(mTotalUnconsumed);
+//        }
 
         // If a client layout is using a custom start position for the circle
         // view, they mean to hide it again before scrolling the child view
@@ -862,7 +887,25 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
         // 'offset in window 'functionality to see if we have been moved from the event.
         // This is a decent indication of whether we should take over the event stream or not.
         final int dy = dyUnconsumed + mParentOffsetInWindow[1];
-        if (dy < 0 && !canChildScrollUp(direction)) {
+//        if (dy < 0 && !canChildScrollUp(direction)) {
+//            mTotalUnconsumed += Math.abs(dy);
+//            moveSpinner(mTotalUnconsumed);
+//        }
+        if (dy < 0 && !canChildScrollUp(DIRECTION.TOP)) {
+            if (mTotalUnconsumed == 0) {
+                direction = DIRECTION.TOP;
+                setProgressViewOffset(false, -mCircleHeight, mCircleHeight / 3);
+                setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCircleView.getTop(), true);
+            }
+            mTotalUnconsumed += Math.abs(dy);
+            moveSpinner(mTotalUnconsumed);
+        }
+        if (dy > 0 && !canChildScrollUp(DIRECTION.BOTTOM)) {
+            if (mTotalUnconsumed == 0) {
+                direction = DIRECTION.BOTTOM;
+                setProgressViewOffset(false, getHeight(), getHeight() - mCircleHeight - mCircleHeight / 3);
+                setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCircleView.getTop(), true);
+            }
             mTotalUnconsumed += Math.abs(dy);
             moveSpinner(mTotalUnconsumed);
         }

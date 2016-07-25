@@ -2,11 +2,8 @@ package com.lyb.besttimer.pluginwidget.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 import com.lyb.besttimer.pluginwidget.view.swiperefreshlayout.XSwipeRefreshLayout;
-import com.lyb.besttimer.pluginwidget.view.util.OnReadySimpleListener;
-import com.lyb.besttimer.pluginwidget.view.util.TouchCombineController;
 
 
 /**
@@ -25,45 +22,6 @@ public class BaseSwipeRefreshLayout extends XSwipeRefreshLayout {
     }
 
     private void init() {
-        touchCombineController = new TouchCombineController(this, new OnReadySimpleListener() {
-            @Override
-            public boolean onReadyUp(MotionEvent event) {
-                return !onSuperTouchEvent(MotionEvent.obtainNoHistory(event));
-            }
-
-            @Override
-            public boolean onReadyDown(MotionEvent event) {
-                return !onSuperTouchEvent(MotionEvent.obtainNoHistory(event));
-            }
-        }, new OnReadySimpleListener() {
-            @Override
-            public boolean onReadyUp(MotionEvent event) {
-                return !onSuperTouchEvent(MotionEvent.obtainNoHistory(event));
-            }
-
-            @Override
-            public boolean onReadyDown(MotionEvent event) {
-                return !onSuperTouchEvent(MotionEvent.obtainNoHistory(event));
-            }
-        });
-    }
-
-
-    private TouchCombineController touchCombineController;
-
-    private boolean onSuperTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    public boolean onTouchEvent(final MotionEvent event) {
-
-
-        if (touchCombineController.onTouchEvent(event)) {
-            return false;
-        }
-
-        return super.onTouchEvent(event);
     }
 
 }
