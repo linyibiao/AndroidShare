@@ -891,7 +891,7 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
 //            mTotalUnconsumed += Math.abs(dy);
 //            moveSpinner(mTotalUnconsumed);
 //        }
-        if (dy < 0 && !canChildScrollUp(DIRECTION.TOP)) {
+        if (dy < 0 && !canChildScrollUp(DIRECTION.TOP) && mode != MODE.BOTTOM_ONLY) {
             if (mTotalUnconsumed == 0) {
                 direction = DIRECTION.TOP;
                 setProgressViewOffset(false, -mCircleHeight, mCircleHeight / 3);
@@ -900,7 +900,7 @@ public class XSwipeRefreshLayout extends ViewGroup implements NestedScrollingPar
             mTotalUnconsumed += Math.abs(dy);
             moveSpinner(mTotalUnconsumed);
         }
-        if (dy > 0 && !canChildScrollUp(DIRECTION.BOTTOM)) {
+        if (dy > 0 && !canChildScrollUp(DIRECTION.BOTTOM) && mode != MODE.TOP_ONLY) {
             if (mTotalUnconsumed == 0) {
                 direction = DIRECTION.BOTTOM;
                 setProgressViewOffset(false, getHeight(), getHeight() - mCircleHeight - mCircleHeight / 3);
