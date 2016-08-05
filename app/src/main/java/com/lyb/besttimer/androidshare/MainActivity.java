@@ -10,9 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lyb.besttimer.androidshare.activity.HeaderRecycleViewActivity;
+import com.lyb.besttimer.androidshare.activity.HeaderRecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.ItemTreeActivity;
-import com.lyb.besttimer.androidshare.activity.RecycleViewActivity;
+import com.lyb.besttimer.androidshare.activity.RecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
 
@@ -29,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
         List<LVData> lvDatas = new ArrayList<>();
         lvDatas.add(new LVData(ScrollViewControlActivity.class, "ScrollView触摸代理切换"));
         lvDatas.add(new LVData(SwipeRefreshLayoutActivity.class, "SwipeRefreshLayout上下拉刷新"));
-        lvDatas.add(new LVData(RecycleViewActivity.class, "RecycleView上下拉刷新"));
-        lvDatas.add(new LVData(HeaderRecycleViewActivity.class, "RecycleView悬浮header"));
-        lvDatas.add(new LVData(ItemTreeActivity.class, "多层次RecycleView"));
+        lvDatas.add(new LVData(RecyclerViewActivity.class, "RecyclerView上下拉刷新"));
+        lvDatas.add(new LVData(HeaderRecyclerViewActivity.class, "RecyclerView悬浮header"));
+        lvDatas.add(new LVData(ItemTreeActivity.class, "多层次RecyclerView"));
+        lvDatas.add(new LVData(ItemTouchActivity.class, "方格移动RecyclerView"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 

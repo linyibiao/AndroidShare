@@ -17,9 +17,10 @@
         </activity>
         <activity android:name=".activity.ScrollViewControlActivity" />
         <activity android:name=".activity.SwipeRefreshLayoutActivity" />
-        <activity android:name=".activity.RecycleViewActivity" />
-        <activity android:name=".activity.HeaderRecycleViewActivity" />
-        <activity android:name=".activity.ItemTreeActivity"></activity>
+        <activity android:name=".activity.RecyclerViewActivity" />
+        <activity android:name=".activity.HeaderRecyclerViewActivity" />
+        <activity android:name=".activity.ItemTreeActivity" />
+        <activity android:name=".activity.ItemTouchActivity"></activity>
     </application>
 
 </manifest>

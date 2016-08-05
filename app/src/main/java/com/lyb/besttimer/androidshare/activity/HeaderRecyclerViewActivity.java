@@ -16,7 +16,7 @@ import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeaderRecycleViewActivity extends BaseActivity {
+public class HeaderRecyclerViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -15,7 +15,7 @@ import com.lyb.besttimer.androidshare.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecycleViewActivity extends BaseActivity {
+public class RecyclerViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

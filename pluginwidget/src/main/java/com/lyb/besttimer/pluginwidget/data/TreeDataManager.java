@@ -3,6 +3,7 @@ package com.lyb.besttimer.pluginwidget.data;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -58,6 +59,56 @@ public class TreeDataManager<T> {
 
     public int indexOf(ItemTree<T> itemTree) {
         return activedTrees.indexOf(itemTree);
+    }
+
+    public int itemRange(int position) {
+        return ItemTree.getShowTreeList(activedTrees.get(position)).size();
+    }
+
+    public void remove(int position) {
+        ItemTree<T> itemTree = activedTrees.get(position);
+        if (itemTree.getFather() != null) {
+            itemTree.getFather().removeChild(itemTree);
+        } else {
+            itemTrees.remove(itemTree);
+        }
+        updateActivedData();
+    }
+
+    public boolean canMove(int position1, int position2) {
+        ItemTree<T> itemTree1 = activedTrees.get(position1);
+        ItemTree<T> itemTree2 = activedTrees.get(position2);
+        return itemTree1.getFather() == itemTree2.getFather();
+    }
+
+    public boolean move(int position1, int position2) {
+        ItemTree<T> itemTree1 = activedTrees.get(position1);
+        ItemTree<T> itemTree2 = activedTrees.get(position2);
+        List<ItemTree<T>> childs = null;
+        if (itemTree1.getFather() == itemTree2.getFather()) {
+            ItemTree<T> father = itemTree1.getFather();
+            if (father == null) {
+                childs = itemTrees;
+            } else {
+                childs = father.getChilds();
+            }
+        }
+        if (childs != null) {
+            int index1 = childs.indexOf(itemTree1);
+            int index2 = childs.indexOf(itemTree2);
+            if (index1 < index2) {
+                for (int position = index1; position < index2; position++) {
+                    Collections.swap(childs, position, position + 1);
+                }
+            } else {
+                for (int position = index2; position < index1; position++) {
+                    Collections.swap(childs, position, position + 1);
+                }
+            }
+            updateActivedData();
+            return true;
+        }
+        return false;
     }
 
     private void updateActivedData() {

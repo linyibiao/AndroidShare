@@ -9,17 +9,17 @@ import android.util.AttributeSet;
  * Common RecycleView
  * Created by linyibiao on 2016/7/18.
  */
-public class BaseRecycleView extends RecyclerView {
+public class BaseRecyclerView extends RecyclerView {
 
-    public BaseRecycleView(Context context) {
+    public BaseRecyclerView(Context context) {
         this(context, null);
     }
 
-    public BaseRecycleView(Context context, @Nullable AttributeSet attrs) {
+    public BaseRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BaseRecycleView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public BaseRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

@@ -22,12 +22,12 @@ public class ItemTree<T> {
     /**
      * father tree
      */
-    private ItemTree father = null;
+    private ItemTree<T> father = null;
 
     /**
      * childs it has
      */
-    private List<ItemTree> childs = new ArrayList<>();
+    private List<ItemTree<T>> childs = new ArrayList<>();
 
     public ItemTree() {
     }
@@ -74,7 +74,14 @@ public class ItemTree<T> {
         }
     }
 
-    public List<ItemTree> getChilds() {
+    public void removeChild(ItemTree itemTree) {
+        if (this.childs.contains(itemTree)) {
+            this.childs.remove(itemTree);
+            itemTree.setFather(null);
+        }
+    }
+
+    public List<ItemTree<T>> getChilds() {
         return this.childs;
     }
 

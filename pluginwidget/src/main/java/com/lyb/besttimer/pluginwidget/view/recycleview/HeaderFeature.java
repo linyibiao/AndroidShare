@@ -88,9 +88,9 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         for (int index = 0; index < recyclerView.getChildCount(); index++) {
             View nextChild = recyclerView.getChildAt(index);
             int position = recyclerView.getChildAdapterPosition(nextChild);
-            if (position < 0 || position >= recyclerView.getAdapter().getItemCount()) {
-                continue;
-            }
+//            if (position < 0 || position >= recyclerView.getAdapter().getItemCount()) {
+//                continue;
+//            }
             if (isHeader(recyclerView, position)) {
                 if (position != headerPosition) {
                     int ScrollX = 0;
@@ -149,22 +149,31 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         View firstView = recyclerView.getChildAt(0);
         int position = recyclerView.getChildAdapterPosition(firstView);
         for (int currPos = position; currPos >= 0; currPos--) {
-            if (currPos < 0 || currPos >= recyclerView.getAdapter().getItemCount()) {
-                continue;
-            }
-            if (isHeader(recyclerView, currPos)) {
+//            if (currPos < 0 || currPos >= recyclerView.getAdapter().getItemCount()) {
+//                continue;
+//            }
+            if (isHeader(recyclerView, currPos) && (currPos != position || !canHideHeader(firstView))) {
                 return currPos;
             }
         }
         return RecyclerView.NO_POSITION;
     }
 
+    private boolean canHideHeader(View firstView) {
+        if (header_oriention == HEADER_ORIENTION.HORIZONTAL) {
+            return firstView.getLeft() == recyclerView.getPaddingLeft();
+        } else if (header_oriention == HEADER_ORIENTION.VERTICAL) {
+            return firstView.getTop() == recyclerView.getPaddingTop();
+        }
+        return false;
+    }
+
     /**
      * Is set to a suspended head
      *
-     * @param recyclerView
-     * @param position
-     * @return
+     * @param recyclerView container
+     * @param position     adapter position
+     * @return true if is header
      */
     public abstract boolean isHeader(RecyclerView recyclerView, int position);
 
