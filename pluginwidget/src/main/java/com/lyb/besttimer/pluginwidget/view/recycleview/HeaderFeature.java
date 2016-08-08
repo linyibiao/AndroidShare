@@ -69,6 +69,7 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
             recyclerView.post(postUpdateHeader);
             return;
         }
+        showAllItem();
         int headerPosition = showHeaderPosition();
         if (headerPosition != RecyclerView.NO_POSITION) {
             if (getTargetAdapterPosition() != headerPosition) {
@@ -76,6 +77,7 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
                 setupHeader(headerPosition);
             }
             ajustHeader();
+            hideHeaderItem();
             headerLayout.setVisibility(View.VISIBLE);
         } else {
             releaseHeader();
@@ -143,6 +145,20 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
 
         targetPosition = RecyclerView.NO_POSITION;
 
+    }
+
+    private void hideHeaderItem() {
+        int headerPosition = getTargetAdapterPosition();
+        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(headerPosition);
+        if (viewHolder != null) {
+            viewHolder.itemView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void showAllItem() {
+        for (int index = 0; index < recyclerView.getChildCount(); index++) {
+            recyclerView.getChildAt(index).setVisibility(View.VISIBLE);
+        }
     }
 
     private int showHeaderPosition() {
