@@ -135,10 +135,12 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
             if (childView == pullHeaderManager.getHeaderView()) {
                 childView.layout(childL, childT - childView.getMeasuredHeight(), childL + childView.getMeasuredWidth(), childT);
             } else if (childView == pullFooterManager.getFooterView()) {
+                int paddingTop=900;
                 childView.layout(childL, childT + mTarget.getMeasuredHeight(), childL + childView.getMeasuredWidth(), childT + mTarget.getMeasuredHeight() + childView.getMeasuredHeight());
-                Log.e("what",childView.getMeasuredHeight()+";;;");
+                Log.e("what",childView.getMeasuredHeight()+";;;"+childView.getMeasuredWidth());
             } else {
                 childView.layout(childL, childT, childL + childView.getMeasuredWidth(), childT + childView.getMeasuredHeight());
+                Log.e("what",childView.getMeasuredHeight()+";;;rrr");
             }
         }
     }
@@ -149,7 +151,7 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         if (mTarget == null) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
-                if ((!child.equals(pullHeaderManager.getHeaderView())) || (!child.equals(pullFooterManager.getFooterView()))) {
+                if ((!child.equals(pullHeaderManager.getHeaderView())) && (!child.equals(pullFooterManager.getFooterView()))) {
                     mTarget = child;
                     break;
                 }
@@ -383,17 +385,21 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
 
     private void releaseTouch() {
         if (pullHeaderManager.canScrollToTop(getScrollX(), getScrollY())) {
-            if (springBack(getScrollX(), getScrollY(), 0, 0, 0, 0)) {
-                ViewCompat.postInvalidateOnAnimation(this);
-            }
+            springBack(getScrollX(), getScrollY(), 0, 0, 0, 0);
+//            if (springBack(getScrollX(), getScrollY(), 0, 0, 0, 0)) {
+//                ViewCompat.postInvalidateOnAnimation(this);
+//            }
         } else {
-            if (springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), 0)) {
-                ViewCompat.postInvalidateOnAnimation(this);
-            }
+            springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), 0);
+//            if (springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), 0)) {
+//                ViewCompat.postInvalidateOnAnimation(this);
+//            }
         }
     }
 
-    private boolean springBack(int startX, int startY, int minX, int maxX, int minY, int maxY) {
+    private static final float GRAVITY = 5000.0f;
+
+    private void springBack(int startX, int startY, int minX, int maxX, int minY, int maxY) {
         int dx = 0;
         int dy = 0;
         if (startX < minX) {
@@ -406,8 +412,10 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         } else if (startY > maxY) {
             dy = maxY - startY;
         }
-        mScroller.startScroll(startX, startY, dx, dy, SCROLL_TIME);
-        return dx != 0 || dy != 0;
+        int mDuration = (int) (1000.0 * Math.sqrt(Math.abs(2.0 * dy / GRAVITY)));
+        mScroller.startScroll(startX, startY, dx, dy, mDuration);
+        ViewCompat.postInvalidateOnAnimation(this);
+//        return dx != 0 || dy != 0;
     }
 
     @Override
@@ -450,9 +458,10 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
                 public void run() {
                     pullHeaderManager.setHeaderState(PullHeaderHandle.HEADERSTATE.READY);
                     forceToRefresh = true;
-                    if (springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), -pullHeaderManager.getThreshold())) {
-                        ViewCompat.postInvalidateOnAnimation(PullRefreshView.this);
-                    }
+                    springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), -pullHeaderManager.getThreshold());
+//                    if (springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), -pullHeaderManager.getThreshold())) {
+//                        ViewCompat.postInvalidateOnAnimation(PullRefreshView.this);
+//                    }
                 }
             });
         }
@@ -478,9 +487,10 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         @Override
         public void run() {
             if (!mIsBeingDragged && !mNestedScrollInProgress) {
-                if (springBack(getScrollX(), getScrollY(), 0, 0, 0, 0)) {
-                    ViewCompat.postInvalidateOnAnimation(PullRefreshView.this);
-                }
+                springBack(getScrollX(), getScrollY(), 0, 0, 0, 0);
+//                if (springBack(getScrollX(), getScrollY(), 0, 0, 0, 0)) {
+//                    ViewCompat.postInvalidateOnAnimation(PullRefreshView.this);
+//                }
             }
         }
     };

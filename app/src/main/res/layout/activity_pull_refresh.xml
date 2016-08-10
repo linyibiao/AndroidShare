@@ -10,10 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lyb.besttimer.androidshare.activity.PullRefreshActivity">
 
-    <com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout
+    <!--<com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:swipeMode="BOTTOM_ONLY">
+        app:swipeMode="BOTTOM_ONLY">-->
 
         <com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView
             android:id="@+id/prv"
@@ -23,8 +23,8 @@
             <com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView
                 android:id="@+id/rv"
                 android:layout_width="match_parent"
-                android:layout_height="500dp" />
+                android:layout_height="wrap_content" />
         </com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView>
-    </com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout>
+    <!--</com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout>-->
 
 </RelativeLayout>
