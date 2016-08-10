@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.lyb.besttimer.androidshare.activity.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.ItemTreeActivity;
+import com.lyb.besttimer.androidshare.activity.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.RecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         lvDatas.add(new LVData(HeaderRecyclerViewActivity.class, "RecyclerView悬浮header"));
         lvDatas.add(new LVData(ItemTreeActivity.class, "多层次RecyclerView"));
         lvDatas.add(new LVData(ItemTouchActivity.class, "方格移动RecyclerView"));
+        lvDatas.add(new LVData(PullRefreshActivity.class, "复古的下拉刷新"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 

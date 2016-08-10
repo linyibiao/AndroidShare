@@ -20,7 +20,8 @@
         <activity android:name=".activity.RecyclerViewActivity" />
         <activity android:name=".activity.HeaderRecyclerViewActivity" />
         <activity android:name=".activity.ItemTreeActivity" />
-        <activity android:name=".activity.ItemTouchActivity"></activity>
+        <activity android:name=".activity.ItemTouchActivity" />
+        <activity android:name=".activity.PullRefreshActivity"></activity>
     </application>
 
 </manifest>
