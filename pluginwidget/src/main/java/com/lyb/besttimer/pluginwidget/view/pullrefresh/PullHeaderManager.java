@@ -135,7 +135,7 @@ public class PullHeaderManager implements PullHeaderHandle {
         iv_arrow.setImageResource(resId);
     }
 
-    private String stateNormalStr = "pull refresh";
+    private String stateNormalStr = "pull ref resh";
     private String stateReadyStr = "release to refresh";
     private String stateLoadingStr = "refreshing...";
 
