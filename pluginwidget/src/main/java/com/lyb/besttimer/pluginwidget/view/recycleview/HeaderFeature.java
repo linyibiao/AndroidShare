@@ -162,17 +162,21 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     }
 
     private int showHeaderPosition() {
+        int headerPosition = RecyclerView.NO_POSITION;
         View firstView = recyclerView.getChildAt(0);
         int position = recyclerView.getChildAdapterPosition(firstView);
         for (int currPos = position; currPos >= 0; currPos--) {
-//            if (currPos < 0 || currPos >= recyclerView.getAdapter().getItemCount()) {
-//                continue;
-//            }
-            if (isHeader(recyclerView, currPos) && (currPos != position || !canHideHeader(firstView))) {
-                return currPos;
+            if (isHeader(recyclerView, currPos)) {
+                headerPosition = currPos;
+                if (currPos == position) {
+                    if ((currPos + 1 < recyclerView.getAdapter().getItemCount() && isHeader(recyclerView, currPos + 1)) || canHideHeader(firstView)) {
+                        headerPosition = RecyclerView.NO_POSITION;
+                    }
+                }
+                break;
             }
         }
-        return RecyclerView.NO_POSITION;
+        return headerPosition;
     }
 
     private boolean canHideHeader(View firstView) {

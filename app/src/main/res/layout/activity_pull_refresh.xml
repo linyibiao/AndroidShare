@@ -10,21 +10,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lyb.besttimer.androidshare.activity.PullRefreshActivity">
 
-    <!--<com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout
+    <com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView
+        android:id="@+id/prv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:swipeMode="BOTTOM_ONLY">-->
+        app:pull_arrow="@mipmap/refresh_arrow"
+        app:pull_class="com.lyb.besttimer.pluginwidget.view.pullrefresh.PullHeaderManager"
+        app:state_loading_str="正在加载..."
+        app:state_normal_str="下拉刷新"
+        app:state_ready_str="松开刷新">
 
-        <com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView
-            android:id="@+id/prv"
+        <com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView
+            android:id="@+id/rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent" />
 
-            <com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView
-                android:id="@+id/rv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView>
-    <!--</com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout>-->
+        <FrameLayout
+            android:id="@+id/rv_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView>
 
 </RelativeLayout>

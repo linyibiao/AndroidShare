@@ -7,4 +7,11 @@
             <enum name="BOTH" value="3" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="PullRefreshView">
+        <attr name="state_normal_str" format="string" />
+        <attr name="state_ready_str" format="string" />
+        <attr name="state_loading_str" format="string" />
+        <attr name="pull_arrow" format="reference" />
+        <attr name="pull_class" format="string" />
+    </declare-styleable>
 </resources>

@@ -1,6 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.pullrefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingChildHelper;
@@ -8,8 +9,8 @@ import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ScrollerCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -18,6 +19,10 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
+
+import com.lyb.besttimer.pluginwidget.R;
+
+import java.lang.reflect.Constructor;
 
 /**
  * pull refresh view
@@ -35,14 +40,12 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
 
     public PullRefreshView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init(context, attrs);
     }
 
     private View mTarget;
 
-    private PullHeaderManager pullHeaderManager;
-
-    private PullFooterManager pullFooterManager;
+    private PullHeaderHandle pullHeaderManager;
 
     private NestedScrollingChildHelper mChildHelper;
 
@@ -77,16 +80,55 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
 
     private boolean forceToRefresh;
 
-    private final static int SCROLL_TIME = 200;
     private final static long SUCCESS_STAY_TIME = 1000;
 
-    private void init(Context context) {
+    private void init(Context context, AttributeSet attrs) {
 
-        pullHeaderManager = new PullHeaderManager(context);
+        String stateNormalStr = null;
+        String stateReadyStr = null;
+        String stateLoadingStr = null;
+        int arrowResId = 0;
+        String pull_class = null;
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PullRefreshView);
+
+        int n = a.getIndexCount();
+        for (int i = 0; i < n; i++) {
+            int attr = a.getIndex(i);
+            if (attr == R.styleable.PullRefreshView_state_normal_str) {
+                stateNormalStr = a.getString(attr);
+            } else if (attr == R.styleable.PullRefreshView_state_ready_str) {
+                stateReadyStr = a.getString(attr);
+            } else if (attr == R.styleable.PullRefreshView_state_loading_str) {
+                stateLoadingStr = a.getString(attr);
+            } else if (attr == R.styleable.PullRefreshView_pull_arrow) {
+                arrowResId = a.getResourceId(attr, R.mipmap.refresh_arrow);
+            } else if (attr == R.styleable.PullRefreshView_pull_class) {
+                pull_class = a.getString(attr);
+            }
+        }
+
+        a.recycle();
+
+        if ((pullHeaderManager = getHeaderHandle(context, pull_class)) == null) {
+            pullHeaderManager = new PullHeaderManager(context);
+        }
         addView(pullHeaderManager.getHeaderView());
 
-        pullFooterManager = new PullFooterManager(context);
-        addView(pullFooterManager.getFooterView());
+        if (!TextUtils.isEmpty(stateNormalStr)) {
+            pullHeaderManager.setStateNormalStr(stateNormalStr);
+        }
+        if (!TextUtils.isEmpty(stateReadyStr)) {
+            pullHeaderManager.setStateReadyStr(stateReadyStr);
+        }
+        if (!TextUtils.isEmpty(stateLoadingStr)) {
+            pullHeaderManager.setStateLoadingStr(stateLoadingStr);
+        }
+        if (arrowResId != 0) {
+            pullHeaderManager.setImageResource(arrowResId);
+        }
+
+        pullHeaderManager.updateMSG(null);
 
         mChildHelper = new NestedScrollingChildHelper(this);
         mParentHelper = new NestedScrollingParentHelper(this);
@@ -102,6 +144,24 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
 
     }
 
+    static final Class<?>[] CONSTRUCTOR_PARAMS = new Class<?>[]{
+            Context.class
+    };
+
+    private static PullHeaderHandle getHeaderHandle(Context context, String name) {
+        if (TextUtils.isEmpty(name)) {
+            return null;
+        }
+        try {
+            final Class<PullHeaderHandle> clazz = (Class<PullHeaderHandle>) Class.forName(name, true, context.getClassLoader());
+            Constructor<PullHeaderHandle> c = clazz.getConstructor(CONSTRUCTOR_PARAMS);
+            c.setAccessible(true);
+            return c.newInstance(context);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         ensureTarget();
@@ -112,9 +172,6 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
             if (childView == pullHeaderManager.getHeaderView()) {
                 childWidthSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec) - (getPaddingLeft() + getPaddingRight()), MeasureSpec.EXACTLY);
                 childHeightSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) - (getPaddingTop() + getPaddingBottom()), MeasureSpec.EXACTLY);
-            } else if (childView == pullFooterManager.getFooterView()) {
-                childWidthSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec) - (getPaddingLeft() + getPaddingRight()), MeasureSpec.EXACTLY);
-                childHeightSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) - (getPaddingTop() + getPaddingBottom()), MeasureSpec.AT_MOST);
             } else {
                 ViewGroup.LayoutParams params = childView.getLayoutParams();
                 childWidthSpec = getChildMeasureSpec(widthMeasureSpec, getPaddingLeft() + getPaddingRight(), params.width);
@@ -134,13 +191,8 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
             View childView = getChildAt(index);
             if (childView == pullHeaderManager.getHeaderView()) {
                 childView.layout(childL, childT - childView.getMeasuredHeight(), childL + childView.getMeasuredWidth(), childT);
-            } else if (childView == pullFooterManager.getFooterView()) {
-                int paddingTop=900;
-                childView.layout(childL, childT + mTarget.getMeasuredHeight(), childL + childView.getMeasuredWidth(), childT + mTarget.getMeasuredHeight() + childView.getMeasuredHeight());
-                Log.e("what",childView.getMeasuredHeight()+";;;"+childView.getMeasuredWidth());
             } else {
                 childView.layout(childL, childT, childL + childView.getMeasuredWidth(), childT + childView.getMeasuredHeight());
-                Log.e("what",childView.getMeasuredHeight()+";;;rrr");
             }
         }
     }
@@ -151,7 +203,7 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         if (mTarget == null) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
-                if ((!child.equals(pullHeaderManager.getHeaderView())) && (!child.equals(pullFooterManager.getFooterView()))) {
+                if (!child.equals(pullHeaderManager.getHeaderView())) {
                     mTarget = child;
                     break;
                 }
@@ -159,7 +211,7 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         }
     }
 
-    public boolean canChildScrollUp() {
+    private boolean canChildScrollUp() {
         if (android.os.Build.VERSION.SDK_INT < 14) {
             if (mTarget instanceof AbsListView) {
                 final AbsListView absListView = (AbsListView) mTarget;
@@ -449,22 +501,28 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
     }
 
     /**
+     * update message
+     *
+     * @param updateMSG message,hide it if null
+     */
+    public void updateMSG(String updateMSG) {
+        pullHeaderManager.updateMSG(updateMSG);
+    }
+
+    /**
      * force to refresh
      */
     public void forceToRefresh() {
-        if (pullListener != null && pullHeaderManager.getHeaderstate() != PullHeaderHandle.HEADERSTATE.LOADING) {
-            post(new Runnable() {
-                @Override
-                public void run() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (pullListener != null && pullHeaderManager.getHeaderstate() != PullHeaderHandle.HEADERSTATE.LOADING) {
                     pullHeaderManager.setHeaderState(PullHeaderHandle.HEADERSTATE.READY);
                     forceToRefresh = true;
                     springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), -pullHeaderManager.getThreshold());
-//                    if (springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), -pullHeaderManager.getThreshold())) {
-//                        ViewCompat.postInvalidateOnAnimation(PullRefreshView.this);
-//                    }
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -606,7 +664,7 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         if (!forceToRefresh) {
             if (getScrollY() < 0) {
-                if ((dy < 0 && hasPassNestedScroll) || dy > 0) {
+                if ((dy < 0 && !canChildScrollUp() && hasPassNestedScroll) || dy > 0) {
                     final int oldScrollY = getScrollY();
                     scrollByOperation(dy);
                     final int myConsumed = getScrollY() - oldScrollY;

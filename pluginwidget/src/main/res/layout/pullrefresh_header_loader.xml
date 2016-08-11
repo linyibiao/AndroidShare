@@ -26,6 +26,7 @@
 
         <ProgressBar
             android:id="@+id/pb_loading"
+            style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -37,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_margin="20dp"
         android:orientation="vertical">
 
         <TextView
@@ -46,16 +48,16 @@
             android:layout_gravity="center_horizontal"
             android:text="state"
             android:textColor="#ffffff"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/tv_updateMSG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="update time"
+            android:text="update message"
             android:textColor="#ffffff"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
@@ -65,6 +67,6 @@
         android:layout_centerInParent="true"
         android:text="refresh complete"
         android:textColor="#ffffff"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
 </RelativeLayout>

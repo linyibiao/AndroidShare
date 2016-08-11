@@ -1,5 +1,6 @@
 package com.lyb.besttimer.pluginwidget.view.pullrefresh;
 
+import android.support.annotation.DrawableRes;
 import android.view.View;
 
 /**
@@ -21,6 +22,16 @@ public interface PullHeaderHandle {
     int getThreshold();
 
     void update(int scrollX, int scrollY);
+
+    void setImageResource(@DrawableRes int resId);
+
+    void setStateNormalStr(String stateNormalStr);
+
+    void setStateReadyStr(String stateReadyStr);
+
+    void setStateLoadingStr(String stateLoadingStr);
+
+    void updateMSG(String updateMSG);
 
     View getHeaderView();
 
