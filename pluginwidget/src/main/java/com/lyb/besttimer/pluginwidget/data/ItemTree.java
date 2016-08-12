@@ -7,12 +7,12 @@ import java.util.List;
  * element tree
  * Created by linyibiao on 2016/7/14.
  */
-public class ItemTree<T> {
+public class ItemTree {
 
     /**
      * holding object
      */
-    private T object;
+    private Object object;
 
     /**
      * whether to expand,true default
@@ -22,27 +22,27 @@ public class ItemTree<T> {
     /**
      * father tree
      */
-    private ItemTree<T> father = null;
+    private ItemTree father = null;
 
     /**
      * childs it has
      */
-    private List<ItemTree<T>> childs = new ArrayList<>();
+    private List<ItemTree> childs = new ArrayList<>();
 
     public ItemTree() {
     }
 
-    public ItemTree(T object, boolean isExpand, ItemTree father) {
+    public ItemTree(Object object, boolean isExpand, ItemTree father) {
         this.object = object;
         this.isExpand = isExpand;
         setFather(father);
     }
 
-    public T getObject() {
+    public Object getObject() {
         return this.object;
     }
 
-    public void setObject(T object) {
+    public void setObject(Object object) {
         this.object = object;
     }
 
@@ -81,7 +81,7 @@ public class ItemTree<T> {
         }
     }
 
-    public List<ItemTree<T>> getChilds() {
+    public List<ItemTree> getChilds() {
         return this.childs;
     }
 
@@ -92,8 +92,8 @@ public class ItemTree<T> {
      * @param trees targets
      * @return a list of shows that do not contain hidden elements.
      */
-    public static <T> List<ItemTree<T>> getShowTreeList(List<ItemTree<T>> trees) {
-        List<ItemTree<T>> showTrees = new ArrayList<>();
+    public static List<ItemTree> getShowTreeList(List<ItemTree> trees) {
+        List<ItemTree> showTrees = new ArrayList<>();
         for (int i = 0; i < trees.size(); i++) {
             ItemTree tree = trees.get(i);
             showTrees.addAll(ItemTree.getShowTreeList(tree));
@@ -107,11 +107,11 @@ public class ItemTree<T> {
      * @param tree target
      * @return a list of shows that do not contain hidden elements.
      */
-    public static <T> List<ItemTree> getShowTreeList(ItemTree<T> tree) {
+    public static List<ItemTree> getShowTreeList(ItemTree tree) {
         List<ItemTree> showTrees = new ArrayList<>();
         showTrees.add(tree);
         if (tree.isExpand()) {
-            for (ItemTree<T> childTree : tree.getChilds()) {
+            for (ItemTree childTree : tree.getChilds()) {
                 showTrees.addAll(ItemTree.getShowTreeList(childTree));
             }
         }
@@ -124,8 +124,8 @@ public class ItemTree<T> {
      * @param trees targets
      * @return all lists, including hidden elements
      */
-    public static <T> List<ItemTree<T>> getDeepTreeList(List<ItemTree<T>> trees) {
-        List<ItemTree<T>> deepTrees = new ArrayList<>();
+    public static List<ItemTree> getDeepTreeList(List<ItemTree> trees) {
+        List<ItemTree> deepTrees = new ArrayList<>();
         for (int i = 0; i < trees.size(); i++) {
             ItemTree tree = trees.get(i);
             deepTrees.addAll(ItemTree.getDeepTreeList(tree));
@@ -139,10 +139,10 @@ public class ItemTree<T> {
      * @param tree target
      * @return all lists, including hidden elements
      */
-    public static <T> List<ItemTree<T>> getDeepTreeList(ItemTree<T> tree) {
-        List<ItemTree<T>> deepTrees = new ArrayList<>();
+    public static List<ItemTree> getDeepTreeList(ItemTree tree) {
+        List<ItemTree> deepTrees = new ArrayList<>();
         deepTrees.add(tree);
-        for (ItemTree<T> childTree : tree.getChilds()) {
+        for (ItemTree childTree : tree.getChilds()) {
             deepTrees.addAll(ItemTree.getDeepTreeList(childTree));
         }
         return deepTrees;
@@ -155,10 +155,10 @@ public class ItemTree<T> {
      * @param layer layer,layer 0 for targets default
      * @return a list of the same layer
      */
-    public static <T> List<ItemTree<T>> getLayerTreeList(List<ItemTree<T>> trees, int layer) {
-        List<ItemTree<T>> layerTrees = new ArrayList<>();
+    public static List<ItemTree> getLayerTreeList(List<ItemTree> trees, int layer) {
+        List<ItemTree> layerTrees = new ArrayList<>();
         for (int i = 0; i < trees.size(); i++) {
-            List<ItemTree<T>> childLayerTrees = ItemTree.getLayerTreeList(trees.get(i), layer);
+            List<ItemTree> childLayerTrees = ItemTree.getLayerTreeList(trees.get(i), layer);
             layerTrees.addAll(childLayerTrees);
         }
         return layerTrees;
@@ -171,11 +171,11 @@ public class ItemTree<T> {
      * @param layer layer,layer 0 for target default
      * @return a list of the same layer
      */
-    public static <T> List<ItemTree<T>> getLayerTreeList(ItemTree<T> tree, int layer) {
-        List<ItemTree<T>> layerTrees = new ArrayList<>();
+    public static List<ItemTree> getLayerTreeList(ItemTree tree, int layer) {
+        List<ItemTree> layerTrees = new ArrayList<>();
         if (layer > 0) {
-            for (ItemTree<T> childTree : tree.getChilds()) {
-                List<ItemTree<T>> childLayerTrees = ItemTree.getLayerTreeList(childTree, layer - 1);
+            for (ItemTree childTree : tree.getChilds()) {
+                List<ItemTree> childLayerTrees = ItemTree.getLayerTreeList(childTree, layer - 1);
                 layerTrees.addAll(childLayerTrees);
             }
         } else

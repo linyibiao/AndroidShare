@@ -33,18 +33,18 @@ public class ItemTouchActivity extends BaseActivity {
 
         Random random = new Random(System.currentTimeMillis());
 
-        List<ItemTree<RVData>> itemTrees = new ArrayList<>();
+        List<ItemTree> itemTrees = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            ItemTree<RVData> itemTree0 = new ItemTree<>(new RVData("层次" + i, 0), true, null);
+            ItemTree itemTree0 = new ItemTree(new RVData("层次" + i, 0), true, null);
             itemTrees.add(itemTree0);
             for (int j = 0; j < 1 + random.nextInt(3); j++) {
-                ItemTree<RVData> itemTree1 = new ItemTree<>(new RVData("层次" + i + j, 1), true, itemTree0);
+                ItemTree itemTree1 = new ItemTree(new RVData("层次" + i + j, 1), true, itemTree0);
                 for (int k = 0; k < 1 + random.nextInt(3); k++) {
-                    new ItemTree<>(new RVData("层次" + i + j + k, 2), true, itemTree1);
+                    new ItemTree(new RVData("层次" + i + j + k, 2), true, itemTree1);
                 }
             }
         }
-        recyclerView.setAdapter(new MyAdapter(new TreeDataManager<>(recyclerView, itemTrees)));
+        recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
 
         new ItemTouchFeature(recyclerView, ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
 
@@ -85,7 +85,7 @@ public class ItemTouchActivity extends BaseActivity {
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {//获取删除的操作方向符，如果为0则没有删除操作响应
                 MyAdapter myAdapter = (MyAdapter) recyclerView.getAdapter();
-                RVData rvData = myAdapter.getTreeDataManager().getItem(viewHolder.getAdapterPosition()).getObject();
+                RVData rvData = (RVData) myAdapter.getTreeDataManager().getItem(viewHolder.getAdapterPosition()).getObject();
                 if (rvData.type != 1) {
                     return 0;
                 }
@@ -95,7 +95,7 @@ public class ItemTouchActivity extends BaseActivity {
             @Override
             public int getDragDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {//获取拖拽的操作方向符，如果为0则没有拖拽操作响应
                 MyAdapter myAdapter = (MyAdapter) recyclerView.getAdapter();
-                RVData rvData = myAdapter.getTreeDataManager().getItem(viewHolder.getAdapterPosition()).getObject();
+                RVData rvData = (RVData) myAdapter.getTreeDataManager().getItem(viewHolder.getAdapterPosition()).getObject();
                 if (rvData.type != 1) {
                     return 0;
                 }
@@ -133,13 +133,13 @@ public class ItemTouchActivity extends BaseActivity {
 
     private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
 
-        private TreeDataManager<RVData> treeDataManager;
+        private TreeDataManager treeDataManager;
 
-        public MyAdapter(TreeDataManager<RVData> treeDataManager) {
+        public MyAdapter(TreeDataManager treeDataManager) {
             this.treeDataManager = treeDataManager;
         }
 
-        public TreeDataManager<RVData> getTreeDataManager() {
+        public TreeDataManager getTreeDataManager() {
             return treeDataManager;
         }
 
@@ -162,8 +162,8 @@ public class ItemTouchActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(Holder holder, final int position) {
-            final ItemTree<RVData> itemTree = treeDataManager.getItem(position);
-            final RVData rvData = itemTree.getObject();
+            final ItemTree itemTree = treeDataManager.getItem(position);
+            final RVData rvData = (RVData) itemTree.getObject();
             TextView textView = holder.tv;
             textView.setText(rvData.show);
             Button btn = holder.btn;
@@ -183,7 +183,7 @@ public class ItemTouchActivity extends BaseActivity {
 
         @Override
         public int getItemViewType(int position) {
-            return treeDataManager.getItem(position).getObject().type;
+            return ((RVData) treeDataManager.getItem(position).getObject()).type;
         }
 
         @Override

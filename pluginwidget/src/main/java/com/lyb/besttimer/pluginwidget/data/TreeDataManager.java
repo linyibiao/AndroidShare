@@ -10,15 +10,15 @@ import java.util.List;
  * tree data manager
  * Created by linyibiao on 2016/7/22.
  */
-public class TreeDataManager<T> {
+public class TreeDataManager {
 
     private RecyclerView recyclerView;
 
-    private List<ItemTree<T>> itemTrees = new ArrayList<>();
+    private List<ItemTree> itemTrees = new ArrayList<>();
 
-    private List<ItemTree<T>> activedTrees = new ArrayList<>();
+    private List<ItemTree> activedTrees = new ArrayList<>();
 
-    public TreeDataManager(RecyclerView recyclerView, List<ItemTree<T>> itemTrees) {
+    public TreeDataManager(RecyclerView recyclerView, List<ItemTree> itemTrees) {
         this.recyclerView = recyclerView;
         this.itemTrees = itemTrees;
         updateActivedData();
@@ -33,7 +33,7 @@ public class TreeDataManager<T> {
         if (position < 0 || position >= activedTrees.size()) {
             return;
         }
-        ItemTree<T> targetTree = activedTrees.get(position);
+        ItemTree targetTree = activedTrees.get(position);
         int positionStart = position + 1;
         int itemCount;
         if (targetTree.isExpand()) {
@@ -49,7 +49,7 @@ public class TreeDataManager<T> {
         }
     }
 
-    public ItemTree<T> getItem(int position) {
+    public ItemTree getItem(int position) {
         return activedTrees.get(position);
     }
 
@@ -57,7 +57,7 @@ public class TreeDataManager<T> {
         return activedTrees.size();
     }
 
-    public int indexOf(ItemTree<T> itemTree) {
+    public int indexOf(ItemTree itemTree) {
         return activedTrees.indexOf(itemTree);
     }
 
@@ -66,7 +66,7 @@ public class TreeDataManager<T> {
     }
 
     public void remove(int position) {
-        ItemTree<T> itemTree = activedTrees.get(position);
+        ItemTree itemTree = activedTrees.get(position);
         if (itemTree.getFather() != null) {
             itemTree.getFather().removeChild(itemTree);
         } else {
@@ -76,17 +76,17 @@ public class TreeDataManager<T> {
     }
 
     public boolean canMove(int position1, int position2) {
-        ItemTree<T> itemTree1 = activedTrees.get(position1);
-        ItemTree<T> itemTree2 = activedTrees.get(position2);
+        ItemTree itemTree1 = activedTrees.get(position1);
+        ItemTree itemTree2 = activedTrees.get(position2);
         return itemTree1.getFather() == itemTree2.getFather();
     }
 
     public boolean move(int position1, int position2) {
-        ItemTree<T> itemTree1 = activedTrees.get(position1);
-        ItemTree<T> itemTree2 = activedTrees.get(position2);
-        List<ItemTree<T>> childs = null;
+        ItemTree itemTree1 = activedTrees.get(position1);
+        ItemTree itemTree2 = activedTrees.get(position2);
+        List<ItemTree> childs = null;
         if (itemTree1.getFather() == itemTree2.getFather()) {
-            ItemTree<T> father = itemTree1.getFather();
+            ItemTree father = itemTree1.getFather();
             if (father == null) {
                 childs = itemTrees;
             } else {
