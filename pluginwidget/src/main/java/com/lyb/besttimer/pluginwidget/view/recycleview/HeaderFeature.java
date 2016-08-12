@@ -41,6 +41,37 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
 
     public void applyFeature() {
         recyclerView.addOnScrollListener(this);
+        recyclerView.getAdapter().registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                updateHeader();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                updateHeader();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                updateHeader();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                updateHeader();
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+                updateHeader();
+            }
+        });
     }
 
 
@@ -70,7 +101,14 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
             return;
         }
         showAllItem();
+        int preTargetPosition = getTargetAdapterPosition();
         int headerPosition = showHeaderPosition();
+        if (preTargetPosition != RecyclerView.NO_POSITION && preTargetPosition != headerPosition) {
+            RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(preTargetPosition);
+            if (holder != null) {
+                recyclerView.getAdapter().onBindViewHolder(holder, preTargetPosition);
+            }
+        }
         if (headerPosition != RecyclerView.NO_POSITION) {
             if (getTargetAdapterPosition() != headerPosition) {
                 releaseHeader();
