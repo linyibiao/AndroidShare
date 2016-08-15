@@ -45,31 +45,31 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
             @Override
             public void onChanged() {
                 super.onChanged();
-                updateHeader();
+                postUpdateHeader();
             }
 
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
-                updateHeader();
+                postUpdateHeader();
             }
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                updateHeader();
+                postUpdateHeader();
             }
 
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 super.onItemRangeRemoved(positionStart, itemCount);
-                updateHeader();
+                postUpdateHeader();
             }
 
             @Override
             public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
                 super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-                updateHeader();
+                postUpdateHeader();
             }
         });
     }
@@ -83,7 +83,12 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        updateHeader();
+        postUpdateHeader();
+    }
+
+    private void postUpdateHeader() {
+        recyclerView.removeCallbacks(postUpdateHeader);
+        recyclerView.post(postUpdateHeader);
     }
 
     private Runnable postUpdateHeader = new Runnable() {
@@ -94,12 +99,12 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
     };
 
     private void updateHeader() {
-        if (recyclerView.isAnimating()) {
-            // TODO: 2016/7/22 I have to use recyclerView.isAnimating(),because the return of recyclerView.getChildAdapterPosition is not normal,what can I do?
-            recyclerView.removeCallbacks(postUpdateHeader);
-            recyclerView.post(postUpdateHeader);
-            return;
-        }
+//        if (recyclerView.isAnimating()) {
+//            // TODO: 2016/7/22 I have to use recyclerView.isAnimating(),because the return of recyclerView.getChildAdapterPosition is not normal,what can I do?
+//            recyclerView.removeCallbacks(postUpdateHeader);
+//            recyclerView.post(postUpdateHeader);
+//            return;
+//        }
         showAllItem();
         int preTargetPosition = getTargetAdapterPosition();
         int headerPosition = showHeaderPosition();
@@ -128,9 +133,6 @@ public abstract class HeaderFeature extends RecyclerView.OnScrollListener {
         for (int index = 0; index < recyclerView.getChildCount(); index++) {
             View nextChild = recyclerView.getChildAt(index);
             int position = recyclerView.getChildAdapterPosition(nextChild);
-//            if (position < 0 || position >= recyclerView.getAdapter().getItemCount()) {
-//                continue;
-//            }
             if (isHeader(recyclerView, position)) {
                 if (position != headerPosition) {
                     int ScrollX = 0;
