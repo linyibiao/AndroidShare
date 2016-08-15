@@ -15,7 +15,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setTitle(getIntent().getStringExtra(Constants.TITLE));
+        setTitle(getIntent().getStringExtra(Constants.TITLE));
     }
 
 }
