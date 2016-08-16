@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
@@ -18,7 +19,7 @@ public class TextViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_view);
         BaseTextView btv = (BaseTextView) findViewById(R.id.btv);
-        btv.addBGDrawCaller(new OneDrawCaller());
+        btv.getDrawCallerManager().addBGDrawCaller(new OneDrawCaller());
     }
 
     private class OneDrawCaller implements DrawCaller {
@@ -26,7 +27,10 @@ public class TextViewActivity extends AppCompatActivity {
         private int padding = 4;
         private int triangleW = 10;
         private int triangleH = 10;
-        private int lineW = 4;
+        private float lineW = 4;
+
+        @ColorInt
+        private int color = 0xffff0000;
 
         @Override
         public Rect getPadding() {
@@ -34,11 +38,38 @@ public class TextViewActivity extends AppCompatActivity {
         }
 
         @Override
+        public void setbackgroundcolor(@ColorInt int color) {
+            if (this.color == color) {
+                return;
+            }
+            this.color = color;
+        }
+
+        @Override
         public void ondraw(Canvas canvas) {
             int width = canvas.getWidth();
             int height = canvas.getHeight();
-            int extraPad = lineW / 2;
+
             Path path = new Path();
+
+            drawPath(path, width, height, lineW / 2);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            paint.setColor(0xFFEAE2DB);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(lineW);
+            canvas.drawPath(path, paint);
+
+            drawPath(path, width, height, lineW);
+            paint.setColor(color);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setStrokeWidth(lineW);
+            canvas.drawPath(path, paint);
+
+        }
+
+        private void drawPath(Path path, int width, int height, float extraPad) {
+            path.reset();
             path.moveTo(triangleW + extraPad, extraPad);
             path.lineTo(width - extraPad, extraPad);
             path.lineTo(width - extraPad, height - extraPad);
@@ -46,13 +77,6 @@ public class TextViewActivity extends AppCompatActivity {
             path.lineTo(extraPad, height / 2);
             path.lineTo(triangleW + extraPad, (height - triangleH) / 2);
             path.close();
-
-            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setColor(0xFFEAE2DB);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(lineW);
-            canvas.drawPath(path, paint);
-
         }
 
     }

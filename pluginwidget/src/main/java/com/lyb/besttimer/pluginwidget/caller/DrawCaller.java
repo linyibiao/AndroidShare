@@ -11,6 +11,8 @@ public interface DrawCaller {
 
     Rect getPadding();
 
+    void setbackgroundcolor(int color);
+
     void ondraw(Canvas canvas);
 
 }
