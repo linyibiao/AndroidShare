@@ -17,6 +17,7 @@ import com.lyb.besttimer.androidshare.activity.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.RecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
+import com.lyb.besttimer.androidshare.activity.TextViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         lvDatas.add(new LVData(ItemTreeActivity.class, "多层次RecyclerView"));
         lvDatas.add(new LVData(ItemTouchActivity.class, "方格移动RecyclerView"));
         lvDatas.add(new LVData(PullRefreshActivity.class, "复古的下拉刷新"));
+        lvDatas.add(new LVData(TextViewActivity.class, "textview基类"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 

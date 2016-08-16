@@ -14,4 +14,7 @@
         <attr name="pull_arrow" format="reference" />
         <attr name="pull_class" format="string" />
     </declare-styleable>
+    <declare-styleable name="BaseTextView">
+
+    </declare-styleable>
 </resources>
