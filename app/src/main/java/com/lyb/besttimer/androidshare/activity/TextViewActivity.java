@@ -27,7 +27,7 @@ public class TextViewActivity extends AppCompatActivity {
         private int padding = 4;
         private int triangleW = 10;
         private int triangleH = 10;
-        private float lineW = 4;
+        private float lineW = 6;
 
         @ColorInt
         private int color = 0xffff0000;
