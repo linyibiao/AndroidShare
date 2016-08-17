@@ -22,7 +22,8 @@
         <activity android:name=".activity.ItemTreeActivity" />
         <activity android:name=".activity.ItemTouchActivity" />
         <activity android:name=".activity.PullRefreshActivity" />
-        <activity android:name=".activity.TextViewActivity"></activity>
+        <activity android:name=".activity.TextViewActivity" />
+        <activity android:name=".activity.DecorationActivity"></activity>
     </application>
 
 </manifest>

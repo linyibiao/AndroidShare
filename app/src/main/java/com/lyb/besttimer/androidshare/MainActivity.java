@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.lyb.besttimer.androidshare.activity.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.ItemTreeActivity;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         lvDatas.add(new LVData(ItemTouchActivity.class, "方格移动RecyclerView"));
         lvDatas.add(new LVData(PullRefreshActivity.class, "复古的下拉刷新"));
         lvDatas.add(new LVData(TextViewActivity.class, "textview基类"));
+        lvDatas.add(new LVData(DecorationActivity.class, "decoration模板"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 

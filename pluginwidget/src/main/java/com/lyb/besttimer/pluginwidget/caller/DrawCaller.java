@@ -2,6 +2,7 @@ package com.lyb.besttimer.pluginwidget.caller;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.ColorInt;
 
 /**
  * draw callback
@@ -11,7 +12,7 @@ public interface DrawCaller {
 
     Rect getPadding();
 
-    void setbackgroundcolor(int color);
+    void setbackgroundcolor(@ColorInt int color);
 
     void ondraw(Canvas canvas);
 
