@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "0.0.19"       //这个是版本号，必须填写
+version = "0.0.1"       //这个是版本号，必须填写
 
 android {
     compileSdkVersion 24
@@ -31,9 +31,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
-    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.google.code.gson:gson:2.2.4'
 }
 
 def siteUrl = 'https://github.com/linyibiao/AndroidShare'      // 项目的主页   这个是说明，可随便填
@@ -46,7 +44,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'To make widget plugable'    // #CONFIG# // project title
+                name 'To make network convenience'    // #CONFIG# // project title
                 url siteUrl
                 // Set your license
                 licenses {
@@ -100,7 +98,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "plugin_widget"     // #CONFIG# project name in jcenter
+        name = "plugin_network"     // #CONFIG# project name in jcenter
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
