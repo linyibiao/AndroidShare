@@ -34,7 +34,7 @@ public class DecorationActivity extends BaseActivity {
         }
         recyclerView.setAdapter(new MyAdapter(rvDates));
 
-        recyclerView.addItemDecoration(new BaseItemDecoration(2, 5, true, BaseItemDecoration.DRAWORIENTATION.VERTICAL, new ColorDecorateDetail(0xaaff0000)));
+        recyclerView.addItemDecoration(new BaseItemDecoration(2, 5, true, BaseItemDecoration.DRAWORIENTATION.BOTH, new ColorDecorateDetail(0xaaff0000)));
 
     }
 

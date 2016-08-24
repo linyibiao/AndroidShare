@@ -73,8 +73,8 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
 
     private int getLeft(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition) {
         int left = 0;
-//        boolean isFirst = (canScrollHorizontally && adapterPosition < numPerForm) || (!canScrollHorizontally && adapterPosition % numPerForm == 0);
-        boolean isFirst = (canScrollHorizontally && (adapterPosition - numPerForm) < 0) || (!canScrollHorizontally && adapterPosition % numPerForm == 0);
+        boolean isFirst = (canScrollHorizontally && adapterPosition < numPerForm) || (!canScrollHorizontally && adapterPosition % numPerForm == 0);
+//        boolean isFirst = (canScrollHorizontally && (adapterPosition - numPerForm) < 0) || (!canScrollHorizontally && adapterPosition % numPerForm == 0);
         if (hasRound) {
             if (isFirst) {
                 left = lineSize;
@@ -85,8 +85,8 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
 
     private int getTop(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition) {
         int top = 0;
-//        boolean isFirst = (canScrollHorizontally && adapterPosition % numPerForm == 0) || (!canScrollHorizontally && adapterPosition < numPerForm);
-        boolean isFirst = (canScrollHorizontally && adapterPosition % numPerForm == 0) || (!canScrollHorizontally && (adapterPosition - numPerForm) < 0);
+        boolean isFirst = (canScrollHorizontally && adapterPosition % numPerForm == 0) || (!canScrollHorizontally && adapterPosition < numPerForm);
+//        boolean isFirst = (canScrollHorizontally && adapterPosition % numPerForm == 0) || (!canScrollHorizontally && (adapterPosition - numPerForm) < 0);
         if (hasRound) {
             if (isFirst) {
                 top = lineSize;
@@ -100,8 +100,8 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         int itemCount = parent.getAdapter().getItemCount();
         int formCount = (itemCount - 1) / numPerForm + 1;
 
-//        boolean isLast = (canScrollHorizontally && adapterPosition / numPerForm == formCount - 1) || (!canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0);
-        boolean isLast = (canScrollHorizontally && (adapterPosition + numPerForm) > itemCount - 1) || (!canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0);
+        boolean isLast = (canScrollHorizontally && adapterPosition / numPerForm == formCount - 1) || (!canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0);
+//        boolean isLast = (canScrollHorizontally && (adapterPosition + numPerForm) > itemCount - 1) || (!canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0);
         if (drawOrientation == DRAWORIENTATION.HORIZONTAL) {
             int right = 0;
             if (hasRound) {
@@ -126,8 +126,8 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         int itemCount = parent.getAdapter().getItemCount();
         int formCount = (itemCount - 1) / numPerForm + 1;
 
-//        boolean isLast = (canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0) || (!canScrollHorizontally && adapterPosition / numPerForm == formCount - 1);
-        boolean isLast = (canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0) || (!canScrollHorizontally && (adapterPosition + numPerForm) > itemCount - 1);
+        boolean isLast = (canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0) || (!canScrollHorizontally && adapterPosition / numPerForm == formCount - 1);
+//        boolean isLast = (canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0) || (!canScrollHorizontally && (adapterPosition + numPerForm) > itemCount - 1);
         if (drawOrientation == DRAWORIENTATION.VERTICAL) {
             int bottom = 0;
             if (hasRound) {
