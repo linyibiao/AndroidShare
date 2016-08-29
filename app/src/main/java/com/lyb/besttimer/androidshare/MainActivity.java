@@ -17,6 +17,7 @@ import com.lyb.besttimer.androidshare.activity.ItemTreeActivity;
 import com.lyb.besttimer.androidshare.activity.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.RecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
+import com.lyb.besttimer.androidshare.activity.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.TextViewActivity;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         lvDatas.add(new LVData(PullRefreshActivity.class, "复古的下拉刷新"));
         lvDatas.add(new LVData(TextViewActivity.class, "textview基类"));
         lvDatas.add(new LVData(DecorationActivity.class, "decoration模板"));
+        lvDatas.add(new LVData(SwipeLayoutActivity.class, "swipe layout"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 
