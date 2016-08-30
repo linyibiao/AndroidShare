@@ -87,6 +87,7 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         String stateNormalStr = null;
         String stateReadyStr = null;
         String stateLoadingStr = null;
+        String stateSuccessStr = null;
         int arrowResId = 0;
         String pull_class = null;
 
@@ -101,6 +102,8 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
                 stateReadyStr = a.getString(attr);
             } else if (attr == R.styleable.PullRefreshView_state_loading_str) {
                 stateLoadingStr = a.getString(attr);
+            } else if (attr == R.styleable.PullRefreshView_state_success_str) {
+                stateSuccessStr = a.getString(attr);
             } else if (attr == R.styleable.PullRefreshView_pull_arrow) {
                 arrowResId = a.getResourceId(attr, R.mipmap.refresh_arrow);
             } else if (attr == R.styleable.PullRefreshView_pull_class) {
@@ -123,6 +126,9 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         }
         if (!TextUtils.isEmpty(stateLoadingStr)) {
             pullHeaderManager.setStateLoadingStr(stateLoadingStr);
+        }
+        if (!TextUtils.isEmpty(stateSuccessStr)) {
+            pullHeaderManager.setStateSuccessStr(stateSuccessStr);
         }
         if (arrowResId != 0) {
             pullHeaderManager.setImageResource(arrowResId);

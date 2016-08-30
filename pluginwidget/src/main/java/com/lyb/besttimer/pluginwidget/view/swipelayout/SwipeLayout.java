@@ -167,6 +167,13 @@ public class SwipeLayout extends ViewGroup {
 
     }
 
+    /**
+     * reset state
+     */
+    public void reset() {
+        viewDragHelper.smoothSlideViewTo(getTarget(), 0, 0);
+    }
+
     private View getTarget() {
         for (int index = 0; index < getChildCount(); index++) {
             View childView = getChildAt(index);
@@ -224,6 +231,9 @@ public class SwipeLayout extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         viewDragHelper.processTouchEvent(event);
+        if (viewDragHelper.getViewDragState() != ViewDragHelper.STATE_IDLE) {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        }
         return true;
     }
 

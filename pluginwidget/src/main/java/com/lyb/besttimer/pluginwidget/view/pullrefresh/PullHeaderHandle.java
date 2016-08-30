@@ -31,6 +31,8 @@ public interface PullHeaderHandle {
 
     void setStateLoadingStr(String stateLoadingStr);
 
+    void setStateSuccessStr(String stateSuccessStr);
+
     void updateMSG(String updateMSG);
 
     View getHeaderView();

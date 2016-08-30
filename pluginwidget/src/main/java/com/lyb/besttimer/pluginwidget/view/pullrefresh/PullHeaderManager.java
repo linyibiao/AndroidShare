@@ -138,6 +138,7 @@ public class PullHeaderManager implements PullHeaderHandle {
     private String stateNormalStr = "pull refresh";
     private String stateReadyStr = "release to refresh";
     private String stateLoadingStr = "refreshing...";
+    private String stateSuccessStr = "refresh complete";
 
     @Override
     public void setStateNormalStr(String stateNormalStr) {
@@ -160,6 +161,14 @@ public class PullHeaderManager implements PullHeaderHandle {
         this.stateLoadingStr = stateLoadingStr;
         if (headerstate == HEADERSTATE.LOADING) {
             tv_state.setText(stateLoadingStr);
+        }
+    }
+
+    @Override
+    public void setStateSuccessStr(String stateSuccessStr) {
+        this.stateSuccessStr = stateSuccessStr;
+        if (headerstate == HEADERSTATE.SUCCESS) {
+            tv_success.setText(stateSuccessStr);
         }
     }
 
@@ -228,6 +237,7 @@ public class PullHeaderManager implements PullHeaderHandle {
         ll_state_show.setVisibility(View.INVISIBLE);
 
         tv_success.setVisibility(View.VISIBLE);
+        tv_success.setText(stateSuccessStr);
 
     }
 
