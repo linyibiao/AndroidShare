@@ -117,6 +117,7 @@ public class SwipeLayout extends ViewGroup {
         if (swipeOnPreDrawListener != null) {
             getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
         }
+        menuAdapter.setRealAdapter(null);
     }
 
     private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
