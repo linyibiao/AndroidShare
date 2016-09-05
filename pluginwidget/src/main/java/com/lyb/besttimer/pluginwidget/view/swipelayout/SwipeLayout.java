@@ -12,6 +12,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
+
 /**
  * swipe layout
  * Created by linyibiao on 2016/8/26.
@@ -37,6 +39,7 @@ public class SwipeLayout extends ViewGroup {
 
     private SwipeOnPreDrawListener swipeOnPreDrawListener;
     private RecyclerView menuLayout;
+    private MenuAdapter menuAdapter;
 
     private boolean toNormalFromNothing = false;
 
@@ -46,12 +49,38 @@ public class SwipeLayout extends ViewGroup {
 
         menuLayout = new RecyclerView(context);
         menuLayout.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        menuLayout.setAdapter(menuAdapter = new MenuAdapter());
         ajustMenuLayoutManager();
         this.addView(menuLayout);
     }
 
+    private class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private RecyclerView.Adapter realAdapter;
+
+        public void setRealAdapter(RecyclerView.Adapter realAdapter) {
+            this.realAdapter = realAdapter;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return realAdapter.onCreateViewHolder(parent, viewType);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            realAdapter.onBindViewHolder(holder, position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return realAdapter != null ? realAdapter.getItemCount() : 0;
+        }
+
+    }
+
     public void setAdapter(RecyclerView.Adapter adapter) {
-        menuLayout.setAdapter(adapter);
+        menuAdapter.setRealAdapter(adapter);
     }
 
     public void setLeftPos(boolean leftPos) {
@@ -142,36 +171,43 @@ public class SwipeLayout extends ViewGroup {
             } else {
                 smoothSlideViewToWithNV();
             }
-            ViewCompat.postInvalidateOnAnimation(SwipeLayout.this);
         }
 
         private void smoothSlideViewTo(boolean velToLeft) {
             if (isLeftPos) {
-                viewDragHelper.smoothSlideViewTo(getTarget(), velToLeft ? 0 : menuLayout.getWidth(), 0);
+                smoothSlideViewToByTarget(velToLeft ? 0 : menuLayout.getWidth(), 0);
             } else {
-                viewDragHelper.smoothSlideViewTo(getTarget(), velToLeft ? -menuLayout.getWidth() : 0, 0);
+                smoothSlideViewToByTarget(velToLeft ? -menuLayout.getWidth() : 0, 0);
             }
         }
 
         private void smoothSlideViewToWithNV() {
             if (toNormalFromNothing && getTarget().getLeft() != 0) {
-                viewDragHelper.smoothSlideViewTo(getTarget(), 0, 0);
+                smoothSlideViewToByTarget(0, 0);
             } else {
                 if (isLeftPos) {
-                    viewDragHelper.smoothSlideViewTo(getTarget(), getTarget().getLeft() < menuLayout.getWidth() / 2 ? 0 : menuLayout.getWidth(), 0);
+                    smoothSlideViewToByTarget(getTarget().getLeft() < menuLayout.getWidth() / 2 ? 0 : menuLayout.getWidth(), 0);
                 } else {
-                    viewDragHelper.smoothSlideViewTo(getTarget(), getTarget().getLeft() > -menuLayout.getWidth() / 2 ? 0 : -menuLayout.getWidth(), 0);
+                    smoothSlideViewToByTarget(getTarget().getLeft() > -menuLayout.getWidth() / 2 ? 0 : -menuLayout.getWidth(), 0);
                 }
             }
         }
 
     }
 
+    private void smoothSlideViewToByTarget(int finalLeft, int finalTop) {
+        if (getTarget().getLeft() == finalLeft && getTarget().getTop() == finalTop && viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
+            return;
+        }
+        viewDragHelper.smoothSlideViewTo(getTarget(), finalLeft, finalTop);
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
     /**
      * reset state
      */
     public void reset() {
-        viewDragHelper.smoothSlideViewTo(getTarget(), 0, 0);
+        smoothSlideViewToByTarget(0, 0);
     }
 
     private View getTarget() {
@@ -217,6 +253,8 @@ public class SwipeLayout extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (viewDragHelper.shouldInterceptTouchEvent(ev)) {
+            clearTouchFromRecyclerView();
+            getParent().requestDisallowInterceptTouchEvent(true);
             return true;
         } else {
             if (viewDragHelper.findTopChildUnder((int) ev.getX(), (int) ev.getY()) == getTarget() && getTarget().getLeft() != 0) {
@@ -230,11 +268,23 @@ public class SwipeLayout extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        int preState = viewDragHelper.getViewDragState();
         viewDragHelper.processTouchEvent(event);
-        if (viewDragHelper.getViewDragState() != ViewDragHelper.STATE_IDLE) {
-            getParent().requestDisallowInterceptTouchEvent(true);
+        int currState = viewDragHelper.getViewDragState();
+        if (preState != currState && currState == ViewDragHelper.STATE_DRAGGING) {
+            if (getTarget().getLeft() == 0) {
+                menuAdapter.notifyDataSetChanged();
+            }
+            clearTouchFromRecyclerView();
         }
         return true;
+    }
+
+    private void clearTouchFromRecyclerView() {
+        if (getParent() instanceof BaseRecyclerView) {
+            BaseRecyclerView baseRecyclerView = (BaseRecyclerView) getParent();
+            baseRecyclerView.dispatchOnItemTouch(MotionEvent.ACTION_CANCEL);
+        }
     }
 
 }

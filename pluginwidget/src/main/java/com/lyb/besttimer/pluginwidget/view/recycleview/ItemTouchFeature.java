@@ -10,6 +10,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public abstract class ItemTouchFeature extends ItemTouchHelper.SimpleCallback {
 
     protected RecyclerView recyclerView;
+    private ItemTouchHelper itemTouchHelper = new ItemTouchHelper(this);
 
     public ItemTouchFeature(RecyclerView recyclerView, int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
@@ -17,7 +18,11 @@ public abstract class ItemTouchFeature extends ItemTouchHelper.SimpleCallback {
     }
 
     public void applyFeature() {
-        new ItemTouchHelper(this).attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    public void removeFeature() {
+        itemTouchHelper.attachToRecyclerView(null);
     }
 
 }

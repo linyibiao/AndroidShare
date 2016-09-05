@@ -1,13 +1,18 @@
 package com.lyb.besttimer.androidshare.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
+import com.lyb.besttimer.pluginwidget.view.recycleview.ItemTouchFeature;
 import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout;
 
 import java.util.ArrayList;
@@ -15,16 +20,86 @@ import java.util.List;
 
 public class SwipeLayoutActivity extends BaseActivity {
 
+    private BaseRecyclerView baseRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_layout);
-        SwipeLayout swipeLayout = (SwipeLayout) findViewById(R.id.sl);
-        List<String> strings = new ArrayList<>();
-        strings.add("what");
-        strings.add("the");
-        strings.add("hell");
-        swipeLayout.setAdapter(new MenuAdapter(strings));
+        baseRecyclerView = (BaseRecyclerView) findViewById(R.id.brv);
+        baseRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        baseRecyclerView.setAdapter(new SimpleAdapter());
+
+        new ItemTouchFeature(baseRecyclerView, ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+
+        }.applyFeature();
+        baseRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    for (int index = 0; index < baseRecyclerView.getChildCount(); index++) {
+                        View childView = baseRecyclerView.getChildAt(index);
+                        if (childView instanceof SwipeLayout) {
+                            ((SwipeLayout) childView).reset();
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    private class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.MenuHolder> {
+
+        protected class MenuHolder extends RecyclerView.ViewHolder {
+
+            public MenuHolder(View itemView) {
+                super(itemView);
+            }
+
+            public void fillView() {
+                SwipeLayout swipeLayout = (SwipeLayout) itemView;
+                List<String> strings = new ArrayList<>();
+                strings.add("what");
+                strings.add("the");
+                strings.add("hell");
+                swipeLayout.setAdapter(new MenuAdapter(strings));
+//                swipeLayout.setTouchHolderCall(new SwipeLayout.TouchHolderCall() {
+//                    @Override
+//                    public void touchHold() {
+//                        baseRecyclerView.dispatchOnItemTouch(MotionEvent.ACTION_CANCEL);
+//                    }
+//                });
+            }
+
+        }
+
+        @Override
+        public MenuHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new MenuHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_swipe_layout, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(MenuHolder holder, int position) {
+            holder.fillView();
+        }
+
+        @Override
+        public int getItemCount() {
+            return 20;
+        }
+
     }
 
     private class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> {
@@ -41,7 +116,7 @@ public class SwipeLayoutActivity extends BaseActivity {
 
             public MenuHolder(View itemView) {
                 super(itemView);
-                btn_str = (Button) itemView.findViewById(com.lyb.besttimer.pluginwidget.R.id.btn_str);
+                btn_str = (Button) itemView.findViewById(R.id.btn_str);
             }
 
             public void fillView(String s) {
@@ -52,7 +127,7 @@ public class SwipeLayoutActivity extends BaseActivity {
 
         @Override
         public MenuHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MenuHolder(LayoutInflater.from(parent.getContext()).inflate(com.lyb.besttimer.pluginwidget.R.layout.swipelayout_menu_item, parent, false));
+            return new MenuHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.swipelayout_menu_item, parent, false));
         }
 
         @Override

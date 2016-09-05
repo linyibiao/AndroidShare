@@ -9,15 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lyb.besttimer.androidshare.activity.SwipeLayoutActivity">
 
-    <com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout
-        android:id="@+id/sl"
+    <com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView
+        android:id="@+id/brv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="滑动按钮" />
-    </com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
