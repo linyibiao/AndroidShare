@@ -40,6 +40,7 @@ public class SwipeLayout extends ViewGroup {
     private SwipeOnPreDrawListener swipeOnPreDrawListener;
     private RecyclerView menuLayout;
     private MenuAdapter menuAdapter;
+    private RecyclerView.Adapter<?> realAdapter;
 
     private boolean toNormalFromNothing = false;
 
@@ -80,7 +81,12 @@ public class SwipeLayout extends ViewGroup {
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
-        menuAdapter.setRealAdapter(adapter);
+        realAdapter = adapter;
+    }
+
+    private void updateMenuAdapter() {
+        menuAdapter.setRealAdapter(realAdapter);
+        menuAdapter.notifyDataSetChanged();
     }
 
     public void setLeftPos(boolean leftPos) {
@@ -152,7 +158,11 @@ public class SwipeLayout extends ViewGroup {
 
         @Override
         public int getViewHorizontalDragRange(View child) {
-            return menuLayout.getWidth();
+            if (realAdapter != null && realAdapter.getItemCount() > 0) {
+                return 1;
+            }
+            return 0;
+//            return menuLayout.getWidth();
         }
 
         @Override
@@ -253,6 +263,9 @@ public class SwipeLayout extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (viewDragHelper.shouldInterceptTouchEvent(ev)) {
+            if (getTarget().getLeft() == 0) {
+                updateMenuAdapter();
+            }
             clearTouchFromRecyclerView();
             getParent().requestDisallowInterceptTouchEvent(true);
             return true;
@@ -273,7 +286,7 @@ public class SwipeLayout extends ViewGroup {
         int currState = viewDragHelper.getViewDragState();
         if (preState != currState && currState == ViewDragHelper.STATE_DRAGGING) {
             if (getTarget().getLeft() == 0) {
-                menuAdapter.notifyDataSetChanged();
+                updateMenuAdapter();
             }
             clearTouchFromRecyclerView();
         }
