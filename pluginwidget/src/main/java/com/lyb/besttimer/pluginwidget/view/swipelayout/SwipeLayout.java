@@ -39,54 +39,27 @@ public class SwipeLayout extends ViewGroup {
 
     private SwipeOnPreDrawListener swipeOnPreDrawListener;
     private RecyclerView menuLayout;
-    private MenuAdapter menuAdapter;
     private RecyclerView.Adapter<?> realAdapter;
 
     private boolean toNormalFromNothing = false;
 
     private void init(Context context) {
 
-        viewDragHelper = ViewDragHelper.create(this, 2, new SwipeCallback());
+        viewDragHelper = ViewDragHelper.create(this, 1, new SwipeCallback());
 
         menuLayout = new RecyclerView(context);
         menuLayout.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        menuLayout.setAdapter(menuAdapter = new MenuAdapter());
         ajustMenuLayoutManager();
         this.addView(menuLayout);
     }
 
-    private class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private RecyclerView.Adapter realAdapter;
-
-        public void setRealAdapter(RecyclerView.Adapter realAdapter) {
-            this.realAdapter = realAdapter;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return realAdapter.onCreateViewHolder(parent, viewType);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            realAdapter.onBindViewHolder(holder, position);
-        }
-
-        @Override
-        public int getItemCount() {
-            return realAdapter != null ? realAdapter.getItemCount() : 0;
-        }
-
-    }
-
-    public void setAdapter(RecyclerView.Adapter adapter) {
+    public void setAdapter(RecyclerView.Adapter<?> adapter) {
         realAdapter = adapter;
     }
 
     private void updateMenuAdapter() {
-        menuAdapter.setRealAdapter(realAdapter);
-        menuAdapter.notifyDataSetChanged();
+        menuLayout.setAdapter(realAdapter);
+        realAdapter.notifyDataSetChanged();
     }
 
     public void setLeftPos(boolean leftPos) {
@@ -117,7 +90,7 @@ public class SwipeLayout extends ViewGroup {
         if (swipeOnPreDrawListener != null) {
             getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
         }
-        menuAdapter.setRealAdapter(null);
+        menuLayout.setAdapter(null);
     }
 
     private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
@@ -154,6 +127,27 @@ public class SwipeLayout extends ViewGroup {
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
+
+            View target = getTarget();
+            int menuValue = menuLayout.getWidth() != 0 ? menuLayout.getWidth() : viewDragHelper.getTouchSlop();
+            if (child == target) {
+                if (isLeftPos) {
+                    left = Math.max(left, 0);
+                    left = Math.min(left, menuValue);
+                } else {
+                    left = Math.max(left, -menuValue);
+                    left = Math.min(left, 0);
+                }
+            } else {
+                if (isLeftPos) {
+                    left = Math.max(left, -menuValue);
+                    left = Math.min(left, 0);
+                } else {
+                    left = Math.max(left, target.getWidth());
+                    left = Math.min(left, target.getWidth() - menuValue);
+                }
+            }
+
             return left;
         }
 
