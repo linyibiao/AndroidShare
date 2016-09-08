@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
 
@@ -37,7 +36,7 @@ public class SwipeLayout extends ViewGroup {
         init(context);
     }
 
-    private SwipeOnPreDrawListener swipeOnPreDrawListener;
+    //    private SwipeOnPreDrawListener swipeOnPreDrawListener;
     private RecyclerView menuLayout;
     private RecyclerView.Adapter<?> realAdapter;
 
@@ -80,35 +79,35 @@ public class SwipeLayout extends ViewGroup {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (swipeOnPreDrawListener == null) {
-            swipeOnPreDrawListener = new SwipeOnPreDrawListener();
-        }
-        getViewTreeObserver().addOnPreDrawListener(swipeOnPreDrawListener);
+//        if (swipeOnPreDrawListener == null) {
+//            swipeOnPreDrawListener = new SwipeOnPreDrawListener();
+//        }
+//        getViewTreeObserver().addOnPreDrawListener(swipeOnPreDrawListener);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (swipeOnPreDrawListener != null) {
-            getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
-        }
+//        if (swipeOnPreDrawListener != null) {
+//            getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
+//        }
         menuLayout.setAdapter(null);
     }
 
-    private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
-
-        @Override
-        public boolean onPreDraw() {
-            View target = getTarget();
-            if (viewDragHelper.getCapturedView() == target) {
-                align(menuLayout, target, isLeftPos);
-            } else if (viewDragHelper.getCapturedView() == menuLayout) {
-                align(target, menuLayout, !isLeftPos);
-            }
-            return true;
-        }
-
-    }
+//    private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
+//
+//        @Override
+//        public boolean onPreDraw() {
+//            View target = getTarget();
+//            if (viewDragHelper.getCapturedView() == target) {
+//                align(menuLayout, target, isLeftPos);
+//            } else if (viewDragHelper.getCapturedView() == menuLayout) {
+//                align(target, menuLayout, !isLeftPos);
+//            }
+//            return true;
+//        }
+//
+//    }
 
     /**
      * align source to target
@@ -172,7 +171,15 @@ public class SwipeLayout extends ViewGroup {
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
-            toNormalFromNothing = false;
+            if (dx != 0 || dy != 0) {
+                toNormalFromNothing = false;
+            }
+            View target = getTarget();
+            if (changedView == target) {
+                align(menuLayout, target, isLeftPos);
+            } else if (changedView == menuLayout) {
+                align(target, menuLayout, !isLeftPos);
+            }
         }
 
         @Override
@@ -185,7 +192,7 @@ public class SwipeLayout extends ViewGroup {
             } else {
                 smoothSlideViewToWithNV();
             }
-            align(menuLayout, getTarget(), isLeftPos);
+//            align(menuLayout, getTarget(), isLeftPos);
         }
 
         private void smoothSlideViewTo(boolean velToLeft) {
@@ -240,6 +247,7 @@ public class SwipeLayout extends ViewGroup {
         super.computeScroll();
         if (viewDragHelper.continueSettling(false)) {
             ViewCompat.postInvalidateOnAnimation(this);
+            align(menuLayout, getTarget(), isLeftPos);
         }
     }
 
