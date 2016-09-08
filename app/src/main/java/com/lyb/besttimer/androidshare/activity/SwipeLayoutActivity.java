@@ -72,8 +72,8 @@ public class SwipeLayoutActivity extends BaseActivity {
                 SwipeLayout swipeLayout = (SwipeLayout) itemView;
                 List<String> strings = new ArrayList<>();
                 strings.add("what");
-                strings.add("the");
-                strings.add("hell");
+//                strings.add("the");
+//                strings.add("hell");
                 swipeLayout.setAdapter(new MenuAdapter(strings));
 //                swipeLayout.setTouchHolderCall(new SwipeLayout.TouchHolderCall() {
 //                    @Override

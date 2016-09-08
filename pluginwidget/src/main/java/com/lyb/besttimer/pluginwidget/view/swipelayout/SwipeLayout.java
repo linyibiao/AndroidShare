@@ -58,8 +58,10 @@ public class SwipeLayout extends ViewGroup {
     }
 
     private void updateMenuAdapter() {
-        menuLayout.setAdapter(realAdapter);
-        realAdapter.notifyDataSetChanged();
+        if (menuLayout.getAdapter() == null) {
+            menuLayout.setAdapter(realAdapter);
+            realAdapter.notifyDataSetChanged();
+        }
     }
 
     public void setLeftPos(boolean leftPos) {
@@ -106,16 +108,23 @@ public class SwipeLayout extends ViewGroup {
             return true;
         }
 
-        private void align(View source, View target, boolean alignLeft) {
-            if (alignLeft) {
-                ViewCompat.offsetTopAndBottom(source, target.getTop() - source.getTop());
-                ViewCompat.offsetLeftAndRight(source, target.getLeft() - source.getRight());
-            } else {
-                ViewCompat.offsetTopAndBottom(source, target.getTop() - source.getTop());
-                ViewCompat.offsetLeftAndRight(source, target.getRight() - source.getLeft());
-            }
-        }
+    }
 
+    /**
+     * align source to target
+     *
+     * @param source    source view
+     * @param target    target view
+     * @param alignLeft source view is align to left of target?
+     */
+    private void align(View source, View target, boolean alignLeft) {
+        if (alignLeft) {
+            ViewCompat.offsetTopAndBottom(source, target.getTop() - source.getTop());
+            ViewCompat.offsetLeftAndRight(source, target.getLeft() - source.getRight());
+        } else {
+            ViewCompat.offsetTopAndBottom(source, target.getTop() - source.getTop());
+            ViewCompat.offsetLeftAndRight(source, target.getRight() - source.getLeft());
+        }
     }
 
     private class SwipeCallback extends ViewDragHelper.Callback {
@@ -176,6 +185,7 @@ public class SwipeLayout extends ViewGroup {
             } else {
                 smoothSlideViewToWithNV();
             }
+            align(menuLayout, getTarget(), isLeftPos);
         }
 
         private void smoothSlideViewTo(boolean velToLeft) {
@@ -258,9 +268,9 @@ public class SwipeLayout extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (viewDragHelper.shouldInterceptTouchEvent(ev)) {
-            if (getTarget().getLeft() == 0) {
-                updateMenuAdapter();
-            }
+//            if (getTarget().getLeft() == 0) {
+            updateMenuAdapter();
+//            }
             clearTouchFromRecyclerView();
             getParent().requestDisallowInterceptTouchEvent(true);
             return true;
@@ -280,9 +290,9 @@ public class SwipeLayout extends ViewGroup {
         viewDragHelper.processTouchEvent(event);
         int currState = viewDragHelper.getViewDragState();
         if (preState != currState && currState == ViewDragHelper.STATE_DRAGGING) {
-            if (getTarget().getLeft() == 0) {
-                updateMenuAdapter();
-            }
+//            if (getTarget().getLeft() == 0) {
+            updateMenuAdapter();
+//            }
             clearTouchFromRecyclerView();
         }
         return true;
