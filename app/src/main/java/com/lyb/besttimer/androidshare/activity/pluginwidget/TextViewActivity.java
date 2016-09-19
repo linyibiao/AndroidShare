@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -6,13 +6,13 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.v7.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.caller.DrawCaller;
 import com.lyb.besttimer.pluginwidget.view.textview.BaseTextView;
 
-public class TextViewActivity extends AppCompatActivity {
+public class TextViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

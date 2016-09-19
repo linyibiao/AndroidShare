@@ -1,16 +1,16 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
 import com.lyb.besttimer.pluginwidget.view.recycleview.ItemTouchFeature;
 import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout;

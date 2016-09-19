@@ -1,1 +1,1 @@
-include ':app', ':pluginwidget', ':network'
+include ':app', ':pluginwidget', ':network', ':rxandroid'

@@ -15,16 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ScrollViewControlActivity" />
-        <activity android:name=".activity.SwipeRefreshLayoutActivity" />
-        <activity android:name=".activity.RecyclerViewActivity" />
-        <activity android:name=".activity.HeaderRecyclerViewActivity" />
-        <activity android:name=".activity.ItemTreeActivity" />
-        <activity android:name=".activity.ItemTouchActivity" />
-        <activity android:name=".activity.PullRefreshActivity" />
-        <activity android:name=".activity.TextViewActivity" />
-        <activity android:name=".activity.DecorationActivity" />
-        <activity android:name=".activity.SwipeLayoutActivity" />
+        <activity android:name=".activity.pluginwidget.ScrollViewControlActivity" />
+        <activity android:name=".activity.pluginwidget.SwipeRefreshLayoutActivity" />
+        <activity android:name=".activity.pluginwidget.RecyclerViewActivity" />
+        <activity android:name=".activity.pluginwidget.HeaderRecyclerViewActivity" />
+        <activity android:name=".activity.pluginwidget.ItemTreeActivity" />
+        <activity android:name=".activity.pluginwidget.ItemTouchActivity" />
+        <activity android:name=".activity.pluginwidget.PullRefreshActivity" />
+        <activity android:name=".activity.pluginwidget.TextViewActivity" />
+        <activity android:name=".activity.pluginwidget.DecorationActivity" />
+        <activity android:name=".activity.pluginwidget.SwipeLayoutActivity" />
+        <activity android:name=".activity.rxandroid.SimpleRxActivity" />
+        <activity android:name=".activity.network.SimpleRetrofitActivity"></activity>
     </application>
 
 </manifest>

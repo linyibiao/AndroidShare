@@ -1,7 +1,7 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,30 +11,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.pluginwidget.view.recycleview.decoration.BaseItemDecoration;
-import com.lyb.besttimer.pluginwidget.view.recycleview.decoration.ColorDecorateDetail;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DecorationActivity extends BaseActivity {
+public class RecyclerViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_decoration);
+        setContentView(R.layout.activity_recycle_view);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<RVDate> rvDates = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             rvDates.add(new RVDate(i + ";;;"));
         }
         recyclerView.setAdapter(new MyAdapter(rvDates));
-
-        recyclerView.addItemDecoration(new BaseItemDecoration(2, 5, true, BaseItemDecoration.DRAWORIENTATION.BOTH, new ColorDecorateDetail(0xaaff0000)));
 
     }
 

@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -6,6 +6,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.view.BaseSwipeRefreshLayout;
 import com.lyb.besttimer.pluginwidget.view.swiperefreshlayout.XSwipeRefreshLayout;
 

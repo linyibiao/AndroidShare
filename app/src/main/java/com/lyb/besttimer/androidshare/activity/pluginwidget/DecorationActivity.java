@@ -1,7 +1,7 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,46 +11,41 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
+import com.lyb.besttimer.pluginwidget.view.recycleview.decoration.BaseItemDecoration;
+import com.lyb.besttimer.pluginwidget.view.recycleview.decoration.ColorDecorateDetail;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeaderRecyclerViewActivity extends BaseActivity {
+public class DecorationActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_header_recycle_view);
+        setContentView(R.layout.activity_decoration);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<RVDate> rvDates = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            rvDates.add(new RVDate(i + ";;;", i % 2 == 0 ? 0 : 1));
+            rvDates.add(new RVDate(i + ";;;"));
         }
         recyclerView.setAdapter(new MyAdapter(rvDates));
 
-        new HeaderFeature(recyclerView, findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
-
-            @Override
-            public boolean isHeader(RecyclerView recyclerView, int position) {
-                int type = recyclerView.getAdapter().getItemViewType(position);
-                return type == 1;
-            }
-        }.applyFeature();
+        recyclerView.addItemDecoration(new BaseItemDecoration(2, 5, true, BaseItemDecoration.DRAWORIENTATION.BOTH, new ColorDecorateDetail(0xaaff0000)));
 
     }
 
     private static class RVDate {
         public String show;
 
-        public int type;
-
-        public RVDate(String show, int type) {
+        public RVDate(String show) {
             this.show = show;
-            this.type = type;
         }
+
     }
 
     private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
@@ -70,19 +65,14 @@ public class HeaderRecyclerViewActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(Holder holder, final int position) {
             TextView textView = holder.tv;
-            textView.setText(rvDates.get(position).type == 1 ? "标题" + rvDates.get(position).show : rvDates.get(position).show);
+            textView.setText(rvDates.get(position).show);
             Button btn = holder.btn;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), rvDates.get(position).show + ";;" + rvDates.get(position).type, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), rvDates.get(position).show, Toast.LENGTH_SHORT).show();
                 }
             });
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return rvDates.get(position).type;
         }
 
         @Override

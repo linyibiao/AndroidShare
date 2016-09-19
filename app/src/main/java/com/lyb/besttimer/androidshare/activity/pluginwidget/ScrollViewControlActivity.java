@@ -1,8 +1,9 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
 
 /**
  * Created by Administrator on 2016/7/14.

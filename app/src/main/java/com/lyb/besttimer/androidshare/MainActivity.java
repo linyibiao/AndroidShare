@@ -10,16 +10,18 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lyb.besttimer.androidshare.activity.DecorationActivity;
-import com.lyb.besttimer.androidshare.activity.HeaderRecyclerViewActivity;
-import com.lyb.besttimer.androidshare.activity.ItemTouchActivity;
-import com.lyb.besttimer.androidshare.activity.ItemTreeActivity;
-import com.lyb.besttimer.androidshare.activity.PullRefreshActivity;
-import com.lyb.besttimer.androidshare.activity.RecyclerViewActivity;
-import com.lyb.besttimer.androidshare.activity.ScrollViewControlActivity;
-import com.lyb.besttimer.androidshare.activity.SwipeLayoutActivity;
-import com.lyb.besttimer.androidshare.activity.SwipeRefreshLayoutActivity;
-import com.lyb.besttimer.androidshare.activity.TextViewActivity;
+import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ScrollViewControlActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeRefreshLayoutActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
+import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         lvDatas.add(new LVData(TextViewActivity.class, "textview基类"));
         lvDatas.add(new LVData(DecorationActivity.class, "decoration模板"));
         lvDatas.add(new LVData(SwipeLayoutActivity.class, "swipe layout"));
+        lvDatas.add(new LVData(SimpleRxActivity.class, "simple rxjava"));
+        lvDatas.add(new LVData(SimpleRetrofitActivity.class, "simple retrofit"));
         listView.setAdapter(new LVAdapter(lvDatas));
     }
 

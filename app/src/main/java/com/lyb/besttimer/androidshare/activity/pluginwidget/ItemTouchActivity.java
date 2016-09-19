@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.activity;
+package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
-import com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView;
 import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
 import com.lyb.besttimer.pluginwidget.view.recycleview.ItemTouchFeature;
 
@@ -22,38 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PullRefreshActivity extends BaseActivity {
+public class ItemTouchActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pull_refresh);
-
-        final PullRefreshView pullRefreshView = (PullRefreshView) findViewById(R.id.prv);
-
-        pullRefreshView.setPullListener(new PullRefreshView.PullListener() {
-            @Override
-            public void onRefresh() {
-                pullRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        pullRefreshView.refreshCompleted();
-                    }
-                }, 5000);
-            }
-
-            @Override
-            public void onRefreshCompleted() {
-                Toast.makeText(PullRefreshActivity.this, "刷新完毕", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        pullRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullRefreshView.forceToRefresh();
-            }
-        }, 5000);
+        setContentView(R.layout.activity_item_touch);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
