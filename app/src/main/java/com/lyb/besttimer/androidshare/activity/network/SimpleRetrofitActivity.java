@@ -7,8 +7,17 @@ import android.view.View;
 
 import com.lyb.besttimer.androidshare.R;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,7 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class SimpleRetrofitActivity extends AppCompatActivity {
@@ -56,20 +64,49 @@ public class SimpleRetrofitActivity extends AppCompatActivity {
     }
 
     private void oneRXRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
+
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.connectTimeout(60000, TimeUnit.MILLISECONDS);
+        okHttpClientBuilder.readTimeout(60000, TimeUnit.MILLISECONDS);
+
+        okHttpClientBuilder.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request request = chain.request();
+                okhttp3.Request.Builder builder = request.newBuilder();
+
+                builder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+                builder.header("Host", request.url().host());
+
+                return chain.proceed(builder.build());
+            }
+        });
+
+        okHttpClientBuilder.cookieJar(new CookieJar() {
+
+            private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+
+            @Override
+            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                cookieStore.put(url, cookies);
+            }
+
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl url) {
+                List<Cookie> cookies = cookieStore.get(url);
+                return cookies != null ? cookies : new ArrayList<Cookie>();
+            }
+        });
+        OkHttpClient okHttpClient = okHttpClientBuilder.build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.github.com/")
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
         GitHubService service = retrofit.create(GitHubService.class);
         Observable<List<Repo>> repos = service.listReposByRX("octocat");
-        repos.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Repo>>() {
-                    @Override
-                    public void call(List<Repo> repos) {
-                        Log.e("what", repos.size() + ";;;");
-                        for (Repo repo : repos) {
-                            Log.e("what", repo.getId() + ";");
-                        }
-                    }
-                });
         repos.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Repo>>() {
