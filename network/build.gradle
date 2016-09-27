@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "0.0.3"       //这个是版本号，必须填写
+version = "0.0.5"       //这个是版本号，必须填写
 
 android {
     compileSdkVersion 24
@@ -34,15 +34,15 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
-    compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
-    compile 'com.squareup.retrofit2:converter-protobuf:2.1.0'
-    compile 'com.squareup.retrofit2:converter-wire:2.1.0'
-    compile ('com.squareup.retrofit2:converter-simplexml:2.1.0'){
-        exclude group: 'xpp3', module: 'xpp3'
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'stax', module: 'stax'
-    }
+//    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
+//    compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
+//    compile 'com.squareup.retrofit2:converter-protobuf:2.1.0'
+//    compile 'com.squareup.retrofit2:converter-wire:2.1.0'
+//    compile ('com.squareup.retrofit2:converter-simplexml:2.1.0'){
+//        exclude group: 'xpp3', module: 'xpp3'
+//        exclude group: 'stax', module: 'stax-api'
+//        exclude group: 'stax', module: 'stax'
+//    }
     compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'io.reactivex:rxandroid:1.2.1'
