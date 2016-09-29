@@ -57,9 +57,14 @@ public class SwipeLayout extends ViewGroup {
     }
 
     private void updateMenuAdapter() {
-        if (menuLayout.getAdapter() == null) {
-            menuLayout.setAdapter(realAdapter);
-            realAdapter.notifyDataSetChanged();
+        if (realAdapter != null) {
+            menuLayout.setVisibility(View.VISIBLE);
+            if (menuLayout.getAdapter() == null) {
+                menuLayout.setAdapter(realAdapter);
+                realAdapter.notifyDataSetChanged();
+            }
+        } else {
+            menuLayout.setVisibility(View.GONE);
         }
     }
 
@@ -92,6 +97,7 @@ public class SwipeLayout extends ViewGroup {
 //            getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
 //        }
         menuLayout.setAdapter(null);
+        menuLayout.setVisibility(View.GONE);
     }
 
 //    private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
