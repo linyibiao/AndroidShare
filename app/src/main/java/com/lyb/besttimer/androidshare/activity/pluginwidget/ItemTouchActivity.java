@@ -17,10 +17,10 @@ import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
 import com.lyb.besttimer.pluginwidget.view.recycleview.ItemTouchFeature;
-import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ItemTouchActivity extends BaseActivity {
 
@@ -32,16 +32,15 @@ public class ItemTouchActivity extends BaseActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
+        Random random = new Random(System.currentTimeMillis());
+
         List<ItemTree> itemTrees = new ArrayList<>();
-        int iCount = 10;
-        int jCount = 10;
-        int kCount = 10;
-        for (int i = 0; i < iCount; i++) {
+        for (int i = 0; i < 3; i++) {
             ItemTree itemTree0 = new ItemTree(new RVData("层次" + i, 0), true, null);
             itemTrees.add(itemTree0);
-            for (int j = 0; j < jCount; j++) {
+            for (int j = 0; j < 1 + random.nextInt(3); j++) {
                 ItemTree itemTree1 = new ItemTree(new RVData("层次" + i + j, 1), true, itemTree0);
-                for (int k = 0; k < kCount; k++) {
+                for (int k = 0; k < 1 + random.nextInt(3); k++) {
                     new ItemTree(new RVData("层次" + i + j + k, 2), true, itemTree1);
                 }
             }
@@ -159,10 +158,7 @@ public class ItemTouchActivity extends BaseActivity {
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_level2, parent, false);
                     break;
             }
-            SwipeLayout swipeLayout = new SwipeLayout(parent.getContext());
-            swipeLayout.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            swipeLayout.addView(view);
-            return new Holder(swipeLayout);
+            return new Holder(view);
         }
 
         @Override
@@ -178,24 +174,7 @@ public class ItemTouchActivity extends BaseActivity {
                     Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }
             });
-            ((SwipeLayout) holder.itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                @Override
-                public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return new RecyclerView.ViewHolder(new TextView(parent.getContext())) {
-                    };
-                }
-
-                @Override
-                public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                    ((TextView) holder.itemView).setText(position + ";;;");
-                }
-
-                @Override
-                public int getItemCount() {
-                    return 1;
-                }
-            });
-            ((SwipeLayout) holder.itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     treeDataManager.flex(treeDataManager.indexOf(itemTree));
