@@ -57,9 +57,14 @@ public class SwipeLayout extends ViewGroup {
     }
 
     private void updateMenuAdapter() {
-        if (menuLayout.getAdapter() == null) {
-            menuLayout.setAdapter(realAdapter);
-            realAdapter.notifyDataSetChanged();
+        if (realAdapter != null) {
+            menuLayout.setVisibility(View.VISIBLE);
+            if (menuLayout.getAdapter() == null) {
+                menuLayout.setAdapter(realAdapter);
+                realAdapter.notifyDataSetChanged();
+            }
+        } else {
+            menuLayout.setVisibility(View.GONE);
         }
     }
 
@@ -92,6 +97,7 @@ public class SwipeLayout extends ViewGroup {
 //            getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
 //        }
         menuLayout.setAdapter(null);
+        menuLayout.setVisibility(View.GONE);
     }
 
 //    private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
@@ -255,7 +261,7 @@ public class SwipeLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         View target = getTarget();
-        ViewGroup.LayoutParams targetParams = target.getLayoutParams();
+        LayoutParams targetParams = target.getLayoutParams();
         int targetWidthSpec = getChildMeasureSpec(widthMeasureSpec, getPaddingLeft() + getPaddingRight(), targetParams.width);
         int targetHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingTop() + getPaddingBottom(), targetParams.height);
         target.measure(targetWidthSpec, targetHeightSpec);
