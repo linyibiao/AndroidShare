@@ -3,13 +3,14 @@ package com.lyb.besttimer.pluginwidget.view.swipelayout;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
 import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
 
@@ -36,9 +37,10 @@ public class SwipeLayout extends ViewGroup {
         init(context);
     }
 
-    //    private SwipeOnPreDrawListener swipeOnPreDrawListener;
-    private RecyclerView menuLayout;
-    private RecyclerView.Adapter<?> realAdapter;
+    private LinearLayout menuLayout;
+    private RecyclerView.Adapter realAdapter;
+
+    private SwipeOnPreDrawListener swipeOnPreDrawListener;
 
     private boolean toNormalFromNothing = false;
 
@@ -46,22 +48,34 @@ public class SwipeLayout extends ViewGroup {
 
         viewDragHelper = ViewDragHelper.create(this, 1, new SwipeCallback());
 
-        menuLayout = new RecyclerView(context);
-        menuLayout.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        ajustMenuLayoutManager();
+        menuLayout = new LinearLayout(context);
+        menuLayout.setOrientation(LinearLayout.HORIZONTAL);
+        menuLayout.setVisibility(View.GONE);
         this.addView(menuLayout);
     }
 
-    public void setAdapter(RecyclerView.Adapter<?> adapter) {
+    public void setAdapter(RecyclerView.Adapter adapter) {
         realAdapter = adapter;
     }
 
     private void updateMenuAdapter() {
         if (realAdapter != null) {
-            menuLayout.setVisibility(View.VISIBLE);
-            if (menuLayout.getAdapter() == null) {
-                menuLayout.setAdapter(realAdapter);
-                realAdapter.notifyDataSetChanged();
+            if (menuLayout.getVisibility()==View.GONE) {
+                menuLayout.removeAllViews();
+                menuLayout.setVisibility(View.VISIBLE);
+                if (isLeftPos) {
+                    for (int position = realAdapter.getItemCount() - 1; position >= 0; position--) {
+                        RecyclerView.ViewHolder viewHolder = realAdapter.onCreateViewHolder(menuLayout, realAdapter.getItemViewType(position));
+                        menuLayout.addView(viewHolder.itemView, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                        realAdapter.onBindViewHolder(viewHolder,position);
+                    }
+                } else {
+                    for (int position = 0; position < realAdapter.getItemCount(); position++) {
+                        RecyclerView.ViewHolder viewHolder = realAdapter.onCreateViewHolder(menuLayout, realAdapter.getItemViewType(position));
+                        menuLayout.addView(viewHolder.itemView, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                        realAdapter.onBindViewHolder(viewHolder, position);
+                    }
+                }
             }
         } else {
             menuLayout.setVisibility(View.GONE);
@@ -70,50 +84,41 @@ public class SwipeLayout extends ViewGroup {
 
     public void setLeftPos(boolean leftPos) {
         isLeftPos = leftPos;
-        ajustMenuLayoutManager();
-    }
-
-    private void ajustMenuLayoutManager() {
-        if (isLeftPos) {
-            menuLayout.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        } else {
-            menuLayout.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-//        if (swipeOnPreDrawListener == null) {
-//            swipeOnPreDrawListener = new SwipeOnPreDrawListener();
-//        }
-//        getViewTreeObserver().addOnPreDrawListener(swipeOnPreDrawListener);
+        if (swipeOnPreDrawListener == null) {
+            swipeOnPreDrawListener = new SwipeOnPreDrawListener();
+        }
+        getViewTreeObserver().addOnPreDrawListener(swipeOnPreDrawListener);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-//        if (swipeOnPreDrawListener != null) {
-//            getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
-//        }
-        menuLayout.setAdapter(null);
+        if (swipeOnPreDrawListener != null) {
+            getViewTreeObserver().removeOnPreDrawListener(swipeOnPreDrawListener);
+        }
+//        menuLayout.setAdapter(null);
         menuLayout.setVisibility(View.GONE);
     }
 
-//    private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
-//
-//        @Override
-//        public boolean onPreDraw() {
-//            View target = getTarget();
-//            if (viewDragHelper.getCapturedView() == target) {
-//                align(menuLayout, target, isLeftPos);
-//            } else if (viewDragHelper.getCapturedView() == menuLayout) {
-//                align(target, menuLayout, !isLeftPos);
-//            }
-//            return true;
-//        }
-//
-//    }
+    private class SwipeOnPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
+
+        @Override
+        public boolean onPreDraw() {
+            View target = getTarget();
+            if (viewDragHelper.getCapturedView() == target) {
+                align(menuLayout, target, isLeftPos);
+            } else if (viewDragHelper.getCapturedView() == menuLayout) {
+                align(target, menuLayout, !isLeftPos);
+            }
+            return true;
+        }
+
+    }
 
     /**
      * align source to target
@@ -253,7 +258,7 @@ public class SwipeLayout extends ViewGroup {
         super.computeScroll();
         if (viewDragHelper.continueSettling(false)) {
             ViewCompat.postInvalidateOnAnimation(this);
-            align(menuLayout, getTarget(), isLeftPos);
+//            align(menuLayout, getTarget(), isLeftPos);
         }
     }
 
