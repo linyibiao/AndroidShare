@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
-import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
 
 /**
  * swipe layout

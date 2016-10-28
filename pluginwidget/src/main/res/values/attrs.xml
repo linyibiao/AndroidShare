@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="XSwipeRefreshLayout">
-        <attr name="swipeMode" format="enum">
-            <enum name="TOP_ONLY" value="1" />
-            <enum name="BOTTOM_ONLY" value="2" />
-            <enum name="BOTH" value="3" />
-        </attr>
-    </declare-styleable>
     <declare-styleable name="PullRefreshView">
         <attr name="state_normal_str" format="string" />
         <attr name="state_ready_str" format="string" />

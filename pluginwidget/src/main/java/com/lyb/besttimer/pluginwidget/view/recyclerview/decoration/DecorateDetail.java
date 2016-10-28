@@ -1,4 +1,4 @@
-package com.lyb.besttimer.pluginwidget.view.recycleview.decoration;
+package com.lyb.besttimer.pluginwidget.view.recyclerview.decoration;
 
 import android.graphics.Canvas;
 

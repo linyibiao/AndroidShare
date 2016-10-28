@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
-import com.lyb.besttimer.pluginwidget.view.recycleview.decoration.BaseItemDecoration;
-import com.lyb.besttimer.pluginwidget.view.recycleview.decoration.ColorDecorateDetail;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,7 +14,7 @@ import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
-import com.lyb.besttimer.pluginwidget.view.recycleview.HeaderFeature;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.lyb.besttimer.pluginwidget.view;
+package com.lyb.besttimer.pluginwidget.view.nestedscrollview;
 
 import android.content.Context;
 import android.support.v4.widget.NestedScrollView;
@@ -8,17 +8,17 @@ import android.util.AttributeSet;
  * Common ScrollView
  * Created by linyibiao on 2016/7/12.
  */
-public class BaseScrollView extends NestedScrollView {
+public class BaseNestedScrollView extends NestedScrollView {
 
-    public BaseScrollView(Context context) {
+    public BaseNestedScrollView(Context context) {
         this(context, null);
     }
 
-    public BaseScrollView(Context context, AttributeSet attrs) {
+    public BaseNestedScrollView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BaseScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseNestedScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

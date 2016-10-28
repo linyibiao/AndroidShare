@@ -20,7 +20,7 @@
         app:state_normal_str="下拉刷新"
         app:state_ready_str="松开刷新">
 
-        <com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView
+        <com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

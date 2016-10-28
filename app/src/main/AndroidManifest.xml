@@ -3,20 +3,19 @@
     package="com.lyb.besttimer.androidshare">
 
     <application
+        android:name=".ShareApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.ShowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.pluginwidget.ScrollViewControlActivity" />
-        <activity android:name=".activity.pluginwidget.SwipeRefreshLayoutActivity" />
+        <activity android:name=".activity.pluginwidget.NestedScrollViewControlActivity" />
         <activity android:name=".activity.pluginwidget.RecyclerViewActivity" />
         <activity android:name=".activity.pluginwidget.HeaderRecyclerViewActivity" />
         <activity android:name=".activity.pluginwidget.ItemTreeActivity" />
@@ -26,7 +25,8 @@
         <activity android:name=".activity.pluginwidget.DecorationActivity" />
         <activity android:name=".activity.pluginwidget.SwipeLayoutActivity" />
         <activity android:name=".activity.rxandroid.SimpleRxActivity" />
-        <activity android:name=".activity.network.SimpleRetrofitActivity"></activity>
+        <activity android:name=".activity.network.SimpleRetrofitActivity" />
+        <activity android:name=".activity.pluginwidget.TabLayoutActivity" />
     </application>
 
 </manifest>

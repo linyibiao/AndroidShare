@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "0.0.31"       //这个是版本号，必须填写
+version = "0.0.32"       //这个是版本号，必须填写
 
 android {
     compileSdkVersion 24
@@ -33,6 +33,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:design:24.2.0'
 }
 
 def siteUrl = 'https://github.com/linyibiao/AndroidShare'      // 项目的主页   这个是说明，可随便填

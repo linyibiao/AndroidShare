@@ -11,8 +11,8 @@ import android.widget.Button;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
-import com.lyb.besttimer.pluginwidget.view.recycleview.BaseRecyclerView;
-import com.lyb.besttimer.pluginwidget.view.recycleview.ItemTouchFeature;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.ItemTouchFeature;
 import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout;
 
 import java.util.ArrayList;
