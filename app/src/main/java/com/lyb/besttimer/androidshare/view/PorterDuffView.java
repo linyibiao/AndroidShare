@@ -132,38 +132,30 @@ public class PorterDuffView extends View {
 
         drawEdge(canvas, width, height);
 
-        drawCircle_DST(canvas, width, 0, 0, isBitmap);
-        drawCircle_SRC(canvas, width, width / 4, width / 4, isBitmap);
+        int pad = 5;
+        drawCircle(canvas, 0xFFFFCC44, width, pad, pad, false, isBitmap);
+        drawCircle(canvas, 0xFF66AAFF, width, width / 4 - pad, width / 4 - pad, true, isBitmap);
 
         canvas.restoreToCount(layerId);
 
     }
 
-    private void drawCircle_DST(Canvas canvas, int d, int padLeft, int padTop, boolean isBitmap) {
+    private void drawCircle(Canvas canvas, int color, int d, int padLeft, int padTop, boolean showMode, boolean isBitmap) {
         if (isBitmap) {
             Bitmap bitmap = Bitmap.createBitmap(d * 3 / 4, d * 3 / 4, Bitmap.Config.ARGB_8888);
             Canvas bitmapCanvas = new Canvas(bitmap);
-            drawCircle_DST(bitmapCanvas, d, 0, 0, false);
-            canvas.drawBitmap(bitmap, padLeft, padTop, null);
-        } else {
+            drawCircle(bitmapCanvas, color, d, 0, 0, false, false);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setColor(0xFFFFCC44);
-            canvas.drawCircle(d * 3 / 8 + padLeft, d * 3 / 8 + padTop, d * 3 / 8, paint);
-        }
-    }
-
-    private void drawCircle_SRC(Canvas canvas, int d, int padLeft, int padTop, boolean isBitmap) {
-        if (isBitmap) {
-            Bitmap bitmap = Bitmap.createBitmap(d * 3 / 4, d * 3 / 4, Bitmap.Config.ARGB_8888);
-            Canvas bitmapCanvas = new Canvas(bitmap);
-            drawCircle_SRC(bitmapCanvas, d, 0, 0, false);
-            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setXfermode(new PorterDuffXfermode(mode));
+            if (showMode) {
+                paint.setXfermode(new PorterDuffXfermode(mode));
+            }
             canvas.drawBitmap(bitmap, padLeft, padTop, paint);
         } else {
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setColor(0xFF66AAFF);
-            paint.setXfermode(new PorterDuffXfermode(mode));
+            paint.setColor(color);
+            if (showMode) {
+                paint.setXfermode(new PorterDuffXfermode(mode));
+            }
             canvas.drawCircle(d * 3 / 8 + padLeft, d * 3 / 8 + padTop, d * 3 / 8, paint);
         }
     }
