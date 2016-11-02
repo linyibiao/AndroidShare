@@ -15,9 +15,10 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewControlActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
-import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TabLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
@@ -54,6 +55,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(DecorationActivity.class, "decoration模板"));
             lvData.getLvDatas().add(new LVData(SwipeLayoutActivity.class, "swipe layout"));
             lvData.getLvDatas().add(new LVData(TabLayoutActivity.class, "simple tablayout"));
+            lvData.getLvDatas().add(new LVData(PorterDuffActivity.class, "simple porterDuff"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

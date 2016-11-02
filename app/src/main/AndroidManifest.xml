@@ -12,6 +12,7 @@
         <activity android:name=".activity.ShowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,6 +28,7 @@
         <activity android:name=".activity.rxandroid.SimpleRxActivity" />
         <activity android:name=".activity.network.SimpleRetrofitActivity" />
         <activity android:name=".activity.pluginwidget.TabLayoutActivity" />
+        <activity android:name=".activity.pluginwidget.PorterDuffActivity" />
     </application>
 
 </manifest>
