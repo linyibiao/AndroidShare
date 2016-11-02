@@ -2,7 +2,7 @@ package com.lyb.besttimer.pluginwidget.utils;
 
 import android.graphics.drawable.GradientDrawable;
 
-public class GradientDrawableHelper {
+public class GradientDrawableUtil {
 
     public static GradientDrawable getGradientDrawable(GradientDrawableData gradientDrawableData) {
         GradientDrawable gradientDrawable = new GradientDrawable(gradientDrawableData.getOrientation(), gradientDrawableData.getColors());

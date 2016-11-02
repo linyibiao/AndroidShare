@@ -5,7 +5,7 @@ import android.content.res.ColorStateList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ColorStateListHelper {
+public class ColorStateListUtil {
 
     public static ColorStateList getColorStateList(ColorState colorState) {
         return getColorStateList(new ColorState[]{colorState});

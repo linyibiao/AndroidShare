@@ -10,7 +10,7 @@ import android.support.v4.view.ViewPager;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
-import com.lyb.besttimer.androidshare.adapter.TestTabAdapter;
+import com.lyb.besttimer.androidshare.adapter.SimpleTabAdapter;
 import com.lyb.besttimer.androidshare.fragment.TabFragment;
 import com.lyb.besttimer.pluginwidget.view.tablayout.BaseTabLayout;
 
@@ -40,14 +40,13 @@ public class TabLayoutActivity extends BaseActivity {
 //        btl.setBackgroundShape(BaseTabLayout.SHAPE_BACKGROUND.Normal);
         btl.setBGColor(0xFFad0000);
 //        btl.setBGColor(0);
-        btl.setEdgeColor(0xFFFFFFFF);
         btl.setTabMode(TabLayout.MODE_SCROLLABLE);
         setAdapter(vp);
     }
 
     private void setAdapter(ViewPager vp) {
         btl.setupWithViewPager(vp);
-        new TestTabAdapter(btl, titles).notifyDataSetChanged();
+        new SimpleTabAdapter(btl, titles).notifyDataSetChanged();
     }
 
     private static class SimpleAdapter extends FragmentPagerAdapter {

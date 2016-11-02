@@ -7,18 +7,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.pluginwidget.utils.ColorStateListHelper;
+import com.lyb.besttimer.pluginwidget.utils.ColorStateListUtil;
 import com.lyb.besttimer.pluginwidget.view.tablayout.BaseTabLayout;
 
 /**
  * Created by Administrator on 2016/11/1.
  */
 
-public class TestTabAdapter extends BaseTabLayout.BaseTabAdapter<TestTabAdapter.TestHolder> {
+public class SimpleTabAdapter extends BaseTabLayout.BaseTabAdapter<SimpleTabAdapter.TestHolder> {
 
     private String[] titles;
 
-    public TestTabAdapter(TabLayout tabLayout, String[] titles) {
+    public SimpleTabAdapter(TabLayout tabLayout, String[] titles) {
         super(tabLayout);
         this.titles = titles;
     }
@@ -32,8 +32,8 @@ public class TestTabAdapter extends BaseTabLayout.BaseTabAdapter<TestTabAdapter.
             super(itemView);
             item_title = (TextView) itemView.findViewById(R.id.item_title);
             item_number = (TextView) itemView.findViewById(R.id.item_number);
-            item_title.setTextColor(ColorStateListHelper.getColorStateList(new ColorStateListHelper.ColorState(0xffffffff, 0xffeeeeee, android.R.attr.state_selected)));
-            item_number.setTextColor(ColorStateListHelper.getColorStateList(new ColorStateListHelper.ColorState(0xffffffff, 0xffeeeeee, android.R.attr.state_selected)));
+            item_title.setTextColor(ColorStateListUtil.getColorStateList(new ColorStateListUtil.ColorState(0xffffffff, 0xffeeeeee, android.R.attr.state_selected)));
+            item_number.setTextColor(ColorStateListUtil.getColorStateList(new ColorStateListUtil.ColorState(0xffffffff, 0xffeeeeee, android.R.attr.state_selected)));
         }
 
         public void fillView(String s, int position) {

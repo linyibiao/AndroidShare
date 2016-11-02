@@ -1,6 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.tablayout;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -8,6 +9,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -174,18 +176,44 @@ public class BaseTabLayout extends TabLayout {
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
-    public void setEdgeColor(int edgeColor) {
-        mEdgePaint.setColor(edgeColor);
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-
     public void setBackgroundShape(SHAPE_BACKGROUND backgroundShape) {
         this.backgroundShape = backgroundShape;
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
+    private Bitmap bitmap_BGCircle;
+
+    private Bitmap getBitmapInstance_BGCircle(int width, int height) {
+
+        if (bitmap_BGCircle == null) {
+
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas bitmapCanvas = new Canvas(bitmap);
+
+            float d = height;
+            float startX = d / 2;
+            float startY = height / 2;
+            float stopX = width - d / 2;
+            float stopY = height / 2;
+
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setXfermode(null);
+            paint.setStrokeCap(Paint.Cap.SQUARE);
+            paint.setStrokeWidth(d);
+            bitmapCanvas.drawLine(startX, startY, stopX, stopY, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            bitmapCanvas.drawLine(startX, startY, stopX, stopY, paint);
+            bitmap_BGCircle = bitmap;
+        }
+
+        return bitmap_BGCircle;
+    }
+
     @Override
     public void draw(Canvas canvas) {
+
+        int layerId_BGCircle = 0;
 
         //handle background
         if (backgroundShape == SHAPE_BACKGROUND.Normal) {
@@ -193,6 +221,7 @@ public class BaseTabLayout extends TabLayout {
         } else if (backgroundShape == SHAPE_BACKGROUND.Circle) {
             Rect bounds = canvas.getClipBounds();
             bounds.set(bounds.left, bounds.top + indicatorPaddingVertical, bounds.right, bounds.bottom - indicatorPaddingVertical);
+            layerId_BGCircle = canvas.saveLayer(new RectF(bounds), null, Canvas.ALL_SAVE_FLAG);
             float d = bounds.height();
             float startX = bounds.left + d / 2;
             float startY = (bounds.top + bounds.bottom) / 2;
@@ -255,23 +284,12 @@ public class BaseTabLayout extends TabLayout {
             Rect bounds = canvas.getClipBounds();
             bounds.set(bounds.left, bounds.top + indicatorPaddingVertical, bounds.right, bounds.bottom - indicatorPaddingVertical);
 
-            int saveCount = canvas.saveLayer(bounds.left, bounds.top, bounds.right, bounds.bottom, null, Canvas.ALL_SAVE_FLAG);
-
-            float d = bounds.height();
-            float startX = bounds.left + d / 2;
-            float startY = (bounds.top + bounds.bottom) / 2;
-            float stopX = bounds.right - d / 2;
-            float stopY = (bounds.top + bounds.bottom) / 2;
-
+            Bitmap bitmap_BGCircle = getBitmapInstance_BGCircle(bounds.width(), bounds.height());
+            mEdgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+            canvas.drawBitmap(bitmap_BGCircle, bounds.left, bounds.top, mEdgePaint);
             mEdgePaint.setXfermode(null);
-            mEdgePaint.setStrokeCap(Paint.Cap.SQUARE);
-            mEdgePaint.setStrokeWidth(d);
-            canvas.drawLine(startX, startY, stopX, stopY, mEdgePaint);
-            mEdgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
-            mEdgePaint.setStrokeCap(Paint.Cap.ROUND);
-            canvas.drawLine(startX, startY, stopX, stopY, mEdgePaint);
 
-            canvas.restoreToCount(saveCount);
+            canvas.restoreToCount(layerId_BGCircle);
 
         }
 

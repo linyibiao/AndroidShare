@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
  * Created by linyibiao on 2016/11/1.
  */
 
-public class CommonHelper {
+public class PluginWidgetUtil {
 
     public static Bitmap drawable2Bitmap(Drawable drawable, int width, int height) {
         if (drawable instanceof BitmapDrawable) {
