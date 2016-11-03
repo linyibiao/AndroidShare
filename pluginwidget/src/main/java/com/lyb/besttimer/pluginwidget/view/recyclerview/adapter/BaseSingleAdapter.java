@@ -1,13 +1,13 @@
 package com.lyb.besttimer.pluginwidget.view.recyclerview.adapter;
 
 /**
- * 单选adapter
+ * single adapter
  * Created by linyibiao on 2016/10/26.
  */
 
 public abstract class BaseSingleAdapter extends BaseAdapter {
 
-    //默认是-1不选择
+    //-1 for default what means no selection
     private int selectPosition = -1;
 
     public int getSelectPosition() {

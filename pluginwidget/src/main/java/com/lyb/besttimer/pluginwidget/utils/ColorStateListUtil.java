@@ -37,26 +37,26 @@ public class ColorStateListUtil {
 
     public static class ColorState {
 
-        //状态颜色
+        //state color
         private int stateColor;
-        //反状态颜色
+        //state reverse color
         private int stateReverseColor;
-        //是否显示反状态颜色
+        //whether show reverse
         private boolean showReverse;
-        //状态，0代表默认状态
+        //state,0 for default
         private int state;
 
-        //设置默认状态
+        //set for default state
         public ColorState(int stateReverseColor) {
             this(0, stateReverseColor, true, 0);
         }
 
-        //设置选中状态
+        //set for checked state
         public ColorState(int stateColor, int state) {
             this(stateColor, 0, false, state);
         }
 
-        //设置选中未选中状态
+        //set for checked and unchecked states
         public ColorState(int stateColor, int stateReverseColor, int state) {
             this(stateColor, stateReverseColor, true, state);
         }
