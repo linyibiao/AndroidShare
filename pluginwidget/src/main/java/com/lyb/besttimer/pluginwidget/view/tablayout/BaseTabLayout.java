@@ -267,20 +267,21 @@ public class BaseTabLayout extends TabLayout {
     @Override
     public void draw(Canvas canvas) {
 
+        Rect bounds = canvas.getClipBounds();
+        Rect bgBounds = new Rect(bounds.left, bounds.top + indicatorPaddingVertical, bounds.right, bounds.bottom - indicatorPaddingVertical);
+
         int layerId_BGCircle = 0;
 
         //handle background
         if (backgroundShape == SHAPE_BACKGROUND.Normal) {
             canvas.drawColor(mBackgroundPaint.getColor());
         } else if (backgroundShape == SHAPE_BACKGROUND.Circle) {
-            Rect bounds = canvas.getClipBounds();
-            bounds.set(bounds.left, bounds.top + indicatorPaddingVertical, bounds.right, bounds.bottom - indicatorPaddingVertical);
             layerId_BGCircle = canvas.saveLayer(new RectF(bounds), null, Canvas.ALL_SAVE_FLAG);
-            float d = bounds.height();
-            float startX = bounds.left + d / 2;
-            float startY = (bounds.top + bounds.bottom) / 2;
-            float stopX = bounds.right - d / 2;
-            float stopY = (bounds.top + bounds.bottom) / 2;
+            float d = bgBounds.height();
+            float startX = bgBounds.left + d / 2;
+            float startY = (bgBounds.top + bgBounds.bottom) / 2;
+            float stopX = bgBounds.right - d / 2;
+            float stopY = (bgBounds.top + bgBounds.bottom) / 2;
             mBackgroundPaint.setStrokeWidth(d);
             canvas.drawLine(startX, startY, stopX, stopY, mBackgroundPaint);
         }
@@ -335,12 +336,9 @@ public class BaseTabLayout extends TabLayout {
         if (backgroundShape == SHAPE_BACKGROUND.Normal) {
         } else if (backgroundShape == SHAPE_BACKGROUND.Circle) {
 
-            Rect bounds = canvas.getClipBounds();
-            bounds.set(bounds.left, bounds.top + indicatorPaddingVertical, bounds.right, bounds.bottom - indicatorPaddingVertical);
-
-            Bitmap bitmap_BGCircle = getBitmapInstance_BGCircle(bounds.width(), bounds.height());
+            Bitmap bitmap_BGCircle = getBitmapInstance_BGCircle(bgBounds.width(), bgBounds.height());
             mEdgePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-            canvas.drawBitmap(bitmap_BGCircle, bounds.left, bounds.top, mEdgePaint);
+            canvas.drawBitmap(bitmap_BGCircle, bgBounds.left, bgBounds.top, mEdgePaint);
             mEdgePaint.setXfermode(null);
 
             canvas.restoreToCount(layerId_BGCircle);

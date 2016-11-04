@@ -35,7 +35,7 @@ public class TabLayoutActivity extends BaseActivity {
         btl.setIndicatorShape(BaseTabLayout.SHAPE_INDICATOR.Circle);
 //        btl.setIndicatorShape(BaseTabLayout.SHAPE_INDICATOR.Triangle);
         btl.setIndicatorColor(0xFFFF0000);
-        btl.setIndicatorPaddingVertical(10);
+        btl.setIndicatorPaddingVertical(30);
         btl.setBackgroundShape(BaseTabLayout.SHAPE_BACKGROUND.Circle);
 //        btl.setBackgroundShape(BaseTabLayout.SHAPE_BACKGROUND.Normal);
         btl.setBGColor(0xFFad0000);
