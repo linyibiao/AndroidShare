@@ -41,6 +41,7 @@ public class TabLayoutActivity extends BaseActivity {
         btl.setBGColor(0xFFad0000);
 //        btl.setBGColor(0);
         btl.setTabMode(TabLayout.MODE_SCROLLABLE);
+        btl.setmTabPadding(0);
         setAdapter(vp);
     }
 

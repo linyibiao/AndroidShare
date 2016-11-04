@@ -8,13 +8,14 @@ import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.pluginwidget.utils.ColorStateListUtil;
-import com.lyb.besttimer.pluginwidget.view.tablayout.BaseTabLayout;
+import com.lyb.besttimer.pluginwidget.view.tablayout.adapter.BaseTabAdapter;
+import com.lyb.besttimer.pluginwidget.view.tablayout.adapter.BaseTabHolder;
 
 /**
  * Created by Administrator on 2016/11/1.
  */
 
-public class SimpleTabAdapter extends BaseTabLayout.BaseTabAdapter<SimpleTabAdapter.TestHolder> {
+public class SimpleTabAdapter extends BaseTabAdapter {
 
     private String[] titles;
 
@@ -23,7 +24,7 @@ public class SimpleTabAdapter extends BaseTabLayout.BaseTabAdapter<SimpleTabAdap
         this.titles = titles;
     }
 
-    class TestHolder extends BaseTabLayout.ViewHolder {
+    private class TestHolder extends BaseTabHolder<String> {
 
         TextView item_title;
         TextView item_number;
@@ -44,12 +45,12 @@ public class SimpleTabAdapter extends BaseTabLayout.BaseTabAdapter<SimpleTabAdap
     }
 
     @Override
-    public TestHolder onCreateViewHolder(ViewGroup parent) {
+    public BaseTabHolder onCreateViewHolder(ViewGroup parent) {
         return new TestHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tablayout, (ViewGroup) parent.getChildAt(0), false));
     }
 
     @Override
-    public void onBindViewHolder(TestHolder holder, int position) {
+    public void onBindViewHolder(BaseTabHolder holder, int position) {
         holder.fillView(titles[position], position);
     }
 

@@ -49,6 +49,7 @@ public class BaseTabLayout extends TabLayout {
             mTabStripField.setAccessible(true);
             mTabStrip = (ViewGroup) mTabStripField.get(this);
 
+            initTab();
             initIndicator();
             initBackground();
 
@@ -92,6 +93,59 @@ public class BaseTabLayout extends TabLayout {
             return true;
         }
     };
+
+    private void initTab() throws NoSuchFieldException {
+
+        mTabPaddingStartField = getClass().getSuperclass().getDeclaredField("mTabPaddingStart");
+        mTabPaddingStartField.setAccessible(true);
+
+        mTabPaddingTopField = getClass().getSuperclass().getDeclaredField("mTabPaddingTop");
+        mTabPaddingTopField.setAccessible(true);
+
+        mTabPaddingEndField = getClass().getSuperclass().getDeclaredField("mTabPaddingEnd");
+        mTabPaddingEndField.setAccessible(true);
+
+        mTabPaddingBottomField = getClass().getSuperclass().getDeclaredField("mTabPaddingBottom");
+        mTabPaddingBottomField.setAccessible(true);
+
+    }
+
+    //super data
+    private Field mTabPaddingStartField;
+    private Field mTabPaddingTopField;
+    private Field mTabPaddingEndField;
+    private Field mTabPaddingBottomField;
+
+    public void setmTabPadding(int tabPadding) {
+        setmTabPaddingStart(tabPadding);
+        setmTabPaddingTop(tabPadding);
+        setmTabPaddingEnd(tabPadding);
+        setmTabPaddingBottom(tabPadding);
+    }
+
+    public void setmTabPaddingStart(int mTabPaddingStart) {
+        setIntValueField(this, mTabPaddingStartField, mTabPaddingStart);
+    }
+
+    public void setmTabPaddingTop(int mTabPaddingTop) {
+        setIntValueField(this, mTabPaddingTopField, mTabPaddingTop);
+    }
+
+    public void setmTabPaddingEnd(int mTabPaddingEnd) {
+        setIntValueField(this, mTabPaddingEndField, mTabPaddingEnd);
+    }
+
+    public void setmTabPaddingBottom(int mTabPaddingBottom) {
+        setIntValueField(this, mTabPaddingBottomField, mTabPaddingBottom);
+    }
+
+    private void setIntValueField(Object object, Field field, int value) {
+        try {
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initIndicator() throws NoSuchFieldException, IllegalAccessException {
 
@@ -295,11 +349,11 @@ public class BaseTabLayout extends TabLayout {
 
     }
 
-    public static abstract class BaseTabAdapter<VH extends ViewHolder> {
+    public static abstract class Adapter<VH extends ViewHolder> {
 
-        private TabLayout tabLayout;
+        protected TabLayout tabLayout;
 
-        public BaseTabAdapter(TabLayout tabLayout) {
+        public Adapter(TabLayout tabLayout) {
             this.tabLayout = tabLayout;
         }
 
