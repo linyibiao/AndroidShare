@@ -2,16 +2,17 @@ package com.lyb.besttimer.androidshare.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.Constants;
-import com.lyb.besttimer.pluginwidget.systembar.SystemBarTintManager;
+import com.lyb.besttimer.pluginwidget.systembar.SystemBarTintRealManager;
+
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * activity基类
  * Created by Administrator on 2016/7/15.
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends SwipeBackActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,18 +23,13 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // create our manager instance after the content view is set
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        // enable status bar tint
-        tintManager.setStatusBarTintEnabled(true);
-        // enable navigation bar tint
-        tintManager.setNavigationBarTintEnabled(true);
-        // set a custom tint color for all system bars
-//        tintManager.setTintColor(Color.parseColor("#999000FF"));
-        // set a custom navigation bar resource
-//        tintManager.setNavigationBarTintResource(R.mipmap.refresh_arrow);
-        // set a custom status bar drawable
-//        tintManager.setStatusBarTintResource(R.mipmap.ic_launcher);
+        SystemBarTintRealManager.install(this);
+        SystemBarTintRealManager.getSystemBarTintManager(this).setStatusBarTintColor(0xff3F51B5);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SystemBarTintRealManager.uninstall(this);
+    }
 }

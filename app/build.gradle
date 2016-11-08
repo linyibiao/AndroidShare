@@ -29,4 +29,5 @@ dependencies {
     compile project(':pluginwidget')
     compile project(':network')
     compile project(':rxandroid')
+    compile project(':library_SwipeBackLayout')
 }
