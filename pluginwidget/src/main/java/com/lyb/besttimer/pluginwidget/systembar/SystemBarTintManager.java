@@ -26,6 +26,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -88,7 +89,30 @@ public class SystemBarTintManager {
         Window win = activity.getWindow();
         ViewGroup decorViewGroup = (ViewGroup) win.getDecorView();
 
+        Pair<Boolean, Boolean> isWindowTranslucent = isWindowTranslucent(activity);
+        mStatusBarAvailable = isWindowTranslucent.first;
+        mNavBarAvailable = isWindowTranslucent.second;
+
+        mConfig = new SystemBarConfig(activity, mStatusBarAvailable, mNavBarAvailable);
+        // device might not have virtual navigation keys
+        if (!mConfig.hasNavigtionBar()) {
+            mNavBarAvailable = false;
+        }
+
+        if (mStatusBarAvailable) {
+            setupStatusBarView(activity, decorViewGroup);
+        }
+        if (mNavBarAvailable) {
+            setupNavBarView(activity, decorViewGroup);
+        }
+
+    }
+
+    private static Pair<Boolean, Boolean> isWindowTranslucent(Activity activity) {
+        boolean mStatusBarAvailable = false;
+        boolean mNavBarAvailable = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window win = activity.getWindow();
             // check theme attrs
             int[] attrs = {android.R.attr.windowTranslucentStatus,
                     android.R.attr.windowTranslucentNavigation};
@@ -111,20 +135,7 @@ public class SystemBarTintManager {
                 mNavBarAvailable = true;
             }
         }
-
-        mConfig = new SystemBarConfig(activity, mStatusBarAvailable, mNavBarAvailable);
-        // device might not have virtual navigation keys
-        if (!mConfig.hasNavigtionBar()) {
-            mNavBarAvailable = false;
-        }
-
-        if (mStatusBarAvailable) {
-            setupStatusBarView(activity, decorViewGroup);
-        }
-        if (mNavBarAvailable) {
-            setupNavBarView(activity, decorViewGroup);
-        }
-
+        return new Pair<>(mStatusBarAvailable, mNavBarAvailable);
     }
 
     /**
@@ -368,6 +379,11 @@ public class SystemBarTintManager {
         private final int mNavigationBarWidth;
         private final boolean mInPortrait;
         private final float mSmallestWidthDp;
+
+        public static SystemBarConfig getSystemBarConfig(Activity activity) {
+            Pair<Boolean, Boolean> isWindowTranslucent = isWindowTranslucent(activity);
+            return new SystemBarConfig(activity, isWindowTranslucent.first, isWindowTranslucent.second);
+        }
 
         private SystemBarConfig(Activity activity, boolean translucentStatusBar, boolean traslucentNavBar) {
             Resources res = activity.getResources();
