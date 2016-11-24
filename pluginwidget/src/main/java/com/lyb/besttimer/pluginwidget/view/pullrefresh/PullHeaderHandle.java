@@ -10,7 +10,7 @@ import android.view.View;
 public interface PullHeaderHandle {
 
     enum HEADERSTATE {
-        NORMAL, READY, LOADING, SUCCESS
+        NORMAL, READY, LOADING, SUCCESS, FAIL
     }
 
     HEADERSTATE getHeaderstate();
@@ -32,6 +32,8 @@ public interface PullHeaderHandle {
     void setStateLoadingStr(String stateLoadingStr);
 
     void setStateSuccessStr(String stateSuccessStr);
+
+    void setStateFailStr(String stateFailStr);
 
     void updateMSG(String updateMSG);
 

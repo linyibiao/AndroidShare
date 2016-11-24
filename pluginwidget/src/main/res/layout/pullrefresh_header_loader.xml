@@ -69,4 +69,13 @@
         android:textColor="#ffffff"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/tv_fail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="refresh fail"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
 </RelativeLayout>

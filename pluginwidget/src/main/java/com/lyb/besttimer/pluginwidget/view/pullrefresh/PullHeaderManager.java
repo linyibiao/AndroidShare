@@ -40,6 +40,7 @@ public class PullHeaderManager implements PullHeaderHandle {
     private TextView tv_state;
     private TextView tv_updateMSG;
     private TextView tv_success;
+    private TextView tv_fail;
 
     private void init(Context context, @LayoutRes int layoutID) {
         headerView = LayoutInflater.from(context).inflate(layoutID, null, false);
@@ -51,6 +52,7 @@ public class PullHeaderManager implements PullHeaderHandle {
         tv_state = (TextView) headerView.findViewById(R.id.tv_state);
         tv_updateMSG = (TextView) headerView.findViewById(R.id.tv_updateMSG);
         tv_success = (TextView) headerView.findViewById(R.id.tv_success);
+        tv_fail = (TextView) headerView.findViewById(R.id.tv_fail);
 
         setHeaderState(HEADERSTATE.NORMAL);
 
@@ -79,7 +81,10 @@ public class PullHeaderManager implements PullHeaderHandle {
                 setLoading();
                 break;
             case SUCCESS:
-                setSuccess();
+                setCompleted(true);
+                break;
+            case FAIL:
+                setCompleted(false);
                 break;
         }
         this.headerstate = headerstate;
@@ -100,6 +105,7 @@ public class PullHeaderManager implements PullHeaderHandle {
                 }
                 break;
             case SUCCESS:
+            case FAIL:
                 break;
         }
         return canScrollToTop;
@@ -123,6 +129,7 @@ public class PullHeaderManager implements PullHeaderHandle {
             case LOADING:
                 break;
             case SUCCESS:
+            case FAIL:
                 if (scrollY >= 0) {
                     setHeaderState(HEADERSTATE.NORMAL);
                 }
@@ -139,6 +146,7 @@ public class PullHeaderManager implements PullHeaderHandle {
     private String stateReadyStr = "release to refresh";
     private String stateLoadingStr = "refreshing...";
     private String stateSuccessStr = "refresh complete";
+    private String stateFailStr = "refresh fail";
 
     @Override
     public void setStateNormalStr(String stateNormalStr) {
@@ -173,6 +181,14 @@ public class PullHeaderManager implements PullHeaderHandle {
     }
 
     @Override
+    public void setStateFailStr(String stateFailStr) {
+        this.stateFailStr = stateFailStr;
+        if (headerstate == HEADERSTATE.FAIL) {
+            tv_fail.setText(stateFailStr);
+        }
+    }
+
+    @Override
     public void updateMSG(String updateMSG) {
         tv_updateMSG.setText(updateMSG);
         if (TextUtils.isEmpty(updateMSG)) {
@@ -200,6 +216,7 @@ public class PullHeaderManager implements PullHeaderHandle {
         tv_state.setText(stateNormalStr);
 
         tv_success.setVisibility(View.INVISIBLE);
+        tv_fail.setVisibility(View.INVISIBLE);
 
     }
 
@@ -214,6 +231,7 @@ public class PullHeaderManager implements PullHeaderHandle {
         tv_state.setText(stateReadyStr);
 
         tv_success.setVisibility(View.INVISIBLE);
+        tv_fail.setVisibility(View.INVISIBLE);
 
     }
 
@@ -227,17 +245,25 @@ public class PullHeaderManager implements PullHeaderHandle {
         tv_state.setText(stateLoadingStr);
 
         tv_success.setVisibility(View.INVISIBLE);
+        tv_fail.setVisibility(View.INVISIBLE);
 
     }
 
-    private void setSuccess() {
+    private void setCompleted(boolean successful) {
 
         rl_refresh_pic.setVisibility(View.INVISIBLE);
 
         ll_state_show.setVisibility(View.INVISIBLE);
 
-        tv_success.setVisibility(View.VISIBLE);
-        tv_success.setText(stateSuccessStr);
+        if (successful) {
+            tv_success.setVisibility(View.VISIBLE);
+            tv_success.setText(stateSuccessStr);
+            tv_fail.setVisibility(View.INVISIBLE);
+        } else {
+            tv_fail.setVisibility(View.VISIBLE);
+            tv_fail.setText(stateFailStr);
+            tv_success.setVisibility(View.INVISIBLE);
+        }
 
     }
 

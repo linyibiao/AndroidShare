@@ -88,6 +88,7 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         String stateReadyStr = null;
         String stateLoadingStr = null;
         String stateSuccessStr = null;
+        String stateFailStr = null;
         int arrowResId = 0;
         String pull_class = null;
 
@@ -104,6 +105,8 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
                 stateLoadingStr = a.getString(attr);
             } else if (attr == R.styleable.PullRefreshView_state_success_str) {
                 stateSuccessStr = a.getString(attr);
+            } else if (attr == R.styleable.PullRefreshView_state_fail_str) {
+                stateFailStr = a.getString(attr);
             } else if (attr == R.styleable.PullRefreshView_pull_arrow) {
                 arrowResId = a.getResourceId(attr, R.mipmap.refresh_arrow);
             } else if (attr == R.styleable.PullRefreshView_pull_class) {
@@ -129,6 +132,9 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         }
         if (!TextUtils.isEmpty(stateSuccessStr)) {
             pullHeaderManager.setStateSuccessStr(stateSuccessStr);
+        }
+        if (!TextUtils.isEmpty(stateFailStr)) {
+            pullHeaderManager.setStateFailStr(stateFailStr);
         }
         if (arrowResId != 0) {
             pullHeaderManager.setImageResource(arrowResId);
@@ -444,14 +450,8 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
     private void releaseTouch() {
         if (pullHeaderManager.canScrollToTop(getScrollX(), getScrollY())) {
             springBack(getScrollX(), getScrollY(), 0, 0, 0, 0);
-//            if (springBack(getScrollX(), getScrollY(), 0, 0, 0, 0)) {
-//                ViewCompat.postInvalidateOnAnimation(this);
-//            }
         } else {
             springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), 0);
-//            if (springBack(getScrollX(), getScrollY(), 0, 0, -pullHeaderManager.getThreshold(), 0)) {
-//                ViewCompat.postInvalidateOnAnimation(this);
-//            }
         }
     }
 
@@ -473,7 +473,6 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         int mDuration = (int) (1000.0 * Math.sqrt(Math.abs(2.0 * dy / GRAVITY)));
         mScroller.startScroll(startX, startY, dx, dy, mDuration);
         ViewCompat.postInvalidateOnAnimation(this);
-//        return dx != 0 || dy != 0;
     }
 
     @Override
@@ -495,11 +494,11 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
                     if (pullListener != null) {
                         pullListener.onRefresh();
                     }
-                } else if (pullHeaderManager.getHeaderstate() == PullHeaderHandle.HEADERSTATE.SUCCESS) {
+                } else if (pullHeaderManager.getHeaderstate() == PullHeaderHandle.HEADERSTATE.SUCCESS || pullHeaderManager.getHeaderstate() == PullHeaderHandle.HEADERSTATE.FAIL) {
                     if (getScrollY() >= 0) {
                         pullHeaderManager.setHeaderState(PullHeaderHandle.HEADERSTATE.NORMAL);
                     } else {
-                        refreshSuccessRun();
+                        refreshCompletedRun(pullHeaderManager.getHeaderstate() == PullHeaderHandle.HEADERSTATE.SUCCESS);
                     }
                 }
             }
@@ -534,15 +533,15 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
     /**
      * refresh completed
      */
-    public void refreshCompleted() {
-        refreshSuccessRun();
+    public void refreshCompleted(boolean successful) {
+        refreshCompletedRun(successful);
         if (pullListener != null) {
-            pullListener.onRefreshCompleted();
+            pullListener.onRefreshCompleted(successful);
         }
     }
 
-    private void refreshSuccessRun() {
-        pullHeaderManager.setHeaderState(PullHeaderHandle.HEADERSTATE.SUCCESS);
+    private void refreshCompletedRun(boolean successful) {
+        pullHeaderManager.setHeaderState(successful ? PullHeaderHandle.HEADERSTATE.SUCCESS : PullHeaderHandle.HEADERSTATE.FAIL);
         removeCallbacks(releaseRunnable);
         postDelayed(releaseRunnable, SUCCESS_STAY_TIME);
     }
@@ -552,9 +551,6 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
         public void run() {
             if (!mIsBeingDragged && !mNestedScrollInProgress) {
                 springBack(getScrollX(), getScrollY(), 0, 0, 0, 0);
-//                if (springBack(getScrollX(), getScrollY(), 0, 0, 0, 0)) {
-//                    ViewCompat.postInvalidateOnAnimation(PullRefreshView.this);
-//                }
             }
         }
     };
@@ -566,9 +562,11 @@ public class PullRefreshView extends ViewGroup implements NestedScrollingChild, 
     }
 
     public interface PullListener {
+
         void onRefresh();
 
-        void onRefreshCompleted();
+        //completed
+        void onRefreshCompleted(boolean successful);
     }
 
     private void flingWithNestedDispatch(int velocityY) {

@@ -38,14 +38,14 @@ public class PullRefreshActivity extends BaseActivity {
                 pullRefreshView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pullRefreshView.refreshCompleted();
+                        pullRefreshView.refreshCompleted(true);
                     }
                 }, 5000);
             }
 
             @Override
-            public void onRefreshCompleted() {
-                Toast.makeText(PullRefreshActivity.this, "刷新完毕", Toast.LENGTH_SHORT).show();
+            public void onRefreshCompleted(boolean successful) {
+                Toast.makeText(PullRefreshActivity.this, "刷新完毕" + successful, Toast.LENGTH_SHORT).show();
             }
         });
 
