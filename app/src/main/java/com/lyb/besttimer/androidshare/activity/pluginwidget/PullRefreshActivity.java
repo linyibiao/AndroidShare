@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.pullrefresh.PullRefreshView;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.ItemTouchFeature;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.LoadMoreAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,52 @@ public class PullRefreshActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pull_refresh);
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        Random random = new Random(System.currentTimeMillis());
+
+        List<ItemTree> itemTrees = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            ItemTree itemTree0 = new ItemTree(new RVData("层次" + i, 0), true, null);
+            itemTrees.add(itemTree0);
+            for (int j = 0; j < 1 /*+ random.nextInt(3)*/; j++) {
+                ItemTree itemTree1 = new ItemTree(new RVData("层次" + i + j, 1), true, itemTree0);
+                for (int k = 0; k < 1 /*+ random.nextInt(3)*/; k++) {
+                    new ItemTree(new RVData("层次" + i + j + k, 2), true, itemTree1);
+                }
+            }
+        }
+        final LoadMoreAdapter loadMoreAdapter = new LoadMoreAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)), new LoadMoreAdapter.MoreListener() {
+
+            private Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    LoadMoreAdapter loadMoreAdapter = (LoadMoreAdapter) recyclerView.getAdapter();
+                    loadMoreAdapter.loadMoreCompleted(true, true);
+                    Log.e("what", "whatwhat_inside");
+                }
+            };
+
+            @Override
+            public void onLoadMore() {
+                Log.e("what", "whatwhat_outside");
+                recyclerView.postDelayed(runnable, 5000);
+            }
+
+            @Override
+            public void interruptLoad() {
+                recyclerView.removeCallbacks(runnable);
+            }
+
+            @Override
+            public void onLoadCompleted(boolean successful) {
+                Toast.makeText(recyclerView.getContext(), "加载完毕" + successful, Toast.LENGTH_SHORT).show();
+            }
+        });
+        loadMoreAdapter.updateMoreData(new LoadMoreAdapter.MoreData("加载更多", "加载失败", "没有更多了"));
+        recyclerView.setAdapter(loadMoreAdapter);
 
         final PullRefreshView pullRefreshView = (PullRefreshView) findViewById(R.id.prv);
 
@@ -45,6 +95,7 @@ public class PullRefreshActivity extends BaseActivity {
 
             @Override
             public void onRefreshCompleted(boolean successful) {
+                loadMoreAdapter.notifyDataSetChanged();
                 Toast.makeText(PullRefreshActivity.this, "刷新完毕" + successful, Toast.LENGTH_SHORT).show();
             }
         });
@@ -55,24 +106,6 @@ public class PullRefreshActivity extends BaseActivity {
                 pullRefreshView.forceToRefresh();
             }
         }, 5000);
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
-        Random random = new Random(System.currentTimeMillis());
-
-        List<ItemTree> itemTrees = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            ItemTree itemTree0 = new ItemTree(new RVData("层次" + i, 0), true, null);
-            itemTrees.add(itemTree0);
-            for (int j = 0; j < 1 + random.nextInt(3); j++) {
-                ItemTree itemTree1 = new ItemTree(new RVData("层次" + i + j, 1), true, itemTree0);
-                for (int k = 0; k < 1 + random.nextInt(3); k++) {
-                    new ItemTree(new RVData("层次" + i + j + k, 2), true, itemTree1);
-                }
-            }
-        }
-        recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
 
         new ItemTouchFeature(recyclerView, ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
 
@@ -159,7 +192,7 @@ public class PullRefreshActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
+    private static class MyAdapter extends BaseAdapter {
 
         private TreeDataManager treeDataManager;
 
@@ -172,7 +205,7 @@ public class PullRefreshActivity extends BaseActivity {
         }
 
         @Override
-        public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = null;
             switch (viewType) {
                 case 0:
@@ -189,24 +222,10 @@ public class PullRefreshActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(Holder holder, final int position) {
+        public void onBindViewHolder(BaseHolder holder, final int position) {
             final ItemTree itemTree = treeDataManager.getItem(position);
             final RVData rvData = (RVData) itemTree.getObject();
-            TextView textView = holder.tv;
-            textView.setText(rvData.show);
-            Button btn = holder.btn;
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
-                }
-            });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    treeDataManager.flex(treeDataManager.indexOf(itemTree));
-                }
-            });
+            holder.fillView(itemTree.getObject(), position);
         }
 
         @Override
@@ -219,7 +238,7 @@ public class PullRefreshActivity extends BaseActivity {
             return treeDataManager.getItemCount();
         }
 
-        protected class Holder extends RecyclerView.ViewHolder {
+        protected class Holder extends BaseHolder<RVData> {
 
             public TextView tv;
             public Button btn;
@@ -228,6 +247,25 @@ public class PullRefreshActivity extends BaseActivity {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
+            }
+
+            @Override
+            public void fillView(final RVData data, int position) {
+                final ItemTree itemTree = treeDataManager.getItem(position);
+                TextView textView = tv;
+                textView.setText(data.show);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), data.show, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                    }
+                });
             }
         }
 
