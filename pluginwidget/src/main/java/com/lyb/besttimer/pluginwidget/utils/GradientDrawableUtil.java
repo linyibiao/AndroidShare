@@ -7,6 +7,7 @@ public class GradientDrawableUtil {
     public static GradientDrawable getGradientDrawable(GradientDrawableData gradientDrawableData) {
         GradientDrawable gradientDrawable = new GradientDrawable(gradientDrawableData.getOrientation(), gradientDrawableData.getColors());
         gradientDrawable.setCornerRadius(gradientDrawableData.getmRadius());
+        gradientDrawable.setCornerRadii(gradientDrawableData.getRadii());
         GradientDrawableData.StrokeData strokeData = gradientDrawableData.getStrokeData();
         gradientDrawable.setStroke(strokeData.getWidth(), strokeData.getColor(), strokeData.getDashWidth(), strokeData.getDashGap());
         gradientDrawable.setShape(gradientDrawableData.getmShape());
@@ -22,6 +23,7 @@ public class GradientDrawableUtil {
         private GradientDrawable.Orientation orientation = GradientDrawable.Orientation.TOP_BOTTOM;
         private int[] colors = null;
         private float mRadius = 0.0f;
+        private float[] radii = null;
         private StrokeData strokeData = new StrokeData(0, 0);
         private int mShape = GradientDrawable.RECTANGLE;
         private int mGradient = GradientDrawable.LINEAR_GRADIENT;
@@ -74,10 +76,22 @@ public class GradientDrawableUtil {
             this.argb = argb;
         }
 
-        public GradientDrawableData(GradientDrawable.Orientation orientation, int[] colors, float mRadius, StrokeData strokeData, int mShape, int mGradient, float mCenterX, float mCenterY, float mGradientRadius, int argb) {
+        public GradientDrawableData(float[] radii, int argb) {
+            this.radii = radii;
+            this.argb = argb;
+        }
+
+        public GradientDrawableData(float mRadius, StrokeData strokeData, int argb) {
+            this.mRadius = mRadius;
+            this.strokeData = strokeData;
+            this.argb = argb;
+        }
+
+        public GradientDrawableData(GradientDrawable.Orientation orientation, int[] colors, float mRadius, float[] radii, StrokeData strokeData, int mShape, int mGradient, float mCenterX, float mCenterY, float mGradientRadius, int argb) {
             this.orientation = orientation;
             this.colors = colors;
             this.mRadius = mRadius;
+            this.radii = radii;
             this.strokeData = strokeData;
             this.mShape = mShape;
             this.mGradient = mGradient;
@@ -97,6 +111,10 @@ public class GradientDrawableUtil {
 
         public float getmRadius() {
             return mRadius;
+        }
+
+        public float[] getRadii() {
+            return radii;
         }
 
         public StrokeData getStrokeData() {

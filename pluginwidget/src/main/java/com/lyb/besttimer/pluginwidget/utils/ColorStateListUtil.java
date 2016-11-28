@@ -7,20 +7,20 @@ import java.util.Map;
 
 public class ColorStateListUtil {
 
-    public static ColorStateList getColorStateList(ColorState colorState) {
-        return getColorStateList(new ColorState[]{colorState});
+    public static ColorStateList getColorStateList(ViewState<Integer> colorState) {
+        return getColorStateList(new ViewState[]{colorState});
     }
 
-    public static ColorStateList getColorStateList(ColorState... colorStates) {
+    public static ColorStateList getColorStateList(ViewState<Integer>... colorStates) {
         Map<Integer, Integer> map = new LinkedHashMap<>();
-        for (ColorState colorState : colorStates) {
+        for (ViewState<Integer> colorState : colorStates) {
             if (colorState.getState() != 0) {
-                map.put(colorState.getState(), colorState.getStateColor());
+                map.put(colorState.getState(), colorState.getStateValue());
                 if (colorState.isShowReverse()) {
-                    map.put(-colorState.getState(), colorState.getStateReverseColor());
+                    map.put(-colorState.getState(), colorState.getStateReverseValue());
                 }
             } else {
-                map.put(0, colorState.getStateReverseColor());
+                map.put(0, colorState.getStateReverseValue());
             }
         }
         int[][] states = new int[map.size()][];
@@ -33,56 +33,6 @@ public class ColorStateListUtil {
         }
         ColorStateList colorStateList = new ColorStateList(states, colors);
         return colorStateList;
-    }
-
-    public static class ColorState {
-
-        //state color
-        private int stateColor;
-        //state reverse color
-        private int stateReverseColor;
-        //whether show reverse
-        private boolean showReverse;
-        //state,0 for default
-        private int state;
-
-        //set for default state
-        public ColorState(int stateReverseColor) {
-            this(0, stateReverseColor, true, 0);
-        }
-
-        //set for checked state
-        public ColorState(int stateColor, int state) {
-            this(stateColor, 0, false, state);
-        }
-
-        //set for checked and unchecked states
-        public ColorState(int stateColor, int stateReverseColor, int state) {
-            this(stateColor, stateReverseColor, true, state);
-        }
-
-        private ColorState(int stateColor, int stateReverseColor, boolean showReverse, int state) {
-            this.stateColor = stateColor;
-            this.stateReverseColor = stateReverseColor;
-            this.showReverse = showReverse;
-            this.state = state;
-        }
-
-        public int getStateColor() {
-            return stateColor;
-        }
-
-        public int getStateReverseColor() {
-            return stateReverseColor;
-        }
-
-        public boolean isShowReverse() {
-            return showReverse;
-        }
-
-        public int getState() {
-            return state;
-        }
     }
 
 }
