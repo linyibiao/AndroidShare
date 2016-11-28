@@ -81,6 +81,12 @@ public class GradientDrawableUtil {
             this.argb = argb;
         }
 
+        public GradientDrawableData(float[] radii, StrokeData strokeData, int argb) {
+            this.radii = radii;
+            this.strokeData = strokeData;
+            this.argb = argb;
+        }
+
         public GradientDrawableData(float mRadius, StrokeData strokeData, int argb) {
             this.mRadius = mRadius;
             this.strokeData = strokeData;
