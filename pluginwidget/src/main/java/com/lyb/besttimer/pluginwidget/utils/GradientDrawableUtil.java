@@ -7,7 +7,9 @@ public class GradientDrawableUtil {
     public static GradientDrawable getGradientDrawable(GradientDrawableData gradientDrawableData) {
         GradientDrawable gradientDrawable = new GradientDrawable(gradientDrawableData.getOrientation(), gradientDrawableData.getColors());
         gradientDrawable.setCornerRadius(gradientDrawableData.getmRadius());
-        gradientDrawable.setCornerRadii(gradientDrawableData.getRadii());
+        if (gradientDrawableData.getRadii() != null) {
+            gradientDrawable.setCornerRadii(gradientDrawableData.getRadii());
+        }
         GradientDrawableData.StrokeData strokeData = gradientDrawableData.getStrokeData();
         gradientDrawable.setStroke(strokeData.getWidth(), strokeData.getColor(), strokeData.getDashWidth(), strokeData.getDashGap());
         gradientDrawable.setShape(gradientDrawableData.getmShape());
