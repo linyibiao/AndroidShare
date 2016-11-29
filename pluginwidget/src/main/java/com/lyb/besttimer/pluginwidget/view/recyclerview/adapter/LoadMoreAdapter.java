@@ -14,17 +14,21 @@ import com.lyb.besttimer.pluginwidget.view.textview.BaseTextView;
  * Created by linyibiao on 2016/11/25.
  */
 
-public class LoadMoreAdapter extends BaseAdapter {
+public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter {
 
-    private BaseAdapter mWrapperAdapter;
+    private T mWrapperAdapter;
     private MoreListener moreListener;
 
     //more type
     public static final int MORETYPE = Integer.MAX_VALUE;
 
-    public LoadMoreAdapter(BaseAdapter mWrapperAdapter, MoreListener moreListener) {
+    public LoadMoreAdapter(T mWrapperAdapter, MoreListener moreListener) {
         this.mWrapperAdapter = mWrapperAdapter;
         this.moreListener = moreListener;
+    }
+
+    public T getmWrapperAdapter() {
+        return mWrapperAdapter;
     }
 
     public void updateMoreData(MoreData moreData) {
