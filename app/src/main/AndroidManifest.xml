@@ -30,6 +30,7 @@
         <activity android:name=".activity.pluginwidget.TabLayoutActivity" />
         <activity android:name=".activity.pluginwidget.PorterDuffActivity" />
         <activity android:name=".activity.network.WebJSActivity" />
+        <activity android:name=".activity.pluginwidget.EditTextActivity"></activity>
     </application>
 
 </manifest>

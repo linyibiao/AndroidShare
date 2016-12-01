@@ -13,6 +13,7 @@ import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.network.WebJSActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
@@ -58,6 +59,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(SwipeLayoutActivity.class, "swipe layout"));
             lvData.getLvDatas().add(new LVData(TabLayoutActivity.class, "simple tablayout"));
             lvData.getLvDatas().add(new LVData(PorterDuffActivity.class, "simple porterDuff"));
+            lvData.getLvDatas().add(new LVData(EditTextActivity.class, "simple edittext"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
