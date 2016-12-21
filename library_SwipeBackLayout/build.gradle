@@ -6,12 +6,14 @@ apply plugin: 'com.jfrog.bintray'
 
 version = "0.0.2"       //这个是版本号，必须填写
 
+Map<String, String> cfg = rootProject.ext.android
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion cfg.minSdkVersion
         targetSdkVersion 24
         versionCode 1
         versionName "1.0.0"

@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.glide.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.network.WebJSActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
@@ -64,6 +65,10 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
             lvData.getLvDatas().add(new LVData(SimpleRxActivity.class, "simple rxjava"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "glide");
+            lvData.getLvDatas().add(new LVData(GlideActivity.class, "simple glide"));
             lvDatas.add(lvData);
 
         }

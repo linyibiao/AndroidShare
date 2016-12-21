@@ -1,12 +1,14 @@
 apply plugin: 'com.android.application'
 
+Map<String, String> cfg = rootProject.ext.android
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.lyb.besttimer.androidshare"
-        minSdkVersion 9
+        minSdkVersion cfg.minSdkVersion
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
