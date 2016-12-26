@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 新的主界面布局 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_layout">
+    <RelativeLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+         android:id="@+id/web_first_Text" >
+           <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="(web前端注意事项)"
+        android:textSize="15dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/text" 
+        android:textStyle="italic" 
+        android:textIsSelectable="false"
+        android:textColor="@android:color/black"/> 
+    </RelativeLayout>
+     <RelativeLayout android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/web_bt_plot"
+        android:layout_centerHorizontal="true"
+        android:background="#ebebeb">
+           <LinearLayout android:layout_width="fill_parent"
+       		android:layout_height="30dp"
+        		android:layout_alignParentBottom="true"
+        		android:layout_centerHorizontal="true"
+        		android:orientation="horizontal">
+               <Button android:layout_width="fill_parent"
+           	 android:layout_height="30dp"
+          	  android:id="@+id/bt_setting_web"
+         	 	  android:layout_marginRight="1dp"
+            	 android:textSize="12dp"
+            	 android:text="设置" 
+            	 android:textColor="@android:color/black"
+            	 android:background="#ffffff"
+            	 android:layout_weight="1"/>
+        		<Button android:layout_width="fill_parent"
+          	  android:layout_height="30dp"
+          	  android:id="@+id/bt_help_web"
+           	  android:layout_marginLeft="1dp"
+           	 android:text="帮助"
+           	 android:textSize="12dp"
+           	 android:textColor="@android:color/black"
+           	 android:background="#ffffff"
+           	 android:layout_weight="1"/>
+           </LinearLayout>
+        </RelativeLayout>
+         <ListView android:id="@+id/web_tips_item_list"
+        android:layout_width="wrap_content"       
+         android:layout_height="match_parent"
+         android:layout_below="@id/web_first_Text"
+        android:layout_above="@id/web_bt_plot"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="1dp"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+        android:numColumns="3"
+        android:background="#ebebeb"
+        android:layout_marginTop="1dp"
+       />
+    
+
+
+
+   
+    
+
+</RelativeLayout>

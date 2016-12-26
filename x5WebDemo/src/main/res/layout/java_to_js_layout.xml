@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="5dp">
+        <com.example.test_webview_demo.utils.X5WebView
+         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:id="@+id/web_jsjava"
+        android:scrollbars="none"
+        >         
+        </com.example.test_webview_demo.utils.X5WebView>
+        <Button android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="native关闭web页面"
+            android:layout_alignParentRight="true"
+ 			android:layout_alignParentTop="true"
+ 			android:textSize="20dp"
+ 			android:id="@+id/web_jsjava_close_btn"/>
+	        
+	    <TextView android:text="X5webview"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentBottom="true"
+	            android:textColor="#f8022b"
+	            android:textSize="15dp"
+	            android:layout_margin="2dp"/>
+    </RelativeLayout>
+    <View android:layout_width="fill_parent"
+	            android:paddingTop="3dp"
+	            android:paddingBottom="3dp"
+	            android:layout_height="3dp"
+	            android:background="#000000"/>
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="5dp">
+	    
+        
+	    
+	    <LinearLayout android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:padding="5dp">
+	        <LinearLayout android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal"
+	            android:layout_marginTop="3dp"
+	            android:layout_marginBottom="3dp">
+	            <EditText android:layout_width="match_parent"
+	            android:layout_height="50dp"
+	            android:layout_weight="1"
+	            android:id="@+id/edit_jsjava_edit"
+	            />
+	            <Button  android:layout_width="match_parent"
+	                android:layout_height="50dp"
+	               android:layout_weight="3"
+	               android:id="@+id/bt_jsjava_edit"
+	               android:text="提交" />
+	        </LinearLayout>
+	        <View android:layout_width="fill_parent"
+	            android:paddingTop="3dp"
+	            android:paddingBottom="3dp"
+	            android:layout_height="1dp"
+	            android:background="#000000"/>
+	        <LinearLayout android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal"
+	             android:layout_marginTop="3dp"
+	            android:layout_marginBottom="3dp">
+	            <TextView android:layout_width="match_parent"
+	            android:layout_height="50dp"
+	            android:layout_weight="1"
+	            android:id="@+id/text_jsjava_num"/>
+	            <Button  android:layout_width="match_parent"
+	                android:layout_height="50dp"
+	               android:layout_weight="3"
+	               android:id="@+id/bt_jsjava_num_add"
+	               android:text="+" />
+	            <Button  android:layout_width="match_parent"
+	                android:layout_height="50dp"
+	               android:layout_weight="3"
+	               android:id="@+id/bt_jsjava_num_minuse"
+	               android:text="-" />
+	        </LinearLayout>
+	        <View android:layout_width="fill_parent"
+	            android:paddingTop="3dp"
+	            android:paddingBottom="3dp"
+	            android:layout_height="1dp"
+	            android:background="#000000"/>
+	        
+	    </LinearLayout>
+	    <TextView android:text="Android框架"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentTop="true"
+	            android:layout_alignParentRight="true"
+	            android:textColor="#f8022b"
+	            android:textSize="15dp"
+	            android:layout_margin="2dp"/>
+        
+    </RelativeLayout>
+    
+
+</LinearLayout>

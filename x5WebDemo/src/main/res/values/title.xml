@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="index_titles">
+        <item>浏览器demo</item>
+        <item>全屏播放</item>
+        <item>java Js相互调用</item>
+        <item>文件选择器</item>
+        <item>TBS视频裸播</item>
+        <item>网页图片</item>
+        <item>web窗口转移</item>
+        <item>系统内核测试</item>
+        <item>TBS Flash播放</item>
+        <item>定制长按功能</item>
+        <item>过量下拉</item>
+        <item>调用简版QB</item>
+    </string-array>
+
+</resources>
