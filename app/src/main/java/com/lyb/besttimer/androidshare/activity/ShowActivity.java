@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.glide.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
-import com.lyb.besttimer.androidshare.activity.network.WebJSActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
@@ -45,7 +44,6 @@ public class ShowActivity extends BaseActivity {
 
             LVData lvData = new LVData(ShowActivity.class, "network");
             lvData.getLvDatas().add(new LVData(SimpleRetrofitActivity.class, "simple retrofit"));
-            lvData.getLvDatas().add(new LVData(WebJSActivity.class, "web js"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "pluginwidget");
