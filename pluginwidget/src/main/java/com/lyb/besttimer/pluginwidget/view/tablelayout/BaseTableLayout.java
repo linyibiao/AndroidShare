@@ -27,6 +27,10 @@ public class BaseTableLayout extends TableLayout {
 
     }
 
+    public TableAdapter getTableAdapter() {
+        return tableAdapter;
+    }
+
     public void setTableAdapter(TableAdapter tableAdapter) {
         this.tableAdapter = tableAdapter;
         if (tableAdapter != null) {

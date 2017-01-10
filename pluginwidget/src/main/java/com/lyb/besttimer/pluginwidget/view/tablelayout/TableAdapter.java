@@ -89,14 +89,15 @@ public abstract class TableAdapter extends BaseAdapter {
             TableRowInfo tableRowInfo = tableInfo.getTableRowInfoList().get(tableRowInfoIndex);
             List<BaseHolder> saveHolderList = saveHolderLists.get(tableRowInfoIndex);
             for (int tableItemInfoIndex = 0; tableItemInfoIndex < tableRowInfo.getTableItemInfos().size(); tableItemInfoIndex++) {
+
+                if (position + 1 > getItemCount()) {
+                    return;
+                }
+
                 BaseHolder baseHolder = saveHolderList.get(tableItemInfoIndex);
                 onBindViewHolder(baseHolder, position);
 
                 position++;
-
-                if (position>=getItemCount()){
-                    return;
-                }
 
             }
         }
