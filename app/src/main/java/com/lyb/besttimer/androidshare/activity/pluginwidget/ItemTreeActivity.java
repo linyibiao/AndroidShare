@@ -14,6 +14,7 @@ import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
 
 import java.util.ArrayList;
@@ -80,13 +81,13 @@ public class ItemTreeActivity extends BaseActivity {
             View view = null;
             switch (viewType) {
                 case 0:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_level0, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_list_level0, parent, false);
                     break;
                 case 1:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_level1, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_list_level1, parent, false);
                     break;
                 case 2:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_level2, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_list_level2, parent, false);
                     break;
             }
             return new Holder(view);
@@ -127,11 +128,13 @@ public class ItemTreeActivity extends BaseActivity {
 
             public TextView tv;
             public Button btn;
+            public BaseRecyclerView brv_datas;
 
             public Holder(View itemView) {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
+                brv_datas = (BaseRecyclerView) itemView.findViewById(R.id.brv_datas);
             }
         }
 

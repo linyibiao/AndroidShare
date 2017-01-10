@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 Map<String, String> cfg = rootProject.ext.android
+Map<String, String> dCfg = rootProject.ext.dependencies
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion cfg.compileSdkVersion
+    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
         applicationId "com.lyb.besttimer.androidshare"
         minSdkVersion cfg.minSdkVersion
-        targetSdkVersion 24
+        targetSdkVersion cfg.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -24,7 +25,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile "com.android.support:appcompat-v7:${dCfg.supportVersion}"
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'

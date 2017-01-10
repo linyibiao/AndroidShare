@@ -4,17 +4,18 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "0.0.44"       //这个是版本号，必须填写
+version = "0.0.45"       //这个是版本号，必须填写
 
 Map<String, String> cfg = rootProject.ext.android
+Map<String, String> dCfg = rootProject.ext.dependencies
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion cfg.compileSdkVersion
+    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
         minSdkVersion cfg.minSdkVersion
-        targetSdkVersion 24
+        targetSdkVersion cfg.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -33,9 +34,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile "com.android.support:recyclerview-v7:${dCfg.supportVersion}"
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:design:24.2.0'
+    compile "com.android.support:design:${dCfg.supportVersion}"
 }
 
 def siteUrl = 'https://github.com/linyibiao/AndroidShare'      // 项目的主页   这个是说明，可随便填

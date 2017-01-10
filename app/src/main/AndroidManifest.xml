@@ -31,6 +31,7 @@
         <activity android:name=".activity.pluginwidget.PorterDuffActivity" />
         <activity android:name=".activity.pluginwidget.EditTextActivity" />
         <activity android:name=".activity.glide.GlideActivity" />
+        <activity android:name=".activity.pluginwidget.TableLayoutActivity"></activity>
     </application>
 
 </manifest>

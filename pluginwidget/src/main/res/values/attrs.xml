@@ -12,4 +12,10 @@
     <declare-styleable name="BaseTextView">
 
     </declare-styleable>
+    <declare-styleable name="BaseTableLayout">
+
+    </declare-styleable>
+    <declare-styleable name="BaseTableRow">
+
+    </declare-styleable>
 </resources>
