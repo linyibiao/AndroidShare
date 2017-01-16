@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_simple_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity">
+
+    <FrameLayout
+        android:id="@+id/fl_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <FrameLayout
+        android:id="@+id/fl_vp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <!--<fragment
+        android:name="com.lyb.besttimer.androidshare.fragment.SimpleFragment"
+        android:layout_width="match_parent"
+        android:id="@+id/f_what"
+        android:layout_height="match_parent"
+        android:tag="@string/app_name"
+        tools:layout="@layout/fragment_simple" />-->
+
+</LinearLayout>

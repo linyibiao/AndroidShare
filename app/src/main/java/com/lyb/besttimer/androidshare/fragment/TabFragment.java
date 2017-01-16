@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.lyb.besttimer.pluginwidget.fragment.BaseFragment;
+
 /**
  * tab fragment
  * Created by linyibiao on 2016/10/28.

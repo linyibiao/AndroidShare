@@ -1,10 +1,11 @@
-package com.lyb.besttimer.androidshare.fragment;
+package com.lyb.besttimer.pluginwidget.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by Administrator on 2016/10/28.
+ * base fragment
+ * Created by linyibiao on 2017/1/11.
  */
 
 public class BaseFragment extends Fragment {

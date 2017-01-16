@@ -21,10 +21,12 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewCont
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TabLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
+import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 
 import java.io.Serializable;
@@ -61,10 +63,12 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(PorterDuffActivity.class, "simple porterDuff"));
             lvData.getLvDatas().add(new LVData(EditTextActivity.class, "simple edittext"));
             lvData.getLvDatas().add(new LVData(TableLayoutActivity.class, "simple tablelayout"));
+            lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
             lvData.getLvDatas().add(new LVData(SimpleRxActivity.class, "simple rxjava"));
+            lvData.getLvDatas().add(new LVData(RxBusActivity.class, "simple rxbus"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "glide");

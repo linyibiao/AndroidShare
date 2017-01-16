@@ -16,4 +16,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView
+        android:id="@+id/brv_datas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

@@ -27,7 +27,7 @@ public class RecyclerViewActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<RVDate> rvDates = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 100; i++) {
             rvDates.add(new RVDate(i + ";;;"));
         }
         recyclerView.setAdapter(new MyAdapter(rvDates));
