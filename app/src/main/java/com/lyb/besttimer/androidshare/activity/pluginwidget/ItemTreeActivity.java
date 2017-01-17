@@ -80,7 +80,7 @@ public class ItemTreeActivity extends BaseActivity {
             }
         }.applyFeature();
 
-//        recyclerView.addItemDecoration(new BaseItemDecoration(1, 100, false, BaseItemDecoration.DRAWORIENTATION.VERTICAL, new ColorDecorateDetail(0xaaff0000)));
+        recyclerView.addItemDecoration(new BaseItemDecoration(1, 100, false, BaseItemDecoration.DRAWORIENTATION.HORIZONTAL, new ColorDecorateDetail(0xaaff0000)));
 
     }
 
@@ -138,6 +138,7 @@ public class ItemTreeActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                    notifyItemChanged(position);
                 }
             });
         }

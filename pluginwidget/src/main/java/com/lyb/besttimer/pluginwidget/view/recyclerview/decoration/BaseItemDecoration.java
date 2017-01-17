@@ -128,7 +128,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         int formCount = (itemCount - 1) / numPerForm + 1;
 
         boolean isLast = (canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0) || (!canScrollHorizontally && adapterPosition / numPerForm == formCount - 1);
-        if (drawOrientation == DRAWORIENTATION.HORIZONTAL) {
+        if (drawOrientation == DRAWORIENTATION.VERTICAL) {
             int bottom = 0;
             if (hasRound) {
                 if (isLast) {
