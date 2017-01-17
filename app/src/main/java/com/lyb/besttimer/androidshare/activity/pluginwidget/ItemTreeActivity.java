@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,53 +32,55 @@ public class ItemTreeActivity extends BaseActivity {
         setContentView(R.layout.activity_item_tree);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setItemAnimator(new DefaultItemAnimator(){
-
-            @Override
-            public long getChangeDuration() {
-                return 3000;
-            }
-
-            @Override
-            public long getMoveDuration() {
-                return 3000;
-            }
-
-            @Override
-            public long getRemoveDuration() {
-                return 3000;
-            }
-
-            @Override
-            public long getAddDuration() {
-                return 3000;
-            }
-
-        });
+//        recyclerView.setItemAnimator(new DefaultItemAnimator(){
+//
+//            @Override
+//            public long getChangeDuration() {
+//                return 3000;
+//            }
+//
+//            @Override
+//            public long getMoveDuration() {
+//                return 3000;
+//            }
+//
+//            @Override
+//            public long getRemoveDuration() {
+//                return 3000;
+//            }
+//
+//            @Override
+//            public long getAddDuration() {
+//                return 3000;
+//            }
+//
+//        });
 //        recyclerView.setItemAnimator(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<ItemTree> itemTrees = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 30; i++) {
             ItemTree itemTree0 = new ItemTree(new RVData("层次" + i, 0), true, null);
             itemTrees.add(itemTree0);
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 30; j++) {
                 ItemTree itemTree1 = new ItemTree(new RVData("层次" + i + j, 1), true, itemTree0);
-                for (int k = 0; k < 3; k++) {
+                for (int k = 0; k < 30; k++) {
                     new ItemTree(new RVData("层次" + i + j + k, 2), true, itemTree1);
                 }
             }
         }
         recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
 
-        new HeaderFeature(recyclerView, findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
+        new HeaderFeature(recyclerView, (FrameLayout) findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
 
             @Override
             public boolean isHeader(RecyclerView recyclerView, int position) {
                 int type = recyclerView.getAdapter().getItemViewType(position);
-                return type != 2;
+                return type != 1;
             }
         }.applyFeature();
+
+//        recyclerView.addItemDecoration(new BaseItemDecoration(1, 100, false, BaseItemDecoration.DRAWORIENTATION.VERTICAL, new ColorDecorateDetail(0xaaff0000)));
 
     }
 

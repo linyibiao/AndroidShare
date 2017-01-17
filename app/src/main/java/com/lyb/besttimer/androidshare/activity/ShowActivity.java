@@ -21,6 +21,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewCont
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewShowMoreActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TabLayoutActivity;
@@ -56,6 +57,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(ItemTreeActivity.class, "多层次RecyclerView"));
             lvData.getLvDatas().add(new LVData(ItemTouchActivity.class, "方格移动RecyclerView"));
             lvData.getLvDatas().add(new LVData(PullRefreshActivity.class, "复古的下拉刷新"));
+            lvData.getLvDatas().add(new LVData(RecyclerViewShowMoreActivity.class, "列表元素显示更多"));
             lvData.getLvDatas().add(new LVData(TextViewActivity.class, "textview基类"));
             lvData.getLvDatas().add(new LVData(DecorationActivity.class, "decoration模板"));
             lvData.getLvDatas().add(new LVData(SwipeLayoutActivity.class, "swipe layout"));
