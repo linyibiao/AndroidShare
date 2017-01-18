@@ -1,7 +1,6 @@
 package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +17,8 @@ import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
 
@@ -32,30 +33,7 @@ public class ItemTreeActivity extends BaseActivity {
         setContentView(R.layout.activity_item_tree);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator(){
-//
-//            @Override
-//            public long getChangeDuration() {
-//                return 3000;
-//            }
-//
-//            @Override
-//            public long getMoveDuration() {
-//                return 3000;
-//            }
-//
-//            @Override
-//            public long getRemoveDuration() {
-//                return 3000;
-//            }
-//
-//            @Override
-//            public long getAddDuration() {
-//                return 3000;
-//            }
-//
-//        });
-//        recyclerView.setItemAnimator(null);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<ItemTree> itemTrees = new ArrayList<>();
@@ -96,7 +74,7 @@ public class ItemTreeActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
+    private static class MyAdapter extends BaseAdapter {
 
         private TreeDataManager treeDataManager;
 
@@ -122,25 +100,10 @@ public class ItemTreeActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(Holder holder, final int position) {
+        public void onBindViewHolder(BaseHolder holder, final int position) {
             final ItemTree itemTree = treeDataManager.getItem(position);
             final RVData rvData = (RVData) itemTree.getObject();
-            TextView textView = holder.tv;
-            textView.setText(rvData.show);
-            Button btn = holder.btn;
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
-                }
-            });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    treeDataManager.flex(treeDataManager.indexOf(itemTree));
-                    notifyItemChanged(position);
-                }
-            });
+            holder.fillView(rvData, position);
         }
 
         @Override
@@ -153,7 +116,7 @@ public class ItemTreeActivity extends BaseActivity {
             return treeDataManager.getItemCount();
         }
 
-        protected class Holder extends RecyclerView.ViewHolder {
+        protected class Holder extends BaseHolder<RVData> implements View.OnClickListener {
 
             public TextView tv;
             public Button btn;
@@ -164,6 +127,28 @@ public class ItemTreeActivity extends BaseActivity {
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
                 brv_datas = (BaseRecyclerView) itemView.findViewById(R.id.brv_datas);
+            }
+
+            @Override
+            public void fillView(RVData data, int position) {
+                tv.setText(data.show);
+                btn.setOnClickListener(this);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    ItemTree itemTree = treeDataManager.getItem(position);
+                    RVData rvData = (RVData) itemTree.getObject();
+                    if (v.getId() == itemView.getId()) {
+                        treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                        notifyItemChanged(position);
+                    } else if (v.getId() == btn.getId()) {
+                        Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
 

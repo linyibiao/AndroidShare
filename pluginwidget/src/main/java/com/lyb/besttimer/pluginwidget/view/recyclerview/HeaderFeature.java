@@ -71,7 +71,7 @@ public abstract class HeaderFeature {
         for (int index = 0; index < recyclerView.getChildCount(); index++) {
             View nextChild = recyclerView.getChildAt(index);
             int position = recyclerView.getChildAdapterPosition(nextChild);
-            if (position != headerPosition && isHeader(recyclerView, position)) {
+            if (position != RecyclerView.NO_POSITION && position != headerPosition && isHeader(recyclerView, position)) {
                 int scrollX = 0;
                 int scrollY = 0;
                 if (header_oriention == HEADER_ORIENTION.HORIZONTAL) {
@@ -103,7 +103,7 @@ public abstract class HeaderFeature {
         } else {
             headerLayout.removeAllViews();
             RecyclerView.ViewHolder viewHolder = holderSparseArray.get(viewType);
-            
+
             if (viewHolder == null) {
 
                 viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, recyclerView.getAdapter().getItemViewType(headerPosition));
