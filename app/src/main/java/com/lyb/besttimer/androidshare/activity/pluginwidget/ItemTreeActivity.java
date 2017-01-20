@@ -54,7 +54,7 @@ public class ItemTreeActivity extends BaseActivity {
             @Override
             public boolean isHeader(RecyclerView recyclerView, int position) {
                 int type = recyclerView.getAdapter().getItemViewType(position);
-                return type != 1;
+                return type == 1;
             }
         }.applyFeature();
 
@@ -102,8 +102,7 @@ public class ItemTreeActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(BaseHolder holder, final int position) {
             final ItemTree itemTree = treeDataManager.getItem(position);
-            final RVData rvData = (RVData) itemTree.getObject();
-            holder.fillView(rvData, position);
+            holder.fillView(itemTree, position);
         }
 
         @Override
@@ -116,7 +115,7 @@ public class ItemTreeActivity extends BaseActivity {
             return treeDataManager.getItemCount();
         }
 
-        protected class Holder extends BaseHolder<RVData> implements View.OnClickListener {
+        protected class Holder extends BaseHolder<ItemTree> implements View.OnClickListener {
 
             public TextView tv;
             public Button btn;
@@ -130,24 +129,23 @@ public class ItemTreeActivity extends BaseActivity {
             }
 
             @Override
-            public void fillView(RVData data, int position) {
-                tv.setText(data.show);
+            public void fillView(ItemTree data, int position) {
+                super.fillView(data, position);
+                RVData rvData = (RVData) data.getObject();
+                tv.setText(rvData.show);
                 btn.setOnClickListener(this);
                 itemView.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View v) {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    ItemTree itemTree = treeDataManager.getItem(position);
-                    RVData rvData = (RVData) itemTree.getObject();
-                    if (v.getId() == itemView.getId()) {
-                        treeDataManager.flex(treeDataManager.indexOf(itemTree));
-                        notifyItemChanged(position);
-                    } else if (v.getId() == btn.getId()) {
-                        Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
-                    }
+                RVData rvData = (RVData) data.getObject();
+                if (v.getId() == itemView.getId()) {
+                    int position = treeDataManager.indexOf(data);
+                    treeDataManager.flex(position);
+                    notifyItemChanged(position);
+                } else if (v.getId() == btn.getId()) {
+                    Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }
             }
         }

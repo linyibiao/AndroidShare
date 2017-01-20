@@ -47,7 +47,9 @@ public abstract class HeaderFeature {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
                 super.onDraw(c, parent, state);
-                updateHeader();
+                if (!recyclerView.isAnimating()) {
+                    updateHeader();
+                }
             }
         });
     }
