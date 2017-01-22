@@ -34,7 +34,8 @@
         <activity android:name=".activity.pluginwidget.TableLayoutActivity" />
         <activity android:name=".activity.pluginwidget.SimpleFragmentActivity" />
         <activity android:name=".activity.rxandroid.RxBusActivity" />
-        <activity android:name=".activity.pluginwidget.RecyclerViewShowMoreActivity"></activity>
+        <activity android:name=".activity.pluginwidget.RecyclerViewShowMoreActivity" />
+        <activity android:name=".activity.pluginwidget.DialogActivity"></activity>
     </application>
 
 </manifest>

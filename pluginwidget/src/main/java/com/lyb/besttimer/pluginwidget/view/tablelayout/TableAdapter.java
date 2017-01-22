@@ -34,6 +34,10 @@ public abstract class TableAdapter extends BaseAdapter {
 
     public void notifyTableDataSetChanged() {
 
+        if (tableLayout == null) {
+            return;
+        }
+
         Context context = tableLayout.getContext();
 
         if (!hasBuildView()) {

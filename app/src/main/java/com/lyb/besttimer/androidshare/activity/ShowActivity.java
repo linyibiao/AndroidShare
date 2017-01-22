@@ -13,6 +13,7 @@ import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.glide.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.DialogActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
@@ -66,6 +67,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(EditTextActivity.class, "simple edittext"));
             lvData.getLvDatas().add(new LVData(TableLayoutActivity.class, "simple tablelayout"));
             lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
+            lvData.getLvDatas().add(new LVData(DialogActivity.class, "dialog"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
