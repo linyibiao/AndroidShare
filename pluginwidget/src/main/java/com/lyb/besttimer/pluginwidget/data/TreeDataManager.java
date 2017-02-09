@@ -115,4 +115,16 @@ public class TreeDataManager {
         activedTrees = ItemTree.getShowTreeList(itemTrees);
     }
 
+    public List<ItemTree> getItemTrees() {
+        return itemTrees;
+    }
+
+    public List<ItemTree> getActivedTrees() {
+        return activedTrees;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
 }

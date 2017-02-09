@@ -21,9 +21,4 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseHolder> {
         this.recyclerView = recyclerView;
     }
 
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        this.recyclerView = null;
-    }
 }

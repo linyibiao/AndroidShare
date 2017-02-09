@@ -18,6 +18,8 @@ import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.ItemTouchFeature;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout;
 
 import java.util.ArrayList;
@@ -30,10 +32,10 @@ public class ItemTouchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_touch);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        List<ItemTree> itemTrees = new ArrayList<>();
+        final List<ItemTree> itemTrees = new ArrayList<>();
         int iCount = 10;
         int jCount = 10;
         int kCount = 10;
@@ -48,6 +50,13 @@ public class ItemTouchActivity extends BaseActivity {
             }
         }
         recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
+
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
+            }
+        },5000);
 
         new ItemTouchFeature(recyclerView, ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
 
@@ -116,7 +125,7 @@ public class ItemTouchActivity extends BaseActivity {
             @Override
             public boolean isHeader(RecyclerView recyclerView, int position) {
                 int type = recyclerView.getAdapter().getItemViewType(position);
-                return type != 2;
+                return type == 0;
             }
         }.applyFeature();
 
@@ -134,7 +143,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.Holder> {
+    private static class MyAdapter extends BaseAdapter {
 
         private TreeDataManager treeDataManager;
 
@@ -147,7 +156,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
 
         @Override
-        public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = null;
             switch (viewType) {
                 case 0:
@@ -167,18 +176,19 @@ public class ItemTouchActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(Holder holder, final int position) {
+        public void onBindViewHolder(BaseHolder holder, final int position) {
             final ItemTree itemTree = treeDataManager.getItem(position);
             final RVData rvData = (RVData) itemTree.getObject();
-            TextView textView = holder.tv;
+            TextView textView = ((Holder) holder).tv;
             textView.setText(rvData.show);
-            Button btn = holder.btn;
+            Button btn = ((Holder) holder).btn;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }
             });
+            getRecyclerView().getContext();
             ((SwipeLayout) holder.itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 @Override
                 public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -214,7 +224,7 @@ public class ItemTouchActivity extends BaseActivity {
             return treeDataManager.getItemCount();
         }
 
-        protected class Holder extends RecyclerView.ViewHolder {
+        protected class Holder extends BaseHolder {
 
             public TextView tv;
             public Button btn;

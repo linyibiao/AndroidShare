@@ -15,6 +15,8 @@ public abstract class HeaderFeature {
 
     private RecyclerView recyclerView;
 
+    private RecyclerView.Adapter preAdapter;
+
     private int targetAdapterPosition = RecyclerView.NO_POSITION;
 
     private FrameLayout headerLayout;
@@ -57,6 +59,7 @@ public abstract class HeaderFeature {
     private void updateHeader() {
         int headerPosition = findHeaderPosition();
         if (headerPosition != RecyclerView.NO_POSITION) {
+            checkAdapter();
             if (getTargetAdapterPosition() != headerPosition) {
                 setupHeader(headerPosition);
             }
@@ -94,6 +97,20 @@ public abstract class HeaderFeature {
 
     private void setTargetAdapterPosition(int targetAdapterPosition) {
         this.targetAdapterPosition = targetAdapterPosition;
+    }
+
+    private void checkAdapter() {
+        if (preAdapter != null && !preAdapter.equals(recyclerView.getAdapter())) {
+            resetStatus();
+        }
+    }
+
+    private void resetStatus() {
+        preAdapter = recyclerView.getAdapter();
+        targetAdapterPosition = RecyclerView.NO_POSITION;
+        holderSparseArray.clear();
+        preActiveViewHolder = null;
+        preActivePosition = RecyclerView.NO_POSITION;
     }
 
     private void setupHeader(int headerPosition) {

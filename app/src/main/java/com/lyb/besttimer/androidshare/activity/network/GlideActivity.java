@@ -1,4 +1,4 @@
-package com.lyb.besttimer.androidshare.activity.glide;
+package com.lyb.besttimer.androidshare.activity.network;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.network.glide.RotateTransformation;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
@@ -63,10 +64,10 @@ public class GlideActivity extends AppCompatActivity {
             @Override
             public void fillView(Data data, int position) {
                 if (data.type == 0) {
-                    Glide.with(getRecyclerView().getContext()).load(data.resID).into(iv);
+                    Glide.with(getRecyclerView().getContext()).load(data.resID).transform(new RotateTransformation(getRecyclerView().getContext(), 180)).into(iv);
 //                    iv.setImageResource(data.resID);
                 } else if (data.type == 1) {
-                    Glide.with(getRecyclerView().getContext()).load(data.url).placeholder(R.mipmap.refresh_arrow).into(iv);
+                    Glide.with(getRecyclerView().getContext()).load(data.url).placeholder(R.mipmap.refresh_arrow).transform(new RotateTransformation(getRecyclerView().getContext(), 180)).into(iv);
                 }
             }
         }

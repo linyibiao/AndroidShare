@@ -193,7 +193,6 @@ public abstract class TableAdapter extends BaseAdapter {
     }
 
     public void onDetachedFromTableLayout(TableLayout tableLayout) {
-        this.tableLayout = null;
     }
 
 }
