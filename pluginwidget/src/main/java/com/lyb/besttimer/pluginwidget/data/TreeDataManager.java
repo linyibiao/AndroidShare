@@ -119,6 +119,11 @@ public class TreeDataManager {
         return itemTrees;
     }
 
+    public void setItemTrees(List<ItemTree> itemTrees) {
+        this.itemTrees = itemTrees;
+        updateActivedData();
+    }
+
     public List<ItemTree> getActivedTrees() {
         return activedTrees;
     }

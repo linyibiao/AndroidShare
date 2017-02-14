@@ -25,6 +25,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewShowMore
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TabLayoutActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.TableComplexActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
@@ -66,6 +67,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(PorterDuffActivity.class, "simple porterDuff"));
             lvData.getLvDatas().add(new LVData(EditTextActivity.class, "simple edittext"));
             lvData.getLvDatas().add(new LVData(TableLayoutActivity.class, "simple tablelayout"));
+            lvData.getLvDatas().add(new LVData(TableComplexActivity.class, "complex tablelayout"));
             lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
             lvDatas.add(lvData);
 

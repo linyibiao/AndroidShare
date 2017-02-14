@@ -43,7 +43,6 @@ public class BaseTableLayout extends TableLayout {
         super.onAttachedToWindow();
         if (tableAdapter != null) {
             tableAdapter.onAttachedToTableLayout(this);
-            tableAdapter.notifyTableDataSetChanged();
         }
     }
 

@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 import com.lyb.besttimer.pluginwidget.view.tablelayout.TableAdapter;
+import com.lyb.besttimer.pluginwidget.view.tablelayout.adapter.BaseTableHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class SimpleTableAdapter extends TableAdapter {
 
     }
 
-    private static class TableHolder extends BaseHolder<SimpleTableData> {
+    private static class TableHolder extends BaseTableHolder<SimpleTableData> {
 
         private TextView tv;
 
@@ -50,12 +50,12 @@ public class SimpleTableAdapter extends TableAdapter {
     }
 
     @Override
-    public void onBindViewHolder(BaseHolder holder, int position) {
+    public void onBindViewHolder(BaseTableHolder holder, int position) {
         holder.fillView(simpleTableDatas.get(position), position);
     }
 
     @Override
-    public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseTableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new TableHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tablelayout, parent, false));
     }
 

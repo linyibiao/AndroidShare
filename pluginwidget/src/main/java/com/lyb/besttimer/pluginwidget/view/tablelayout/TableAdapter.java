@@ -6,8 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
-import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
+import com.lyb.besttimer.pluginwidget.view.tablelayout.adapter.BaseTableHolder;
 import com.lyb.besttimer.pluginwidget.view.tablerow.BaseTableRow;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.List;
  * Created by linyibiao on 2017/1/9.
  */
 
-public abstract class TableAdapter extends BaseAdapter {
+public abstract class TableAdapter {
 
     private TableInfo tableInfo;
 
@@ -26,7 +25,17 @@ public abstract class TableAdapter extends BaseAdapter {
         this.tableInfo = tableInfo;
     }
 
-    private List<List<BaseHolder>> saveHolderLists = new ArrayList<>();
+    private List<List<BaseTableHolder>> saveHolderLists = new ArrayList<>();
+
+    public abstract void onBindViewHolder(BaseTableHolder holder, int position);
+
+    public abstract BaseTableHolder onCreateViewHolder(ViewGroup parent, int viewType);
+
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    public abstract int getItemCount();
 
     private boolean hasBuildView() {
         return saveHolderLists.size() > 0;
@@ -58,14 +67,14 @@ public abstract class TableAdapter extends BaseAdapter {
                 tableLayoutParams.bottomMargin = tableRowInfo.getBottomMargin();
                 tableLayout.addView(baseTableRow, tableLayoutParams);
 
-                List<BaseHolder> saveHolderList = new ArrayList<>();
+                List<BaseTableHolder> saveHolderList = new ArrayList<>();
                 saveHolderLists.add(saveHolderList);
                 int currRowSpans = 0;
                 for (int columnIndex = 0; columnIndex < tableRowInfo.getTableItemInfos().size(); columnIndex++) {
 
                     TableItemInfo tableItemInfo = tableRowInfo.getTableItemInfos().get(columnIndex);
-                    BaseHolder baseHolder = onCreateViewHolder(baseTableRow, getItemViewType(position));
-                    saveHolderList.add(baseHolder);
+                    BaseTableHolder baseTableHolder = onCreateViewHolder(baseTableRow, getItemViewType(position));
+                    saveHolderList.add(baseTableHolder);
 
                     currRowSpans += tableItemInfo.getSpan();
 
@@ -79,7 +88,7 @@ public abstract class TableAdapter extends BaseAdapter {
                         tableRowParams.span = tableItemInfo.getSpan();
                         tableRowParams.weight = 0;
                     }
-                    baseTableRow.addView(baseHolder.itemView, tableRowParams);
+                    baseTableRow.addView(baseTableHolder.itemView, tableRowParams);
 
                     position++;
 
@@ -91,15 +100,15 @@ public abstract class TableAdapter extends BaseAdapter {
         int position = 0;
         for (int tableRowInfoIndex = 0; tableRowInfoIndex < tableInfo.getTableRowInfoList().size(); tableRowInfoIndex++) {
             TableRowInfo tableRowInfo = tableInfo.getTableRowInfoList().get(tableRowInfoIndex);
-            List<BaseHolder> saveHolderList = saveHolderLists.get(tableRowInfoIndex);
+            List<BaseTableHolder> saveHolderList = saveHolderLists.get(tableRowInfoIndex);
             for (int tableItemInfoIndex = 0; tableItemInfoIndex < tableRowInfo.getTableItemInfos().size(); tableItemInfoIndex++) {
 
                 if (position + 1 > getItemCount()) {
                     return;
                 }
 
-                BaseHolder baseHolder = saveHolderList.get(tableItemInfoIndex);
-                onBindViewHolder(baseHolder, position);
+                BaseTableHolder baseTableHolder = saveHolderList.get(tableItemInfoIndex);
+                onBindViewHolder(baseTableHolder, position);
 
                 position++;
 

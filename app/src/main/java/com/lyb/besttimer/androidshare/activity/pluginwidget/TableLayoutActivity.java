@@ -43,7 +43,9 @@ public class TableLayoutActivity extends AppCompatActivity {
         simpleTableDatas.add(new SimpleTableAdapter.SimpleTableData("为何6"));
         simpleTableDatas.add(new SimpleTableAdapter.SimpleTableData("为何7"));
 
-        btl.setTableAdapter(new SimpleTableAdapter(new TableAdapter.TableInfo(tableRowInfos, 8), simpleTableDatas));
+        TableAdapter tableAdapter = new SimpleTableAdapter(new TableAdapter.TableInfo(tableRowInfos, 8), simpleTableDatas);
+        btl.setTableAdapter(tableAdapter);
+        tableAdapter.notifyTableDataSetChanged();
 
     }
 }
