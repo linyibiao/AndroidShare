@@ -1,6 +1,5 @@
-package com.lyb.besttimer.pluginwidget.view.recyclerview.adapter;
+package com.lyb.besttimer.pluginwidget.view.linearlayout;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
@@ -8,10 +7,12 @@ import android.view.View;
  * Created by linyibiao on 2016/10/19.
  */
 
-public abstract class BaseHolder<T> extends RecyclerView.ViewHolder {
+public abstract class BaseLinearHolder<T> {
 
-    public BaseHolder(View itemView) {
-        super(itemView);
+    public View itemView;
+
+    public BaseLinearHolder(View itemView) {
+        this.itemView = itemView;
     }
 
     public T data;

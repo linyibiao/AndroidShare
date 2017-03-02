@@ -2,6 +2,7 @@ package com.lyb.besttimer.pluginwidget.view.recyclerview.decoration;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -64,18 +65,70 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
 //        assert viewHolder != null;
 //        int adapterPosition = viewHolder.getAdapterPosition();
         int adapterPosition = parent.getChildAdapterPosition(view);
+        adapterPosition = ajustAdapterPosition(parent, adapterPosition);
 
         boolean canScrollHorizontally = parent.getLayoutManager().canScrollHorizontally();
 
-        int left = getLeft(canScrollHorizontally, drawOrientation, parent, adapterPosition);
-        int top = getTop(canScrollHorizontally, drawOrientation, parent, adapterPosition);
-        int right = getRight(canScrollHorizontally, drawOrientation, parent, adapterPosition);
-        int bottom = getBottom(canScrollHorizontally, drawOrientation, parent, adapterPosition);
+        int itemCount = parent.getAdapter().getItemCount();
+        int formCount = (itemCount - 1) / numPerForm + 1;
+        formCount = ajustFormCount(parent, formCount);
+
+        int left = getLeft(canScrollHorizontally, drawOrientation, parent, adapterPosition, formCount);
+        int top = getTop(canScrollHorizontally, drawOrientation, parent, adapterPosition, formCount);
+        int right = getRight(canScrollHorizontally, drawOrientation, parent, adapterPosition, formCount);
+        int bottom = getBottom(canScrollHorizontally, drawOrientation, parent, adapterPosition, formCount);
 
         outRect.set(left, top, right, bottom);
     }
 
-    private int getLeft(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition) {
+    private int ajustAdapterPosition(RecyclerView parent, int adapterPosition) {
+        //specail for gridlayoutmanager
+        if (parent.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) parent.getLayoutManager();
+            GridLayoutManager.SpanSizeLookup spanSizeLookup = gridLayoutManager.getSpanSizeLookup();
+            if (!(spanSizeLookup instanceof GridLayoutManager.DefaultSpanSizeLookup)) {
+                int actualPos = 0;
+                for (int currPos = 0; currPos <= adapterPosition; currPos++) {
+                    actualPos += spanSizeLookup.getSpanSize(currPos);
+                }
+                if (actualPos > 0) {
+                    actualPos--;
+                }
+                adapterPosition = actualPos;
+            }
+        }
+        return adapterPosition;
+    }
+
+    private int ajustFormCount(RecyclerView parent, int formCount) {
+        //specail for gridlayoutmanager
+        if (parent.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) parent.getLayoutManager();
+            GridLayoutManager.SpanSizeLookup spanSizeLookup = gridLayoutManager.getSpanSizeLookup();
+            if (!(spanSizeLookup instanceof GridLayoutManager.DefaultSpanSizeLookup)) {
+                int spanCount = gridLayoutManager.getSpanCount();
+                int actualFormCount = 0;
+                int currSpan = 0;
+                for (int currPos = 0; currPos < parent.getAdapter().getItemCount(); currPos++) {
+                    if (currSpan == 0) {
+                        actualFormCount++;
+                    }
+                    int currSpanSize = spanSizeLookup.getSpanSize(currPos);
+                    currSpan += currSpanSize;
+                    if (currSpan == spanCount) {
+                        currSpan = 0;
+                    } else if (currSpan > spanCount) {
+                        actualFormCount++;
+                        currSpan = currSpanSize;
+                    }
+                }
+                formCount = actualFormCount;
+            }
+        }
+        return formCount;
+    }
+
+    private int getLeft(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition, int formCount) {
         int left = 0;
         boolean isFirst = (canScrollHorizontally && adapterPosition < numPerForm) || (!canScrollHorizontally && adapterPosition % numPerForm == 0);
         if (hasRound) {
@@ -86,7 +139,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         return left;
     }
 
-    private int getTop(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition) {
+    private int getTop(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition, int formCount) {
         int top = 0;
         boolean isFirst = (canScrollHorizontally && adapterPosition % numPerForm == 0) || (!canScrollHorizontally && adapterPosition < numPerForm);
         if (hasRound) {
@@ -97,10 +150,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         return top;
     }
 
-    private int getRight(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition) {
-
-        int itemCount = parent.getAdapter().getItemCount();
-        int formCount = (itemCount - 1) / numPerForm + 1;
+    private int getRight(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition, int formCount) {
 
         boolean isLast = (canScrollHorizontally && adapterPosition / numPerForm == formCount - 1) || (!canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0);
         if (drawOrientation == DRAWORIENTATION.HORIZONTAL) {
@@ -122,10 +172,7 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    private int getBottom(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition) {
-
-        int itemCount = parent.getAdapter().getItemCount();
-        int formCount = (itemCount - 1) / numPerForm + 1;
+    private int getBottom(boolean canScrollHorizontally, DRAWORIENTATION drawOrientation, RecyclerView parent, int adapterPosition, int formCount) {
 
         boolean isLast = (canScrollHorizontally && (adapterPosition + 1) % numPerForm == 0) || (!canScrollHorizontally && adapterPosition / numPerForm == formCount - 1);
         if (drawOrientation == DRAWORIENTATION.VERTICAL) {

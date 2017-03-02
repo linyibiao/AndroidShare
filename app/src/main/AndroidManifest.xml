@@ -35,7 +35,8 @@
         <activity android:name=".activity.pluginwidget.SimpleFragmentActivity" />
         <activity android:name=".activity.rxandroid.RxBusActivity" />
         <activity android:name=".activity.pluginwidget.RecyclerViewShowMoreActivity" />
-        <activity android:name=".activity.pluginwidget.TableComplexActivity"></activity>
+        <activity android:name=".activity.pluginwidget.TableComplexActivity" />
+        <activity android:name=".activity.pluginwidget.LinearLayoutActivity"></activity>
     </application>
 
 </manifest>

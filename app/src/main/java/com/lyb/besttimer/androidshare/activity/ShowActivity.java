@@ -17,6 +17,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.LinearLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
@@ -67,6 +68,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(PorterDuffActivity.class, "simple porterDuff"));
             lvData.getLvDatas().add(new LVData(EditTextActivity.class, "simple edittext"));
             lvData.getLvDatas().add(new LVData(TableLayoutActivity.class, "simple tablelayout"));
+            lvData.getLvDatas().add(new LVData(LinearLayoutActivity.class, "simple linearlayout"));
             lvData.getLvDatas().add(new LVData(TableComplexActivity.class, "complex tablelayout"));
             lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
             lvDatas.add(lvData);
