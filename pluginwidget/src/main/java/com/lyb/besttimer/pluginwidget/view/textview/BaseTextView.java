@@ -2,14 +2,14 @@ package com.lyb.besttimer.pluginwidget.view.textview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * Common TextView
  * Created by linyibiao on 2016/8/16.
  */
-public class BaseTextView extends TextView {
+public class BaseTextView extends AppCompatTextView {
 
     public BaseTextView(Context context) {
         this(context, null);
