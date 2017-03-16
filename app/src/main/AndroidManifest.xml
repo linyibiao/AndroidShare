@@ -36,7 +36,8 @@
         <activity android:name=".activity.rxandroid.RxBusActivity" />
         <activity android:name=".activity.pluginwidget.RecyclerViewShowMoreActivity" />
         <activity android:name=".activity.pluginwidget.TableComplexActivity" />
-        <activity android:name=".activity.pluginwidget.LinearLayoutActivity"></activity>
+        <activity android:name=".activity.pluginwidget.LinearLayoutActivity" />
+        <activity android:name=".activity.rxandroid.RxIntervalActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,92 @@
+@startuml
+
+interface Function
+interface Action extends Function
+interface Action0 extends Action{
+    void call()
+}
+interface Action1<T> extends Action{
+    void call(T t)
+}
+interface OnSubscribe<T> extends Action1{
+    void call(Subscriber<? super T> t)
+}
+
+class Observable<T>{
+    final OnSubscribe<T> onSubscribe
+
+    public final Observable<T> subscribeOn(Scheduler scheduler)
+    public final Observable<T> observeOn(Scheduler scheduler)
+
+    public final Subscription subscribe(final Observer<? super T> observer)
+    public final Subscription subscribe(Subscriber<? super T> subscriber)
+    public final Subscription unsafeSubscribe(Subscriber<? super T> subscriber)
+}
+
+interface Subscription{
+    void unsubscribe()
+    boolean isUnsubscribed()
+}
+
+interface Observer<T>{
+    void onCompleted()
+    void onError(Throwable e)
+    void onNext(T t)
+}
+
+abstract class Subscriber<T> implements Observer,Subscription{
+    public void onStart()
+}
+
+class SafeSubscriber<T> extends Subscriber{
+    private final Subscriber<? super T> actual;
+}
+
+interface ThreadFactory{
+    Thread newThread(Runnable r)
+}
+class RxThreadFactory implements ThreadFactory
+abstract class Scheduler{
+    public abstract Worker createWorker()
+}
+class NewThreadScheduler extends Scheduler{
+    final ThreadFactory threadFactory
+}
+ThreadFactory <-- NewThreadScheduler
+class Worker{
+    public abstract Subscription schedule(Action0 action)
+    public abstract Subscription schedule(final Action0 action, final long delayTime, final TimeUnit unit)
+}
+class NewThreadWorker extends Worker{
+    private final ScheduledExecutorService executor
+}
+NewThreadWorker <.. NewThreadScheduler
+
+class OperatorSubscribeOn<T> implements OnSubscribe{
+    final Scheduler scheduler
+    final Observable<T> source
+}
+
+interface Func1<T, R> extends Function{
+    R call(T t)
+}
+interface Operator<R, T> extends Func1{
+    Subscriber<? super T> call(Subscriber<? super R> t)
+}
+class OperatorObserveOn<T, T> implements Operator{
+    private final Scheduler scheduler
+}
+
+class OnSubscribeLift<T, R> implements OnSubscribe{
+    final OnSubscribe<T> parent
+    final Operator<? extends R, ? super T> operator
+
+    void call(Subscriber<? super R> r)
+}
+
+class ObserveOnSubscriber<T> extends Subscriber implements Action0{
+    final Subscriber<? super T> child;
+    final Worker recursiveScheduler;
+}
+
+@enduml

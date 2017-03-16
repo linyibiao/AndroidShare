@@ -30,6 +30,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.TableComplexActivity
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
+import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 
 import java.io.Serializable;
@@ -76,6 +77,7 @@ public class ShowActivity extends BaseActivity {
             lvData = new LVData(ShowActivity.class, "rxandroid");
             lvData.getLvDatas().add(new LVData(SimpleRxActivity.class, "simple rxjava"));
             lvData.getLvDatas().add(new LVData(RxBusActivity.class, "simple rxbus"));
+            lvData.getLvDatas().add(new LVData(RxIntervalActivity.class, "rxjava interval"));
             lvDatas.add(lvData);
 
         }
