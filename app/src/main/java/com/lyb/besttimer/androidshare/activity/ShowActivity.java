@@ -19,6 +19,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.LinearLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewControlActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.NumberEditActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
@@ -72,6 +73,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(LinearLayoutActivity.class, "simple linearlayout"));
             lvData.getLvDatas().add(new LVData(TableComplexActivity.class, "complex tablelayout"));
             lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
+            lvData.getLvDatas().add(new LVData(NumberEditActivity.class, "number edit"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
