@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
@@ -32,6 +33,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
+import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 
 import java.io.Serializable;
@@ -74,12 +76,14 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(TableComplexActivity.class, "complex tablelayout"));
             lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
             lvData.getLvDatas().add(new LVData(NumberEditActivity.class, "number edit"));
+            lvData.getLvDatas().add(new LVData(CardViewActivity.class, "card view"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
             lvData.getLvDatas().add(new LVData(SimpleRxActivity.class, "simple rxjava"));
             lvData.getLvDatas().add(new LVData(RxBusActivity.class, "simple rxbus"));
             lvData.getLvDatas().add(new LVData(RxIntervalActivity.class, "rxjava interval"));
+            lvData.getLvDatas().add(new LVData(RxLifeActivity.class, "rxandroid life"));
             lvDatas.add(lvData);
 
         }

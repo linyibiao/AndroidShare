@@ -38,7 +38,9 @@
         <activity android:name=".activity.pluginwidget.TableComplexActivity" />
         <activity android:name=".activity.pluginwidget.LinearLayoutActivity" />
         <activity android:name=".activity.rxandroid.RxIntervalActivity" />
-        <activity android:name=".activity.pluginwidget.NumberEditActivity"></activity>
+        <activity android:name=".activity.pluginwidget.NumberEditActivity" />
+        <activity android:name=".activity.rxandroid.RxLifeActivity" />
+        <activity android:name=".activity.pluginwidget.CardViewActivity"></activity>
     </application>
 
 </manifest>

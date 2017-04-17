@@ -37,6 +37,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${dCfg.supportVersion}"
     compile 'com.nineoldandroids:library:2.4.0'
     compile "com.android.support:design:${dCfg.supportVersion}"
+    compile "com.android.support:cardview-v7:${dCfg.supportVersion}"
 }
 
 def siteUrl = 'https://github.com/linyibiao/AndroidShare'      // 项目的主页   这个是说明，可随便填

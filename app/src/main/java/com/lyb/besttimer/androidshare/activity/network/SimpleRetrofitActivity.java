@@ -106,10 +106,10 @@ public class SimpleRetrofitActivity extends AppCompatActivity {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         GitHubService service = retrofit.create(GitHubService.class);
-        Observable<List<Repo>> repos = service.listReposByRX("octocat");
+        Observable<Response<List<Repo>>> repos = service.listReposByRX("octocat");
         repos.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Repo>>() {
+                .subscribe(new Subscriber<Response<List<Repo>>>() {
                     @Override
                     public void onCompleted() {
 
@@ -121,9 +121,10 @@ public class SimpleRetrofitActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(List<Repo> repos) {
-                        Log.e("what", repos.size() + ";;;");
-                        for (Repo repo : repos) {
+                    public void onNext(Response<List<Repo>> repos) {
+                        Log.e("what", repos.headers().toString() + ";;;");
+                        Log.e("what", repos.body().size() + ";;;");
+                        for (Repo repo : repos.body()) {
                             Log.e("what", repo.getId() + ";");
                         }
                     }

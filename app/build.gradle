@@ -28,7 +28,6 @@ dependencies {
     compile project(':pluginwidget')
     compile project(':network')
     compile project(':rxandroid')
-    compile project(':library_SwipeBackLayout')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'

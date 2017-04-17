@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "0.0.3"       //这个是版本号，必须填写
+version = "0.0.6"       //这个是版本号，必须填写
 
 Map<String, String> cfg = rootProject.ext.android
 Map<String, String> dCfg = rootProject.ext.dependencies
@@ -35,6 +35,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'io.reactivex:rxandroid:1.2.1'
+    compile "com.android.support:appcompat-v7:${dCfg.supportVersion}"
 }
 
 def siteUrl = 'https://github.com/linyibiao/AndroidShare'      // 项目的主页   这个是说明，可随便填

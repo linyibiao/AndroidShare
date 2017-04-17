@@ -1,2 +1,2 @@
-include ':app', ':pluginwidget', ':network', ':rxandroid', ':library_SwipeBackLayout'
+include ':app', ':pluginwidget', ':network', ':rxandroid'
 include ':x5WebDemo'
