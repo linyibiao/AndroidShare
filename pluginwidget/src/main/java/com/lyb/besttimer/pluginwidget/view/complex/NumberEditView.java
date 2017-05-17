@@ -1,9 +1,10 @@
 package com.lyb.besttimer.pluginwidget.view.complex;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
@@ -34,7 +35,7 @@ public class NumberEditView extends LinearLayout {
 
     public NumberEditView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init(context, attrs);
     }
 
     private ImageButton minusImageButton;
@@ -52,7 +53,9 @@ public class NumberEditView extends LinearLayout {
 
     private ValueChangeListener valueChangeListener;
 
-    private void init(Context context) {
+    private void init(Context context, AttributeSet attrs) {
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NumberEditView);
 
         setOrientation(LinearLayout.HORIZONTAL);
 
@@ -67,13 +70,14 @@ public class NumberEditView extends LinearLayout {
         numberEditText = new EditText(context);
         numberEditText.setBackgroundResource(R.mipmap.bg_edit_text);
         numberEditText.setKeyListener(new DigitsKeyListener(false, false));
-        numberEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
+        numberEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getDimensionPixelSize(R.styleable.NumberEditView_nev_textSize, DisplayUtil.dip2px(context, 22)));
+//        numberEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
         numberEditText.setHintTextColor(0xFFCCCCCC);
         numberEditText.setLines(1);
         numberEditText.setGravity(Gravity.CENTER);
-        InputFilter[] filterArray = new InputFilter[1];
-        filterArray[0] = new InputFilter.LengthFilter(9);
-        numberEditText.setFilters(filterArray);
+//        InputFilter[] filterArray = new InputFilter[1];
+//        filterArray[0] = new InputFilter.LengthFilter(9);
+//        numberEditText.setFilters(filterArray);
         numberEditText.setSelectAllOnFocus(true);
         addView(numberEditText, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
 
@@ -111,6 +115,9 @@ public class NumberEditView extends LinearLayout {
             }
         });
 
+        boolean useOperation = a.getBoolean(R.styleable.NumberEditView_nev_useOperation, true);
+        useOperation(useOperation);
+
         initData();
 
     }
@@ -123,8 +130,33 @@ public class NumberEditView extends LinearLayout {
     }
 
     private void initData() {
+        numberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    int rawValue = getRawValue();
+                    if (rawValue < minValue) {
+                        numberEditText.setText(minValue + "");
+                    } else if (rawValue > maxValue) {
+                        numberEditText.setText(maxValue + "");
+                    }
+                }
+            }
+        });
         numberEditText.setText(minValue + "");
         loadColor();
+    }
+
+    public void useOperation(boolean use) {
+        if (use) {
+            minusImageButton.setVisibility(View.VISIBLE);
+            addImageButton.setVisibility(View.VISIBLE);
+            numberEditText.setBackgroundResource(R.mipmap.bg_edit_text);
+        } else {
+            minusImageButton.setVisibility(View.GONE);
+            addImageButton.setVisibility(View.GONE);
+            numberEditText.setBackgroundResource(R.drawable.shape_input_round);
+        }
     }
 
     private void loadColor() {
@@ -206,7 +238,11 @@ public class NumberEditView extends LinearLayout {
     }
 
     private int getRawValue() {
-        return DataUtil.strToInt(numberEditText.getText().toString());
+        if (TextUtils.isEmpty(numberEditText.getText().toString())) {
+            return Integer.MIN_VALUE;
+        } else {
+            return DataUtil.strToInt(numberEditText.getText().toString());
+        }
     }
 
     private int getRealValue() {

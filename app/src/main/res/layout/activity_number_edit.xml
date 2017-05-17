@@ -13,6 +13,28 @@
         android:layout_marginLeft="103dp"
         android:layout_marginTop="233dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:nev_useOperation="false"
+        android:layout_marginStart="103dp" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/spin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="179dp"
+        android:layout_marginTop="240dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/what"
+        android:layout_marginStart="179dp" />
+
+    <EditText
+        android:layout_width="368dp"
+        android:hint="dianwo"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="78dp" />
 
 </android.support.constraint.ConstraintLayout>

@@ -35,6 +35,7 @@ import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
+import com.lyb.besttimer.androidshare.activity.simple.ClearTaskActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -86,8 +87,17 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(RxLifeActivity.class, "rxandroid life"));
             lvDatas.add(lvData);
 
+            lvData = new LVData(ShowActivity.class, "simpple");
+            lvData.getLvDatas().add(new LVData(ClearTaskActivity.class, "clear task"));
+            lvDatas.add(lvData);
+
         }
         listView.setAdapter(new LVAdapter(lvDatas));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     private class LVAdapter extends BaseAdapter {

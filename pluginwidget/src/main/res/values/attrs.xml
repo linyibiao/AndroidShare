@@ -18,4 +18,8 @@
     <declare-styleable name="BaseTableRow">
 
     </declare-styleable>
+    <declare-styleable name="NumberEditView">
+        <attr name="nev_textSize" format="dimension" />
+        <attr name="nev_useOperation" format="boolean" />
+    </declare-styleable>
 </resources>
