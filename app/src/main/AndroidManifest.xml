@@ -41,9 +41,6 @@
         <activity android:name=".activity.pluginwidget.NumberEditActivity" />
         <activity android:name=".activity.rxandroid.RxLifeActivity" />
         <activity android:name=".activity.pluginwidget.CardViewActivity" />
-        <activity android:name=".activity.simple.ClearTaskActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".activity.simple.AnotherClearTaskActivity"></activity>
     </application>
 
 </manifest>
