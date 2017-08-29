@@ -118,6 +118,8 @@ public class NumberEditView extends LinearLayout {
         boolean useOperation = a.getBoolean(R.styleable.NumberEditView_nev_useOperation, true);
         useOperation(useOperation);
 
+        a.recycle();
+
         initData();
 
     }
