@@ -35,7 +35,6 @@ import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
-import com.lyb.besttimer.androidshare.activity.simple.ClearTaskActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -88,7 +87,6 @@ public class ShowActivity extends BaseActivity {
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "simpple");
-            lvData.getLvDatas().add(new LVData(ClearTaskActivity.class, "clear task"));
             lvDatas.add(lvData);
 
         }
@@ -98,6 +96,40 @@ public class ShowActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+    }
+
+    /**
+     * listview data
+     * Created by linyibiao on 2016/10/28.
+     */
+    private static class LVData implements Serializable {
+
+        private Class<?> activityC;
+        private String itemTitle;
+        private List<LVData> lvDatas = new ArrayList<>();
+
+        private LVData(Class<?> activityC, String itemTitle) {
+            this.activityC = activityC;
+            this.itemTitle = itemTitle;
+        }
+
+        public LVData(Class<?> activityC, String itemTitle, List<LVData> lvDatas) {
+            this.activityC = activityC;
+            this.itemTitle = itemTitle;
+            this.lvDatas = lvDatas;
+        }
+
+        public Class<?> getActivityC() {
+            return activityC;
+        }
+
+        public String getItemTitle() {
+            return itemTitle;
+        }
+
+        public List<LVData> getLvDatas() {
+            return lvDatas;
+        }
     }
 
     private class LVAdapter extends BaseAdapter {
@@ -151,39 +183,5 @@ public class ShowActivity extends BaseActivity {
             return view;
         }
 
-    }
-
-    /**
-     * listview data
-     * Created by linyibiao on 2016/10/28.
-     */
-    private static class LVData implements Serializable {
-
-        private Class<?> activityC;
-        private String itemTitle;
-        private List<LVData> lvDatas = new ArrayList<>();
-
-        private LVData(Class<?> activityC, String itemTitle) {
-            this.activityC = activityC;
-            this.itemTitle = itemTitle;
-        }
-
-        public LVData(Class<?> activityC, String itemTitle, List<LVData> lvDatas) {
-            this.activityC = activityC;
-            this.itemTitle = itemTitle;
-            this.lvDatas = lvDatas;
-        }
-
-        public Class<?> getActivityC() {
-            return activityC;
-        }
-
-        public String getItemTitle() {
-            return itemTitle;
-        }
-
-        public List<LVData> getLvDatas() {
-            return lvDatas;
-        }
     }
 }
