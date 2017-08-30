@@ -5,9 +5,9 @@ package com.lyb.besttimer.pluginwidget.view.recyclerview.adapter;
  * Created by linyibiao on 2016/10/26.
  */
 
-public abstract class BaseSingleAdapter extends BaseAdapter {
+public abstract class BaseSingleAdapter<T> extends BaseAdapter<T> {
 
-    //-1 for default what means no selection
+    //-1 for default that means no selection
     private int selectPosition = -1;
 
     public int getSelectPosition() {

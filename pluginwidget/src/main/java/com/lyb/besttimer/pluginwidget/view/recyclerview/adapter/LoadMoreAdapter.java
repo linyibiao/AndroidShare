@@ -14,7 +14,7 @@ import com.lyb.besttimer.pluginwidget.view.textview.BaseTextView;
  * Created by linyibiao on 2016/11/25.
  */
 
-public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter {
+public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapter<TYPE> {
 
     private T mWrapperAdapter;
     private MoreListener moreListener;
@@ -60,7 +60,7 @@ public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter {
 
     protected MORE_STATE more_state = MORE_STATE.NORMAL;
 
-    protected static abstract class BaseMoreHolder extends BaseHolder<MoreData> {
+    protected  abstract class BaseMoreHolder extends BaseHolder<TYPE> {
 
         private LoadMoreAdapter loadMoreAdapter;
 
@@ -77,7 +77,7 @@ public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter {
         };
 
         @Override
-        public void fillView(MoreData data, int position) {
+        public void fillView(TYPE data, int position) {
             switch (loadMoreAdapter.more_state) {
                 case NORMAL:
                     normal();
@@ -169,7 +169,7 @@ public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter {
     }
 
     @Override
-    public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseHolder<TYPE> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == MORETYPE) {
             return onCreateMoreHolder(parent);
         } else {
@@ -178,9 +178,9 @@ public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter {
     }
 
     @Override
-    public void onBindViewHolder(BaseHolder holder, int position) {
+    public void onBindViewHolder(BaseHolder<TYPE> holder, int position) {
         if (getItemViewType(position) == MORETYPE) {
-            holder.fillView(moreData, position);
+            holder.fillView(null, position);
         } else {
             mWrapperAdapter.onBindViewHolder(holder, position);
         }

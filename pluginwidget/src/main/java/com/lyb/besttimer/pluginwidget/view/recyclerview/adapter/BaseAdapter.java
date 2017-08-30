@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
  * Created by linyibiao on 2016/10/19.
  */
 
-public abstract class BaseAdapter extends RecyclerView.Adapter<BaseHolder> {
+public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder<T>> {
 
     private RecyclerView recyclerView;
 

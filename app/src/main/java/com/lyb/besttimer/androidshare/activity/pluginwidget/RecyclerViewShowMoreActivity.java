@@ -26,7 +26,7 @@ public class RecyclerViewShowMoreActivity extends AppCompatActivity {
         recyclerView.setAdapter(new ShowMoreAdapter());
     }
 
-    private static class ShowMoreAdapter extends BaseAdapter {
+    private static class ShowMoreAdapter extends BaseAdapter<Boolean> {
 
         private SparseBooleanArray sparseBooleanArray = new SparseBooleanArray();
 
@@ -59,12 +59,12 @@ public class RecyclerViewShowMoreActivity extends AppCompatActivity {
         }
 
         @Override
-        public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseHolder<Boolean> onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ShowHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_showmore, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder holder, int position) {
+        public void onBindViewHolder(BaseHolder<Boolean> holder, int position) {
             holder.fillView(sparseBooleanArray.get(position), position);
         }
 

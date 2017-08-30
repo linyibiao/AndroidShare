@@ -17,6 +17,7 @@ import com.lyb.besttimer.pluginwidget.view.tablelayout.BaseTableLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class TableComplexActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class TableComplexActivity extends AppCompatActivity {
         brv.setAdapter(tableComplexAdapter);
     }
 
-    private class TableComplexAdapter extends BaseAdapter {
+    private class TableComplexAdapter extends BaseAdapter<List<String>> {
 
         private List<List<String>> listList = new ArrayList<>();
 
@@ -66,12 +67,12 @@ public class TableComplexActivity extends AppCompatActivity {
         }
 
         @Override
-        public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseHolder<List<String>> onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ComplexHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_table_complex_content, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder holder, int position) {
+        public void onBindViewHolder(BaseHolder<List<String>> holder, int position) {
             holder.fillView(listList.get(position), position);
         }
 

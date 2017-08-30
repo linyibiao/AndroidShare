@@ -34,7 +34,7 @@ public class GlideActivity extends AppCompatActivity {
         brv.setAdapter(new SimpleAdapter(datas));
     }
 
-    private static class SimpleAdapter extends BaseAdapter {
+    private static class SimpleAdapter extends BaseAdapter<SimpleAdapter.Data> {
 
         public static class Data {
             public int type;//0 for resID and 1 for url
@@ -79,12 +79,12 @@ public class GlideActivity extends AppCompatActivity {
         }
 
         @Override
-        public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseHolder<Data> onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_glide, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder holder, int position) {
+        public void onBindViewHolder(BaseHolder<Data> holder, int position) {
             holder.fillView(datas.get(position), position);
         }
 

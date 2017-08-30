@@ -56,7 +56,7 @@ public class ItemTouchActivity extends BaseActivity {
             public void run() {
                 recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
             }
-        },5000);
+        }, 5000);
 
         new ItemTouchFeature(recyclerView, ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
 
@@ -143,7 +143,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends BaseAdapter {
+    private static class MyAdapter extends BaseAdapter<ItemTree> {
 
         private TreeDataManager treeDataManager;
 
@@ -156,7 +156,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
 
         @Override
-        public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseHolder<ItemTree> onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = null;
             switch (viewType) {
                 case 0:
@@ -176,42 +176,8 @@ public class ItemTouchActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder holder, final int position) {
-            final ItemTree itemTree = treeDataManager.getItem(position);
-            final RVData rvData = (RVData) itemTree.getObject();
-            TextView textView = ((Holder) holder).tv;
-            textView.setText(rvData.show);
-            Button btn = ((Holder) holder).btn;
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
-                }
-            });
-            getRecyclerView().getContext();
-            ((SwipeLayout) holder.itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                @Override
-                public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return new RecyclerView.ViewHolder(new TextView(parent.getContext())) {
-                    };
-                }
-
-                @Override
-                public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                    ((TextView) holder.itemView).setText(position + ";;;");
-                }
-
-                @Override
-                public int getItemCount() {
-                    return 1;
-                }
-            });
-            ((SwipeLayout) holder.itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    treeDataManager.flex(treeDataManager.indexOf(itemTree));
-                }
-            });
+        public void onBindViewHolder(BaseHolder<ItemTree> holder, final int position) {
+            holder.fillView(treeDataManager.getItem(position), position);
         }
 
         @Override
@@ -224,7 +190,7 @@ public class ItemTouchActivity extends BaseActivity {
             return treeDataManager.getItemCount();
         }
 
-        protected class Holder extends BaseHolder {
+        protected class Holder extends BaseHolder<ItemTree> {
 
             public TextView tv;
             public Button btn;
@@ -233,6 +199,44 @@ public class ItemTouchActivity extends BaseActivity {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
+            }
+
+            @Override
+            public void fillView(ItemTree data, int position) {
+                super.fillView(data, position);
+                final ItemTree itemTree = treeDataManager.getItem(position);
+                final RVData rvData = (RVData) itemTree.getObject();
+                tv.setText(rvData.show);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                getRecyclerView().getContext();
+                ((SwipeLayout) itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    @Override
+                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        return new RecyclerView.ViewHolder(new TextView(parent.getContext())) {
+                        };
+                    }
+
+                    @Override
+                    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                        ((TextView) holder.itemView).setText(position + ";;;");
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return 1;
+                    }
+                });
+                ((SwipeLayout) itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                    }
+                });
             }
         }
 
