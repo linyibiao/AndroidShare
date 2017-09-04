@@ -40,7 +40,7 @@ public class LevelAdapterActivity extends AppCompatActivity {
                                     (i == 5 && j == 6 && k == 9) ||
                                     (i == 8 && j == 5 && k == 5) ||
                                     (i == 9 && j == 5 && k == 5)
-                            , false, true);
+                            , k == 0, true);
                     child2Data.getNextLevelDatas().add(child3Data);
                 }
             }
