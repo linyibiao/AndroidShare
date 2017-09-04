@@ -27,7 +27,7 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
     }
 
     public void fillview(LevelAdapter<? extends LevelHolder> currLevelAdapter, LevelAdapter<? extends LevelHolder> nextLevelAdapter, List<LevelAdapter.LevelData> levelDatas, int position, boolean singleCheck) {
-        super.fillView(levelDatas.get(position), position);
+        this.fillView(levelDatas.get(position), position);
         this.currLevelAdapter = currLevelAdapter;
         this.nextLevelAdapter = nextLevelAdapter;
         this.levelDatas = levelDatas;

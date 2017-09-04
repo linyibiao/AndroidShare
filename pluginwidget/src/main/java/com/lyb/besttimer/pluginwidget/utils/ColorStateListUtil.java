@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class ColorStateListUtil {
 
-    public static ColorStateList getColorStateList(ViewState<Integer> colorState) {
-        return getColorStateList(new ViewState[]{colorState});
-    }
+//    public static ColorStateList getColorStateList(ViewState<Integer> colorState) {
+//        return getColorStateList(new ViewState[]{colorState});
+//    }
 
     public static ColorStateList getColorStateList(ViewState<Integer>... colorStates) {
         Map<Integer, Integer> map = new LinkedHashMap<>();
@@ -31,8 +31,7 @@ public class ColorStateListUtil {
             colors[index] = entry.getValue();
             index++;
         }
-        ColorStateList colorStateList = new ColorStateList(states, colors);
-        return colorStateList;
+        return new ColorStateList(states, colors);
     }
 
 }

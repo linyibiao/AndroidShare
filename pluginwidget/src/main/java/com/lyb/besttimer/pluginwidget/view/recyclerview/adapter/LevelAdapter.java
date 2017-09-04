@@ -38,66 +38,64 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
         return levelDatas.size();
     }
 
-    public void firstShowSetting() {
-        LevelData firstChildData = null;
-        for (LevelData levelData : levelDatas) {
-            boolean hasSelect = hasSelect(levelData);
-            if (hasSelect) {
-                if (firstChildData == null) {
-                    firstChildData = levelData;
-                }
-            }
-        }
-        if (firstChildData != null) {
-            for (LevelData levelData : levelDatas) {
-                levelData.setChecked(levelData == firstChildData);
-            }
-        }
+    /**
+     * mark to first show
+     *
+     * @return whether selected
+     */
+    public boolean hasSelectAndMark() {
+        return hasSelectAndMark(levelDatas);
     }
 
-    private boolean hasSelect(LevelData levelData) {
-        if (levelData.isLastLevel()) {
-            if (levelData.isChecked()) {
-                return true;
+    private boolean hasSelectAndMark(List<LevelData> levelDatas) {
+        LevelData firstSelectData = null;
+        for (LevelData levelData : levelDatas) {
+            if (levelData.isLastLevel()) {
+                if (levelData.isChecked()) {
+                    if (firstSelectData == null) {
+                        firstSelectData = levelData;
+                    }
+                }
             } else {
-                return false;
-            }
-        } else {
-            LevelData firstChildData = null;
-            for (LevelData childData : levelData.getNextLevelDatas()) {
-                if (hasSelect(childData)) {
-                    if (firstChildData == null) {
-                        firstChildData = childData;
+                List<LevelData> childLevelDatas = levelData.getNextLevelDatas();
+                if (hasSelectAndMark(childLevelDatas)) {
+                    if (firstSelectData == null) {
+                        firstSelectData = levelData;
                     }
                 }
             }
-            if (firstChildData != null) {
-                firstChildData.setChecked(true);
-                return true;
-            }
-            return false;
         }
+        if (firstSelectData != null) {
+            if (!firstSelectData.isLastLevel()) {
+                for (LevelData levelData : levelDatas) {
+                    levelData.setChecked(levelData == firstSelectData);
+                }
+            }
+        }
+        return firstSelectData != null;
     }
 
-    public List<LevelData> getSelectData() {
-        return getSelectData(levelDatas);
+    public List<LevelData> getSelectDataList() {
+        return getSelectDataList(levelDatas);
     }
 
-    private List<LevelData> getSelectData(List<LevelData> levelDatas) {
+    private List<LevelData> getSelectDataList(List<LevelData> levelDatas) {
         List<LevelData> selectDatas = new ArrayList<>();
         LevelData allLevelData = getAllLevelData(levelDatas);
         if (allLevelData != null) {
             List<LevelData> notAllLevelDatas = getNotAllLevelDatas(levelDatas);
-            selectDatas.addAll(getSelectData(notAllLevelDatas));
+            selectDatas.addAll(getSelectDataList(notAllLevelDatas));
         } else {
             for (LevelData currData : levelDatas) {
-                if (!currData.isLastLevel() || currData.isChecked()) {
-                    List<LevelData> nextDatas = getSelectData(currData.getNextLevelDatas());
-                    if (nextDatas.size() > 0 || currData.getNextLevelDatas().size() == 0) {
+                if (!currData.isLastLevel()) {
+                    List<LevelData> nextDatas = getSelectDataList(currData.getNextLevelDatas());
+                    if (nextDatas.size() > 0) {
                         LevelData copyData = currData.simpleCopy();
                         copyData.getNextLevelDatas().addAll(nextDatas);
                         selectDatas.add(copyData);
                     }
+                } else if (currData.isChecked()) {
+                    selectDatas.add(currData.simpleCopy());
                 }
             }
         }
