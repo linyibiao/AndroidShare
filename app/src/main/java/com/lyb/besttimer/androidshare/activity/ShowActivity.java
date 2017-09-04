@@ -18,6 +18,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.LevelAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.LinearLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.NumberEditActivity;
@@ -77,6 +78,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(SimpleFragmentActivity.class, "simple fragment"));
             lvData.getLvDatas().add(new LVData(NumberEditActivity.class, "number edit"));
             lvData.getLvDatas().add(new LVData(CardViewActivity.class, "card view"));
+            lvData.getLvDatas().add(new LVData(LevelAdapterActivity.class, "level adapter"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

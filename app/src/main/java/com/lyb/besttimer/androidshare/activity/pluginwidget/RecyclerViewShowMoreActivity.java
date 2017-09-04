@@ -26,11 +26,11 @@ public class RecyclerViewShowMoreActivity extends AppCompatActivity {
         recyclerView.setAdapter(new ShowMoreAdapter());
     }
 
-    private static class ShowMoreAdapter extends BaseAdapter<Boolean> {
+    private static class ShowMoreAdapter extends BaseAdapter<ShowMoreAdapter.ShowHolder> {
 
         private SparseBooleanArray sparseBooleanArray = new SparseBooleanArray();
 
-        private class ShowHolder extends BaseHolder<Boolean> {
+        class ShowHolder extends BaseHolder<Boolean> {
 
             private Button btn;
             private TextView tv;
@@ -59,12 +59,12 @@ public class RecyclerViewShowMoreActivity extends AppCompatActivity {
         }
 
         @Override
-        public BaseHolder<Boolean> onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ShowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ShowHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_showmore, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder<Boolean> holder, int position) {
+        public void onBindViewHolder(ShowHolder holder, int position) {
             holder.fillView(sparseBooleanArray.get(position), position);
         }
 

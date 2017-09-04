@@ -14,7 +14,7 @@ import com.lyb.besttimer.pluginwidget.view.textview.BaseTextView;
  * Created by linyibiao on 2016/11/25.
  */
 
-public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapter<TYPE> {
+public class LoadMoreAdapter<T extends BaseAdapter> extends BaseAdapter<BaseHolder> {
 
     private T mWrapperAdapter;
     private MoreListener moreListener;
@@ -39,6 +39,8 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
     private MoreData moreData = new MoreData();
 
     public static class MoreData {
+
+        MORE_STATE more_state = MORE_STATE.NORMAL;
         String moreTip = "bottom to load more";
         String failTip = "load more fail";
         String doneTip = "no more data";
@@ -58,27 +60,23 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
         NORMAL, LOADING, FAIL, DONE
     }
 
-    protected MORE_STATE more_state = MORE_STATE.NORMAL;
+    protected abstract class BaseMoreHolder extends BaseHolder<MoreData> {
 
-    protected  abstract class BaseMoreHolder extends BaseHolder<TYPE> {
-
-        private LoadMoreAdapter loadMoreAdapter;
-
-        public BaseMoreHolder(View itemView, LoadMoreAdapter loadMoreAdapter) {
+        public BaseMoreHolder(View itemView) {
             super(itemView);
-            this.loadMoreAdapter = loadMoreAdapter;
         }
 
         private View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadMoreAdapter.toLoadMore(true);
+                toLoadMore(true);
             }
         };
 
         @Override
-        public void fillView(TYPE data, int position) {
-            switch (loadMoreAdapter.more_state) {
+        public void fillView(MoreData data, int position) {
+            super.fillView(data, position);
+            switch (data.more_state) {
                 case NORMAL:
                     normal();
                     break;
@@ -98,7 +96,7 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
 
         //reset
         final void normal() {
-            normalUI(loadMoreAdapter.moreData);
+            normalUI(data);
             itemView.setOnClickListener(onClickListener);
         }
 
@@ -106,7 +104,7 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
 
         //to load more
         final void loading() {
-            loadingUI(loadMoreAdapter.moreData);
+            loadingUI(data);
             itemView.setOnClickListener(null);
         }
 
@@ -114,7 +112,7 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
 
         //load fail
         void fail() {
-            failUI(loadMoreAdapter.moreData);
+            failUI(data);
             itemView.setOnClickListener(onClickListener);
         }
 
@@ -122,7 +120,7 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
 
         //load done
         void done() {
-            doneUI(loadMoreAdapter.moreData);
+            doneUI(data);
             itemView.setOnClickListener(onClickListener);
         }
 
@@ -133,8 +131,8 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
         private ProgressBar pb_more_load;
         private BaseTextView btv_more_tip;
 
-        MoreHolder(View itemView, LoadMoreAdapter loadMoreAdapter) {
-            super(itemView, loadMoreAdapter);
+        MoreHolder(View itemView) {
+            super(itemView);
             pb_more_load = (ProgressBar) itemView.findViewById(R.id.pb_more_load);
             btv_more_tip = (BaseTextView) itemView.findViewById(R.id.btv_more_tip);
         }
@@ -169,25 +167,25 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
     }
 
     @Override
-    public BaseHolder<TYPE> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == MORETYPE) {
             return onCreateMoreHolder(parent);
         } else {
-            return mWrapperAdapter.onCreateViewHolder(parent, viewType);
+            return (BaseHolder) mWrapperAdapter.onCreateViewHolder(parent, viewType);
         }
     }
 
     @Override
-    public void onBindViewHolder(BaseHolder<TYPE> holder, int position) {
+    public void onBindViewHolder(BaseHolder holder, int position) {
         if (getItemViewType(position) == MORETYPE) {
-            holder.fillView(null, position);
+            holder.fillView(moreData, position);
         } else {
             mWrapperAdapter.onBindViewHolder(holder, position);
         }
     }
 
     protected MoreHolder onCreateMoreHolder(ViewGroup parent) {
-        return new MoreHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_more_loader, parent, false), this);
+        return new MoreHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_more_loader, parent, false));
     }
 
     private MoreHolder getMoreHolder() {
@@ -195,12 +193,12 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
     }
 
     protected void toLoadMore(boolean force) {
-        if (moreListener != null && (force || more_state == MORE_STATE.NORMAL)) {
+        if (moreListener != null && (force || moreData.more_state == MORE_STATE.NORMAL)) {
             MoreHolder moreHolder = getMoreHolder();
             if (moreHolder != null) {
                 moreHolder.loading();
             }
-            more_state = MORE_STATE.LOADING;
+            moreData.more_state = MORE_STATE.LOADING;
             moreListener.onLoadMore();
         }
     }
@@ -218,17 +216,17 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
     public void loadMoreCompleted(boolean successful, boolean done) {
         MoreHolder moreHolder = getMoreHolder();
         if (done) {
-            more_state = MORE_STATE.DONE;
+            moreData.more_state = MORE_STATE.DONE;
             if (moreHolder != null) {
                 moreHolder.done();
             }
         } else if (successful) {
-            more_state = MORE_STATE.NORMAL;
+            moreData.more_state = MORE_STATE.NORMAL;
             if (moreHolder != null) {
                 moreHolder.normal();
             }
         } else {
-            more_state = MORE_STATE.FAIL;
+            moreData.more_state = MORE_STATE.FAIL;
             if (moreHolder != null) {
                 moreHolder.fail();
             }
@@ -244,7 +242,7 @@ public class LoadMoreAdapter<TYPE,T extends BaseAdapter<TYPE>> extends BaseAdapt
             moreListener.interruptLoad();
         }
         MoreHolder moreHolder = getMoreHolder();
-        more_state = MORE_STATE.NORMAL;
+        moreData.more_state = MORE_STATE.NORMAL;
         if (moreHolder != null) {
             moreHolder.normal();
         }

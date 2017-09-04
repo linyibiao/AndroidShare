@@ -143,7 +143,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends BaseAdapter<ItemTree> {
+    private static class MyAdapter extends BaseAdapter<MyAdapter.Holder> {
 
         private TreeDataManager treeDataManager;
 
@@ -156,7 +156,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
 
         @Override
-        public BaseHolder<ItemTree> onCreateViewHolder(ViewGroup parent, int viewType) {
+        public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = null;
             switch (viewType) {
                 case 0:
@@ -176,7 +176,7 @@ public class ItemTouchActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder<ItemTree> holder, final int position) {
+        public void onBindViewHolder(Holder holder, final int position) {
             holder.fillView(treeDataManager.getItem(position), position);
         }
 

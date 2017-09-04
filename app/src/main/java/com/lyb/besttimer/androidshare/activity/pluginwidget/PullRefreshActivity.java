@@ -51,7 +51,7 @@ public class PullRefreshActivity extends BaseActivity {
                 }
             }
         }
-        final LoadMoreAdapter<RVData, MyAdapter> loadMoreAdapter = new LoadMoreAdapter<>(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)), new LoadMoreAdapter.MoreListener() {
+        final LoadMoreAdapter<MyAdapter> loadMoreAdapter = new LoadMoreAdapter<>(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)), new LoadMoreAdapter.MoreListener() {
 
             private Runnable runnable = new Runnable() {
                 @Override
@@ -112,7 +112,7 @@ public class PullRefreshActivity extends BaseActivity {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {//移动
-                MyAdapter myAdapter = ((LoadMoreAdapter<RVData, MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
+                MyAdapter myAdapter = ((LoadMoreAdapter<MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
                 int fromPosition = viewHolder.getAdapterPosition();
                 int toPosition = target.getAdapterPosition();
                 if (myAdapter.getTreeDataManager().canMove(fromPosition, toPosition)) {
@@ -137,7 +137,7 @@ public class PullRefreshActivity extends BaseActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {//删除
-                MyAdapter myAdapter = ((LoadMoreAdapter<RVData, MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
+                MyAdapter myAdapter = ((LoadMoreAdapter<MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
                 int position = viewHolder.getAdapterPosition();
                 int rangeCount = myAdapter.getTreeDataManager().itemRange(position);
                 myAdapter.getTreeDataManager().remove(position);
@@ -146,7 +146,7 @@ public class PullRefreshActivity extends BaseActivity {
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {//获取删除的操作方向符，如果为0则没有删除操作响应
-                MyAdapter myAdapter = ((LoadMoreAdapter<RVData, MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
+                MyAdapter myAdapter = ((LoadMoreAdapter<MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
                 RVData rvData = (RVData) myAdapter.getTreeDataManager().getItem(viewHolder.getAdapterPosition()).getObject();
                 if (rvData.type != 1) {
                     return 0;
@@ -156,7 +156,7 @@ public class PullRefreshActivity extends BaseActivity {
 
             @Override
             public int getDragDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {//获取拖拽的操作方向符，如果为0则没有拖拽操作响应
-                MyAdapter myAdapter = ((LoadMoreAdapter<RVData, MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
+                MyAdapter myAdapter = ((LoadMoreAdapter<MyAdapter>) recyclerView.getAdapter()).getmWrapperAdapter();
                 RVData rvData = (RVData) myAdapter.getTreeDataManager().getItem(viewHolder.getAdapterPosition()).getObject();
                 if (rvData.type != 1) {
                     return 0;
@@ -193,7 +193,7 @@ public class PullRefreshActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends BaseAdapter<RVData> {
+    private static class MyAdapter extends BaseAdapter<MyAdapter.Holder> {
 
         private TreeDataManager treeDataManager;
 
@@ -206,7 +206,7 @@ public class PullRefreshActivity extends BaseActivity {
         }
 
         @Override
-        public BaseHolder<RVData> onCreateViewHolder(ViewGroup parent, int viewType) {
+        public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = null;
             switch (viewType) {
                 case 0:
@@ -223,7 +223,7 @@ public class PullRefreshActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder<RVData> holder, final int position) {
+        public void onBindViewHolder(Holder holder, final int position) {
             final ItemTree itemTree = treeDataManager.getItem(position);
             final RVData rvData = (RVData) itemTree.getObject();
             holder.fillView(rvData, position);

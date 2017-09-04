@@ -74,7 +74,7 @@ public class ItemTreeActivity extends BaseActivity {
         }
     }
 
-    private static class MyAdapter extends BaseAdapter<ItemTree> {
+    private static class MyAdapter extends BaseAdapter<MyAdapter.Holder> {
 
         private TreeDataManager treeDataManager;
 
@@ -100,7 +100,7 @@ public class ItemTreeActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(BaseHolder<ItemTree> holder, final int position) {
+        public void onBindViewHolder(Holder holder, final int position) {
             final ItemTree itemTree = treeDataManager.getItem(position);
             holder.fillView(itemTree, position);
         }

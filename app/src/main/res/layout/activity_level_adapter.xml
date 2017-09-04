@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.LevelAdapterActivity">
+
+    <com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView
+        android:id="@+id/brv_1"
+        android:layout_width="0dp"
+        android:layout_height="551dp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/brv_2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView
+        android:id="@+id/brv_2"
+        android:layout_width="0dp"
+        android:layout_height="551dp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@+id/brv_1"
+        app:layout_constraintRight_toLeftOf="@+id/brv_3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView
+        android:id="@+id/brv_3"
+        android:layout_width="0dp"
+        android:layout_height="551dp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@+id/brv_2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

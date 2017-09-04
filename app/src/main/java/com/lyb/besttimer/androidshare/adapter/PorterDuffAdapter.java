@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Administrator on 2016/11/2.
  */
 
-public class PorterDuffAdapter extends BaseAdapter<Pair<String, PorterDuff.Mode>> {
+public class PorterDuffAdapter extends BaseAdapter<PorterDuffAdapter.PorterDuffHolder> {
 
     private List<Pair<String, PorterDuff.Mode>> modes = new ArrayList<>();
 
@@ -25,12 +25,12 @@ public class PorterDuffAdapter extends BaseAdapter<Pair<String, PorterDuff.Mode>
     }
 
     @Override
-    public BaseHolder<Pair<String, PorterDuff.Mode>> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PorterDuffHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new PorterDuffHolder(new PorterDuffView(parent.getContext()));
     }
 
     @Override
-    public void onBindViewHolder(BaseHolder<Pair<String, PorterDuff.Mode>> holder, int position) {
+    public void onBindViewHolder(PorterDuffHolder holder, int position) {
         holder.fillView(modes.get(position), position);
     }
 
@@ -39,7 +39,7 @@ public class PorterDuffAdapter extends BaseAdapter<Pair<String, PorterDuff.Mode>
         return modes.size();
     }
 
-    private class PorterDuffHolder extends BaseHolder<Pair<String, PorterDuff.Mode>> {
+    class PorterDuffHolder extends BaseHolder<Pair<String, PorterDuff.Mode>> {
 
         public PorterDuffHolder(View itemView) {
             super(itemView);
