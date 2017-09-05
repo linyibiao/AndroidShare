@@ -18,6 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        app:tabIndicatorHeight="0dp"
-        app:tabPadding="0dp" />
+        app:tabIndicatorHeight="10dp"
+        app:tabPaddingBottom="0dp"
+        app:tabPaddingEnd="0dp"
+        app:tabPaddingStart="0dp"
+        app:tabPaddingTop="0dp" />
 </LinearLayout>

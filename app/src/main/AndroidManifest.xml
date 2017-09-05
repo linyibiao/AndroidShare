@@ -27,7 +27,6 @@
         <activity android:name=".activity.pluginwidget.SwipeLayoutActivity" />
         <activity android:name=".activity.rxandroid.SimpleRxActivity" />
         <activity android:name=".activity.network.SimpleRetrofitActivity" />
-        <activity android:name=".activity.pluginwidget.TabLayoutActivity" />
         <activity android:name=".activity.pluginwidget.PorterDuffActivity" />
         <activity android:name=".activity.pluginwidget.EditTextActivity" />
         <activity android:name=".activity.network.GlideActivity" />

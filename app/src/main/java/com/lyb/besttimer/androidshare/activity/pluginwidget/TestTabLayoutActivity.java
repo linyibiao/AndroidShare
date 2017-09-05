@@ -29,31 +29,8 @@ public class TestTabLayoutActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
-            tab.setIcon(R.drawable.selector_tab);
-        }
-
-    }
-
-    private class TestPagerAdapter extends FragmentPagerAdapter {
-
-        private int pageCount = 3;
-
-        public TestPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Bundle args = new Bundle();
-            args.putString("title", "title" + position);
-            TestFragment testFragment = new TestFragment();
-            testFragment.setArguments(args);
-            return testFragment;
-        }
-
-        @Override
-        public int getCount() {
-            return pageCount;
+            tab.setCustomView(R.layout.item_tab_test);
+//            tab.setIcon(R.drawable.selector_tab);
         }
 
     }
@@ -82,6 +59,30 @@ public class TestTabLayoutActivity extends AppCompatActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             tv_text.setText(title);
+        }
+
+    }
+
+    private class TestPagerAdapter extends FragmentPagerAdapter {
+
+        private int pageCount = 3;
+
+        public TestPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Bundle args = new Bundle();
+            args.putString("title", "title" + position);
+            TestFragment testFragment = new TestFragment();
+            testFragment.setArguments(args);
+            return testFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return pageCount;
         }
 
     }
