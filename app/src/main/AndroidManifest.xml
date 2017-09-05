@@ -41,7 +41,8 @@
         <activity android:name=".activity.pluginwidget.NumberEditActivity" />
         <activity android:name=".activity.rxandroid.RxLifeActivity" />
         <activity android:name=".activity.pluginwidget.CardViewActivity" />
-        <activity android:name=".activity.pluginwidget.LevelAdapterActivity"></activity>
+        <activity android:name=".activity.pluginwidget.LevelAdapterActivity" />
+        <activity android:name=".activity.pluginwidget.TestTabLayoutActivity"></activity>
     </application>
 
 </manifest>

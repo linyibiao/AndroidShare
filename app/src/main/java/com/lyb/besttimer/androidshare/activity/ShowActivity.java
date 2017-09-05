@@ -31,6 +31,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TabLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableComplexActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.TestTabLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
@@ -70,6 +71,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(DecorationActivity.class, "decoration模板"));
             lvData.getLvDatas().add(new LVData(SwipeLayoutActivity.class, "swipe layout"));
             lvData.getLvDatas().add(new LVData(TabLayoutActivity.class, "simple tablayout"));
+            lvData.getLvDatas().add(new LVData(TestTabLayoutActivity.class, "test tablayout"));
             lvData.getLvDatas().add(new LVData(PorterDuffActivity.class, "simple porterDuff"));
             lvData.getLvDatas().add(new LVData(EditTextActivity.class, "simple edittext"));
             lvData.getLvDatas().add(new LVData(TableLayoutActivity.class, "simple tablelayout"));
