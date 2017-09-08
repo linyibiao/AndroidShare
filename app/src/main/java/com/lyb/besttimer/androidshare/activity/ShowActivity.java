@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
@@ -88,7 +89,8 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(RxLifeActivity.class, "rxandroid life"));
             lvDatas.add(lvData);
 
-            lvData = new LVData(ShowActivity.class, "simpple");
+            lvData = new LVData(ShowActivity.class, "monitorCheck");
+            lvData.getLvDatas().add(new LVData(MemoryCheckActivity.class, "memoryCheck"));
             lvDatas.add(lvData);
 
         }
