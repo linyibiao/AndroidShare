@@ -41,7 +41,8 @@
         <activity android:name=".activity.rxandroid.RxLifeActivity" />
         <activity android:name=".activity.pluginwidget.CardViewActivity" />
         <activity android:name=".activity.pluginwidget.LevelAdapterActivity" />
-        <activity android:name=".activity.pluginwidget.TestTabLayoutActivity"></activity>
+        <activity android:name=".activity.pluginwidget.TestTabLayoutActivity" />
+        <activity android:name=".activity.monitorCheck.MemoryCheckActivity" />
     </application>
 
 </manifest>
