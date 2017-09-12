@@ -16,6 +16,7 @@ import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
@@ -80,6 +81,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(NumberEditActivity.class, "number edit"));
             lvData.getLvDatas().add(new LVData(CardViewActivity.class, "card view"));
             lvData.getLvDatas().add(new LVData(LevelAdapterActivity.class, "level adapter"));
+            lvData.getLvDatas().add(new LVData(FragmentUtilActivity.class, "fragment util"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

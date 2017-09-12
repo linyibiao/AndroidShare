@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity">
+
+    <Button
+        android:id="@+id/btn_replace1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="replace1" />
+
+    <Button
+        android:id="@+id/btn_replace2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="replace2" />
+
+    <Button
+        android:id="@+id/btn_add1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add1" />
+
+    <Button
+        android:id="@+id/btn_add2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add2" />
+
+    <Button
+        android:id="@+id/btn_show1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show1" />
+
+    <Button
+        android:id="@+id/btn_show2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show2" />
+
+    <Button
+        android:id="@+id/btn_showAndHideOthers1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="showAndHideOthers1" />
+
+    <Button
+        android:id="@+id/btn_showAndHideOthers2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="showAndHideOthers2" />
+
+    <FrameLayout
+        android:id="@+id/fl_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

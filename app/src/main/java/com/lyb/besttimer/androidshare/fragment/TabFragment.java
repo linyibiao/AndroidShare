@@ -2,20 +2,21 @@ package com.lyb.besttimer.androidshare.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.lyb.besttimer.pluginwidget.fragment.BaseFragment;
+import com.lyb.besttimer.pluginwidget.utils.FragmentUtil;
 
 /**
  * tab fragment
  * Created by linyibiao on 2016/10/28.
  */
 
-public class TabFragment extends BaseFragment {
+public class TabFragment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
     private String mContent;
@@ -23,7 +24,7 @@ public class TabFragment extends BaseFragment {
     public static TabFragment newInstance(String mContent) {
         Bundle args = new Bundle();
         args.putString(ARG_PAGE, mContent);
-        return BaseFragment.newInstance(TabFragment.class, args);
+        return FragmentUtil.newInstance(TabFragment.class, args);
     }
 
     @Override

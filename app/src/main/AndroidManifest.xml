@@ -43,6 +43,7 @@
         <activity android:name=".activity.pluginwidget.LevelAdapterActivity" />
         <activity android:name=".activity.pluginwidget.TestTabLayoutActivity" />
         <activity android:name=".activity.monitorCheck.MemoryCheckActivity" />
+        <activity android:name=".activity.pluginwidget.FragmentUtilActivity"></activity>
     </application>
 
 </manifest>

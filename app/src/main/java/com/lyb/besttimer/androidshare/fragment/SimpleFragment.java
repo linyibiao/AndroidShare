@@ -2,19 +2,19 @@ package com.lyb.besttimer.androidshare.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.pluginwidget.fragment.BaseFragment;
 
 /**
  * Created by Administrator on 2017/1/11.
  */
 
-public class SimpleFragment extends BaseFragment {
+public class SimpleFragment extends Fragment {
 
     @Nullable
     @Override
