@@ -15,6 +15,7 @@ import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.DrawLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
@@ -28,6 +29,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewShowMoreActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.RefreshLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableComplexActivity;
@@ -82,6 +84,8 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(CardViewActivity.class, "card view"));
             lvData.getLvDatas().add(new LVData(LevelAdapterActivity.class, "level adapter"));
             lvData.getLvDatas().add(new LVData(FragmentUtilActivity.class, "fragment util"));
+            lvData.getLvDatas().add(new LVData(DrawLayoutActivity.class, "侧拉菜单"));
+            lvData.getLvDatas().add(new LVData(RefreshLayoutActivity.class, "统一下拉刷新"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
