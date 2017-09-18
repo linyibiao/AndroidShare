@@ -20,6 +20,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchHelperActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.LevelAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.LinearLayoutActivity;
@@ -86,6 +87,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(FragmentUtilActivity.class, "fragment util"));
             lvData.getLvDatas().add(new LVData(DrawLayoutActivity.class, "侧拉菜单"));
             lvData.getLvDatas().add(new LVData(RefreshLayoutActivity.class, "统一下拉刷新"));
+            lvData.getLvDatas().add(new LVData(ItemTouchHelperActivity.class, "列表拖拽尝试"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

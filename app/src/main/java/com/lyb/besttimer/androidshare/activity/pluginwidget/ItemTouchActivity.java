@@ -1,6 +1,7 @@
 package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -50,6 +51,7 @@ public class ItemTouchActivity extends BaseActivity {
             }
         }
         recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         recyclerView.postDelayed(new Runnable() {
             @Override

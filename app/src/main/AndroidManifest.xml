@@ -45,7 +45,8 @@
         <activity android:name=".activity.monitorCheck.MemoryCheckActivity" />
         <activity android:name=".activity.pluginwidget.FragmentUtilActivity" />
         <activity android:name=".activity.pluginwidget.DrawLayoutActivity" />
-        <activity android:name=".activity.pluginwidget.RefreshLayoutActivity"></activity>
+        <activity android:name=".activity.pluginwidget.RefreshLayoutActivity" />
+        <activity android:name=".activity.pluginwidget.ItemTouchHelperActivity"></activity>
     </application>
 
 </manifest>

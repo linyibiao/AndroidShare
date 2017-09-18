@@ -9,8 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.lyb.besttimer.pluginwidget.utils.LogUtil;
-
 /**
  * 下拉刷新控件
  * Created by besttimer on 2017/9/17.
@@ -55,17 +53,20 @@ public class RefreshLayout extends ViewGroup {
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            LogUtil.logE("top,dy:" + top + "," + dy);
-            double h = child.getHeight() / 8;
-            double H = getHeight();
-            double preTop = top - dy;
-            preTop = getValueX(H, h, preTop);
-            double currTop = preTop + dy;
-            if (currTop < 0) {
-                currTop = 0;
+            if (dy > 0) {
+                double h = child.getHeight() / 8;
+                double H = getHeight();
+                double preTop = top - dy;
+                preTop = getValueX(H, h, preTop);
+                double currTop = preTop + dy;
+                if (currTop < 0) {
+                    currTop = 0;
+                }
+                double finalTop = getValueY(H, h, currTop);
+                return (int) Math.ceil(finalTop);
+            } else {
+                return top >= 0 ? top : 0;
             }
-            double finalTop = getValueY(H, h, currTop);
-            return (int) Math.ceil(finalTop);
         }
 
         @Override
