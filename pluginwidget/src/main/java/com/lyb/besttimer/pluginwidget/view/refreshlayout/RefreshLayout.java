@@ -28,78 +28,9 @@ public class RefreshLayout extends ViewGroup {
 
     public RefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        DragCallback dragCallback = new DragCallback();
+        DragCallback dragCallback = new DragCallback(this);
         viewDragHelper = ViewDragHelper.create(this, 1, dragCallback);
         dragCallback.setViewDragHelper(viewDragHelper);
-    }
-
-    private class DragCallback extends ViewDragHelper.Callback {
-
-        private ViewDragHelper viewDragHelper;
-
-        public void setViewDragHelper(ViewDragHelper viewDragHelper) {
-            this.viewDragHelper = viewDragHelper;
-        }
-
-        @Override
-        public boolean tryCaptureView(View child, int pointerId) {
-            return true;
-        }
-
-        @Override
-        public int getViewVerticalDragRange(View child) {
-            return child.getHeight();
-        }
-
-        @Override
-        public int clampViewPositionVertical(View child, int top, int dy) {
-            if (dy > 0) {
-                double h = child.getHeight() / 8;
-                double H = getHeight();
-                double preTop = top - dy;
-                preTop = getValueX(H, h, preTop);
-                double currTop = preTop + dy;
-                if (currTop < 0) {
-                    currTop = 0;
-                }
-                double finalTop = getValueY(H, h, currTop);
-                return (int) Math.ceil(finalTop);
-            } else {
-                return top >= 0 ? top : 0;
-            }
-        }
-
-        @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            super.onViewReleased(releasedChild, xvel, yvel);
-            int currTop = releasedChild.getTop();
-            int thresholdTop = releasedChild.getHeight() / 8;
-
-            int top;
-            top = currTop >= thresholdTop ? thresholdTop : 0;
-
-            viewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
-            invalidate();
-        }
-
-        private double getValueX(double totalX, double thresholdY, double currY) {
-            double k = totalX * thresholdY / (totalX - 3 * thresholdY);
-            return getFormulaX(k, currY);
-        }
-
-        private double getValueY(double totalX, double thresholdY, double currX) {
-            double k = totalX * thresholdY / (totalX - 3 * thresholdY);
-            return getFormulaY(k, currX);
-        }
-
-        private double getFormulaX(double k, double y) {
-            return k * y / (k - y);
-        }
-
-        private double getFormulaY(double k, double x) {
-            return k * x / (k + x);
-        }
-
     }
 
     @Override
