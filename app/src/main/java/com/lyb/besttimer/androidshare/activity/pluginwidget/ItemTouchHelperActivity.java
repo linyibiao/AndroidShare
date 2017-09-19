@@ -107,17 +107,17 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY) {
+            public void handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY) {
                 btn_delete.setText("删除");
                 if (selectedToDelete) {
                     List<String> strings = ((TouchAdapter) recyclerView.getAdapter()).getStrings();
                     int sourcePos = viewHolder.getAdapterPosition();
                     strings.remove(sourcePos);
-                    recyclerView.getAdapter().notifyItemRemoved(sourcePos);
+                    //用了notifyItemRemoved会有灵异现象
+//                    recyclerView.getAdapter().notifyItemRemoved(sourcePos);
+                    recyclerView.getAdapter().notifyDataSetChanged();
                 }
-                boolean toDelete = selectedToDelete;
                 selectedToDelete = false;
-                return toDelete;
             }
         });
         itemTouchHelper.attachToRecyclerView(rv);

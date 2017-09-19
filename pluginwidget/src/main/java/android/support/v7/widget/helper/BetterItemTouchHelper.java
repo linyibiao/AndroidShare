@@ -29,8 +29,6 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
 
     @Override
     void select(RecyclerView.ViewHolder selected, int actionState) {
-        //如果要在这里删除viewholder，只能强制自己置空
-        boolean handleUp = false;
         if (mSelected == null && actionState == ItemTouchHelper.ACTION_STATE_DRAG && mActionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             //长按刚要移动holder
             if (handleEventWithXY != null) {
@@ -39,11 +37,8 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
         } else if (mSelected != null && selected == null && actionState == ItemTouchHelper.ACTION_STATE_IDLE && mActionState == ItemTouchHelper.ACTION_STATE_DRAG) {
             //拖拽后刚松手
             if (handleEventWithXY != null) {
-                handleUp = handleEventWithXY.handleUp(mRecyclerView, mSelected, currRawX, currRawY);
+                handleEventWithXY.handleUp(mRecyclerView, mSelected, currRawX, currRawY);
             }
-        }
-        if (handleUp) {
-            mSelected = null;
         }
         super.select(selected, actionState);
     }
@@ -62,7 +57,7 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
 
         void handleMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY);
 
-        boolean handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY);
+        void handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY);
     }
 
 }

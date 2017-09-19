@@ -6,10 +6,17 @@
     android:clipChildren="false"
     tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchHelperActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_delete"
