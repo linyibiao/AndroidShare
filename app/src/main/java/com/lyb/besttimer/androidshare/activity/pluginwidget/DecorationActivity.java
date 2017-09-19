@@ -26,13 +26,13 @@ public class DecorationActivity extends BaseActivity {
         setContentView(R.layout.activity_decoration);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(this, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (position==0||position==3){
+                if (position == 0 || position == 3) {
                     return 2;
-                }else if (position==4){
+                } else if (position == 4) {
                     return 3;
                 }
                 return 1;
@@ -47,7 +47,7 @@ public class DecorationActivity extends BaseActivity {
         }
         recyclerView.setAdapter(new MyAdapter(rvDates));
 
-        recyclerView.addItemDecoration(new BaseItemDecoration(3, 100, false, BaseItemDecoration.DRAWORIENTATION.BOTH, new ColorDecorateDetail(0xaaff0000)));
+        recyclerView.addItemDecoration(new BaseItemDecoration(100, new ColorDecorateDetail(0xaaff0000)));
 
     }
 

@@ -58,7 +58,7 @@ public class ItemTreeActivity extends BaseActivity {
             }
         }.applyFeature();
 
-        recyclerView.addItemDecoration(new BaseItemDecoration(1, 100, false, BaseItemDecoration.DRAWORIENTATION.HORIZONTAL, new ColorDecorateDetail(0xaaff0000)));
+        recyclerView.addItemDecoration(new BaseItemDecoration(100, new ColorDecorateDetail(0xaaff0000)));
 
     }
 

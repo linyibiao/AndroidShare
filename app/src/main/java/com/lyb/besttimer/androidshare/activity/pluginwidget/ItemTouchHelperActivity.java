@@ -28,13 +28,13 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_touch_helper);
         final Button btn_delete = (Button) findViewById(R.id.btn_delete);
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new GridLayoutManager(this, 4));
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             strings.add("item" + i);
         }
-        rv.addItemDecoration(new BaseItemDecoration(4, 10, false, BaseItemDecoration.DRAWORIENTATION.BOTH, new ColorDecorateDetail(0)));
+        rv.addItemDecoration(new BaseItemDecoration(150, new ColorDecorateDetail(0)));
         rv.setAdapter(new TouchAdapter(strings));
         ItemTouchHelper itemTouchHelper = new BetterItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
             @Override
