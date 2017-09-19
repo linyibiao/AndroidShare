@@ -37,6 +37,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.TableComplexActivity
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TestTabLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.VideoViewActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
@@ -88,6 +89,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(DrawLayoutActivity.class, "侧拉菜单"));
             lvData.getLvDatas().add(new LVData(RefreshLayoutActivity.class, "统一下拉刷新"));
             lvData.getLvDatas().add(new LVData(ItemTouchHelperActivity.class, "列表拖拽尝试"));
+            lvData.getLvDatas().add(new LVData(VideoViewActivity.class, "视频播放"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

@@ -46,7 +46,8 @@
         <activity android:name=".activity.pluginwidget.FragmentUtilActivity" />
         <activity android:name=".activity.pluginwidget.DrawLayoutActivity" />
         <activity android:name=".activity.pluginwidget.RefreshLayoutActivity" />
-        <activity android:name=".activity.pluginwidget.ItemTouchHelperActivity"></activity>
+        <activity android:name=".activity.pluginwidget.ItemTouchHelperActivity" />
+        <activity android:name=".activity.pluginwidget.VideoViewActivity"></activity>
     </application>
 
 </manifest>
