@@ -7,6 +7,7 @@ import android.view.View;
 
 /**
  * common item decoration
+ * 这个decoration需要调整recyclerview的padding属性，请慎用
  * Created by linyibiao on 2016/8/17.
  */
 public class BaseItemDecoration extends RecyclerView.ItemDecoration {
