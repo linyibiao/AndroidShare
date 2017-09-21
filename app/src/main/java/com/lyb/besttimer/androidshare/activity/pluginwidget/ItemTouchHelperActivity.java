@@ -17,6 +17,7 @@ import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,9 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
         for (int i = 0; i < 9; i++) {
             strings.add("item" + i);
         }
-        rv.addItemDecoration(new BaseItemDecoration(150, new ColorDecorateDetail(0)));
+        rv.addItemDecoration(new BaseItemDecoration(10, new ColorDecorateDetail(0)));
         rv.setAdapter(new TouchAdapter(strings));
-        ItemTouchHelper itemTouchHelper = new BetterItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
+        final ItemTouchHelper itemTouchHelper = new BetterItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
             @Override
             public boolean canDropOver(RecyclerView recyclerView, RecyclerView.ViewHolder current, RecyclerView.ViewHolder target) {
                 return super.canDropOver(recyclerView, current, target);
@@ -86,6 +87,8 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
 
             @Override
             public void handleDown(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY) {
+                ObjectAnimator.ofFloat(viewHolder.itemView, "scaleX", 1.2f).start();
+                ObjectAnimator.ofFloat(viewHolder.itemView, "scaleY", 1.2f).start();
                 deleteStatus(false);
             }
 
@@ -108,6 +111,8 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
 
             @Override
             public void handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY) {
+                ObjectAnimator.ofFloat(viewHolder.itemView, "scaleX", 1).start();
+                ObjectAnimator.ofFloat(viewHolder.itemView, "scaleY", 1).start();
                 btn_delete.setText("删除");
                 if (selectedToDelete) {
                     List<String> strings = ((TouchAdapter) recyclerView.getAdapter()).getStrings();
