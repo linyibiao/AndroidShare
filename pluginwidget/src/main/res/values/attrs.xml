@@ -22,4 +22,15 @@
         <attr name="nev_textSize" format="dimension" />
         <attr name="nev_useOperation" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="RefreshLayout">
+        <attr name="refresh_enableHeader" format="boolean" />
+        <attr name="refresh_enableFooter" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="RefreshLayout_Layout">
+        <attr name="refresh_header" format="boolean" />
+        <attr name="refresh_footer" format="boolean" />
+    </declare-styleable>
+
 </resources>

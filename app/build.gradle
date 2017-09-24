@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
 
-//20170517分支
-
 Map<String, String> cfg = rootProject.ext.android
 Map<String, String> dCfg = rootProject.ext.dependencies
 

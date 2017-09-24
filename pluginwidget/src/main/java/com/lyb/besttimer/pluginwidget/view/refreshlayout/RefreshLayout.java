@@ -1,6 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.refreshlayout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Px;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
@@ -8,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.lyb.besttimer.pluginwidget.R;
 
 /**
  * 下拉刷新控件
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 public class RefreshLayout extends ViewGroup {
 
     private ViewDragHelper viewDragHelper;
+    private DragCallback dragCallback;
 
     public RefreshLayout(Context context) {
         this(context, null);
@@ -28,9 +32,23 @@ public class RefreshLayout extends ViewGroup {
 
     public RefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        DragCallback dragCallback = new DragCallback(this);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RefreshLayout);
+        boolean enableHeader = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableHeader, true);
+        boolean enableFooter = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableFooter, true);
+        typedArray.recycle();
+        dragCallback = new DragCallback(this);
         viewDragHelper = ViewDragHelper.create(this, 1, dragCallback);
         dragCallback.setViewDragHelper(viewDragHelper);
+        setEnableHeader(enableHeader);
+        setEnableFooter(enableFooter);
+    }
+
+    public void setEnableHeader(boolean enableHeader) {
+        dragCallback.setEnableHeader(enableHeader);
+    }
+
+    public void setEnableFooter(boolean enableFooter) {
+        dragCallback.setEnableFooter(enableFooter);
     }
 
     @Override
@@ -43,14 +61,6 @@ public class RefreshLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        if (widthMode == MeasureSpec.UNSPECIFIED || heightMode == MeasureSpec.UNSPECIFIED) {
-            throw new IllegalArgumentException(
-                    "不能在具有滚动属性的父视图中使用哦");
-        }
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
@@ -58,10 +68,8 @@ public class RefreshLayout extends ViewGroup {
                 continue;
             }
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            final int contentWidthSpec = MeasureSpec.makeMeasureSpec(
-                    widthSize - lp.leftMargin - lp.rightMargin, MeasureSpec.EXACTLY);
-            final int contentHeightSpec = MeasureSpec.makeMeasureSpec(
-                    heightSize - lp.topMargin - lp.bottomMargin, MeasureSpec.EXACTLY);
+            final int contentWidthSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
+            final int contentHeightSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
             child.measure(contentWidthSpec, contentHeightSpec);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -76,13 +84,9 @@ public class RefreshLayout extends ViewGroup {
             if (child.getVisibility() == GONE) {
                 continue;
             }
-
-            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-
-            child.layout(lp.leftMargin, lp.topMargin,
-                    lp.leftMargin + child.getMeasuredWidth(),
-                    lp.topMargin + child.getMeasuredHeight());
-
+            child.layout(0, 0,
+                    child.getMeasuredWidth(),
+                    child.getMeasuredHeight());
         }
     }
 
@@ -112,8 +116,15 @@ public class RefreshLayout extends ViewGroup {
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
 
+        public boolean header;
+        public boolean footer;
+
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
+            TypedArray typedArray = c.obtainStyledAttributes(attrs, R.styleable.RefreshLayout_Layout);
+            header = typedArray.getBoolean(R.styleable.RefreshLayout_Layout_refresh_header, false);
+            footer = typedArray.getBoolean(R.styleable.RefreshLayout_Layout_refresh_footer, false);
+            typedArray.recycle();
         }
 
         public LayoutParams(@Px int width, @Px int height) {
@@ -132,11 +143,13 @@ public class RefreshLayout extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        dragCallback.setCurrMotionEvent(ev);
         return viewDragHelper.shouldInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        dragCallback.setCurrMotionEvent(event);
         viewDragHelper.processTouchEvent(event);
         return true;
     }
