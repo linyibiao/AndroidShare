@@ -71,7 +71,7 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         LogUtil.logE("preTop" + preTop);
         preTop = getValueX(H, h, factor, preTop);
         LogUtil.logE("currTop" + preTop);
-        double finalTop = getValueY(H, h, factor, preTop + dy);
+        double finalTop = getValueY(H, h, factor, Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, preTop + dy)));
         LogUtil.logE("finalTop" + finalTop);
         if (!enableHeader && finalTop > 0) {
             finalTop = 0;
@@ -79,7 +79,7 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         if (!enableFooter && finalTop < 0) {
             finalTop = 0;
         }
-        return (int) Math.ceil(finalTop);
+        return (int) (finalTop < 0 ? Math.ceil(finalTop) : Math.floor(finalTop));
     }
 
     @Override
@@ -153,15 +153,7 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
      */
     private double getValueX(double H, double h, double factor, double y) {
         double k = H * h / (H - factor * h);
-        double x = getFormulaX(k, y);
-        if (x > Integer.MAX_VALUE || x < Integer.MIN_VALUE) {
-            if (y > 0) {
-                return Integer.MAX_VALUE;
-            } else {
-                return Integer.MIN_VALUE;
-            }
-        }
-        return x;
+        return getFormulaX(k, y);
     }
 
     /**
