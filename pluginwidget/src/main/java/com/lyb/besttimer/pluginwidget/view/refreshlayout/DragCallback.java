@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.lyb.besttimer.pluginwidget.utils.LogUtil;
+
 /**
  * 自定义下拉刷新drag回调
  * Created by besttimer on 2017/9/18.
@@ -66,8 +68,11 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         double h = top >= 0 ? headerView.getHeight() : footerView.getHeight();
         double H = refreshLayout.getHeight();
         double preTop = top - dy;
+        LogUtil.logE("preTop" + preTop);
         preTop = getValueX(H, h, factor, preTop);
+        LogUtil.logE("currTop" + preTop);
         double finalTop = getValueY(H, h, factor, preTop + dy);
+        LogUtil.logE("finalTop" + finalTop);
         if (!enableHeader && finalTop > 0) {
             finalTop = 0;
         }
@@ -148,7 +153,15 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
      */
     private double getValueX(double H, double h, double factor, double y) {
         double k = H * h / (H - factor * h);
-        return getFormulaX(k, y);
+        double x = getFormulaX(k, y);
+        if (x > Integer.MAX_VALUE || x < Integer.MIN_VALUE) {
+            if (y > 0) {
+                return Integer.MAX_VALUE;
+            } else {
+                return Integer.MIN_VALUE;
+            }
+        }
+        return x;
     }
 
     /**
@@ -160,6 +173,9 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         return getFormulaY(k, x);
     }
 
+    /**
+     * x=-k*k/(y-k)-k
+     */
     private double getFormulaX(double k, double y) {
         if (y >= 0) {
             return k * y / (k - y);
@@ -168,6 +184,9 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         }
     }
 
+    /**
+     * y=-k*k/(x+k)+k
+     */
     private double getFormulaY(double k, double x) {
         if (x >= 0) {
             return k * x / (k + x);
