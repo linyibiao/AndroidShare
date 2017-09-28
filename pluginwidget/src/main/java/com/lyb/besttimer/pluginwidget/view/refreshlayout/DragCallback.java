@@ -1,5 +1,8 @@
 package com.lyb.besttimer.pluginwidget.view.refreshlayout;
 
+import android.support.v4.view.NestedScrollingParent;
+import android.support.v4.view.NestedScrollingParentHelper;
+import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.view.MotionEvent;
@@ -7,16 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.lyb.besttimer.pluginwidget.utils.LogUtil;
-
 /**
  * 自定义下拉刷新drag回调
  * Created by besttimer on 2017/9/18.
  */
-class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.OnPreDrawListener {
+class DragCallback extends ViewDragHelper.Callback {
 
-    private ViewGroup refreshLayout;
+    private final ViewGroup refreshLayout;
     private ViewDragHelper viewDragHelper;
+
+    private final NestedScrollingParentHelper nestedScrollingParentHelper;
 
     private boolean enableHeader;
     private boolean enableFooter;
@@ -28,7 +31,8 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
 
     public DragCallback(ViewGroup refreshLayout) {
         this.refreshLayout = refreshLayout;
-        refreshLayout.getViewTreeObserver().addOnPreDrawListener(this);
+        refreshLayout.getViewTreeObserver().addOnPreDrawListener(onPreDrawListener);
+        nestedScrollingParentHelper = new NestedScrollingParentHelper(refreshLayout);
     }
 
     public void setViewDragHelper(ViewDragHelper viewDragHelper) {
@@ -61,18 +65,27 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
 
     @Override
     public int clampViewPositionVertical(View child, int top, int dy) {
+        if ((nestedScrollingParentHelper.getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_VERTICAL) != 0) {
+            return top - dy;
+        }
         if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE && child.getTop() == 0 && canScroll(child, -dy)) {
             return top - dy;
         }
+        return getFinalVerticalPos(top - dy, dy);
+    }
+
+    @Override
+    public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        super.onViewReleased(releasedChild, xvel, yvel);
+        finalReleased(releasedChild);
+    }
+
+    private int getFinalVerticalPos(double preTop, double dy) {
         double factor = dy > 0 ? 3 : 4;
-        double h = top >= 0 ? headerView.getHeight() : footerView.getHeight();
+        double h = preTop >= 0 ? headerView.getHeight() : footerView.getHeight();
         double H = refreshLayout.getHeight();
-        double preTop = top - dy;
-        LogUtil.logE("preTop" + preTop);
         preTop = getValueX(H, h, factor, preTop);
-        LogUtil.logE("currTop" + preTop);
         double finalTop = getValueY(H, h, factor, Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, preTop + dy)));
-        LogUtil.logE("finalTop" + finalTop);
         if (!enableHeader && finalTop > 0) {
             finalTop = 0;
         }
@@ -82,11 +95,8 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         return (int) (finalTop < 0 ? Math.ceil(finalTop) : Math.floor(finalTop));
     }
 
-    @Override
-    public void onViewReleased(View releasedChild, float xvel, float yvel) {
-        super.onViewReleased(releasedChild, xvel, yvel);
+    private void finalReleased(View releasedChild) {
         int currTop = releasedChild.getTop();
-
         int top;
         if (currTop >= 0) {
             top = currTop >= headerView.getHeight() ? headerView.getHeight() : 0;
@@ -94,7 +104,11 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
             top = -currTop >= footerView.getHeight() ? -footerView.getHeight() : 0;
         }
 
-        viewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
+        if (viewDragHelper.getCapturedView() != null) {
+            viewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
+        } else {
+            viewDragHelper.smoothSlideViewTo(releasedChild, releasedChild.getLeft(), top);
+        }
         refreshLayout.invalidate();
     }
 
@@ -187,25 +201,120 @@ class DragCallback extends ViewDragHelper.Callback implements ViewTreeObserver.O
         }
     }
 
-    @Override
-    public boolean onPreDraw() {
-        if (!initView) {
-            for (int index = 0; index < refreshLayout.getChildCount(); index++) {
-                View child = refreshLayout.getChildAt(index);
-                RefreshLayout.LayoutParams layoutParams = (RefreshLayout.LayoutParams) child.getLayoutParams();
-                if (layoutParams.header) {
-                    headerView = child;
-                } else if (layoutParams.footer) {
-                    footerView = child;
-                } else {
-                    userView = child;
-                }
-            }
-            initView = true;
-        }
-        ViewCompat.offsetTopAndBottom(headerView, userView.getTop() - headerView.getHeight() - headerView.getTop());
-        ViewCompat.offsetTopAndBottom(footerView, userView.getBottom() - footerView.getTop());
-        return true;
+    public NestedScrollingParent getNestedScrollingParent() {
+        return nestedScrollingParent;
     }
+
+    private NestedScrollingParent nestedScrollingParent = new NestedScrollingParent() {
+        @Override
+        public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+            return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+        }
+
+        @Override
+        public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
+            nestedScrollingParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
+        }
+
+        @Override
+        public void onStopNestedScroll(View target) {
+            nestedScrollingParentHelper.onStopNestedScroll(target);
+            finalReleased(userView);
+        }
+
+        @Override
+        public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+            if (dyUnconsumed != 0) {
+                int finalTop = getFinalVerticalPos(userView.getTop(), -dyUnconsumed);
+                ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
+            }
+        }
+
+        @Override
+        public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+            if (userView.getTop() != 0) {
+                int finalTop = getFinalVerticalPos(userView.getTop(), -dy);
+                if ((finalTop > 0 && userView.getTop() < 0) || (finalTop < 0 && userView.getTop() > 0)) {
+                    finalTop = 0;
+                }
+                ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
+                consumed[1] = dy;
+            }
+        }
+
+        @Override
+        public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+            return false;
+        }
+
+        @Override
+        public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
+            return false;
+        }
+
+        @Override
+        public int getNestedScrollAxes() {
+            return nestedScrollingParentHelper.getNestedScrollAxes();
+        }
+    };
+
+    public ScrollingView getScrollingView() {
+        return scrollingView;
+    }
+
+    private ScrollingView scrollingView = new ScrollingView() {
+        @Override
+        public int computeHorizontalScrollRange() {
+            return refreshLayout.getWidth();
+        }
+
+        @Override
+        public int computeHorizontalScrollOffset() {
+            return refreshLayout.getScrollX();
+        }
+
+        @Override
+        public int computeHorizontalScrollExtent() {
+            return refreshLayout.getWidth();
+        }
+
+        @Override
+        public int computeVerticalScrollRange() {
+            return refreshLayout.getHeight();
+        }
+
+        @Override
+        public int computeVerticalScrollOffset() {
+            return refreshLayout.getScrollY();
+        }
+
+        @Override
+        public int computeVerticalScrollExtent() {
+            return refreshLayout.getHeight();
+        }
+    };
+
+    private ViewTreeObserver.OnPreDrawListener onPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+        @Override
+        public boolean onPreDraw() {
+            if (!initView) {
+                for (int index = 0; index < refreshLayout.getChildCount(); index++) {
+                    View child = refreshLayout.getChildAt(index);
+                    RefreshLayout.LayoutParams layoutParams = (RefreshLayout.LayoutParams) child.getLayoutParams();
+                    if (layoutParams.header) {
+                        headerView = child;
+                    } else if (layoutParams.footer) {
+                        footerView = child;
+                    } else {
+                        userView = child;
+                    }
+                }
+                initView = true;
+            }
+            ViewCompat.offsetTopAndBottom(headerView, userView.getTop() - headerView.getHeight() - headerView.getTop());
+            ViewCompat.offsetTopAndBottom(footerView, userView.getBottom() - footerView.getTop());
+            return true;
+        }
+    };
 
 }

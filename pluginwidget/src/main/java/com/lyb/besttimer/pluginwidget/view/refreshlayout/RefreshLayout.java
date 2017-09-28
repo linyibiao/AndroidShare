@@ -3,6 +3,8 @@ package com.lyb.besttimer.pluginwidget.view.refreshlayout;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Px;
+import android.support.v4.view.NestedScrollingParent;
+import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -17,10 +19,12 @@ import com.lyb.besttimer.pluginwidget.R;
  * Created by besttimer on 2017/9/17.
  */
 
-public class RefreshLayout extends ViewGroup {
+public class RefreshLayout extends ViewGroup implements NestedScrollingParent, ScrollingView {
 
     private ViewDragHelper viewDragHelper;
     private DragCallback dragCallback;
+    private ScrollingView scrollingView;
+    private NestedScrollingParent nestedScrollingParent;
 
     public RefreshLayout(Context context) {
         this(context, null);
@@ -39,6 +43,8 @@ public class RefreshLayout extends ViewGroup {
         dragCallback = new DragCallback(this);
         viewDragHelper = ViewDragHelper.create(this, 1, dragCallback);
         dragCallback.setViewDragHelper(viewDragHelper);
+        scrollingView = dragCallback.getScrollingView();
+        nestedScrollingParent = dragCallback.getNestedScrollingParent();
         setEnableHeader(enableHeader);
         setEnableFooter(enableFooter);
     }
@@ -142,6 +148,11 @@ public class RefreshLayout extends ViewGroup {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         dragCallback.setCurrMotionEvent(ev);
         return viewDragHelper.shouldInterceptTouchEvent(ev);
@@ -153,4 +164,75 @@ public class RefreshLayout extends ViewGroup {
         viewDragHelper.processTouchEvent(event);
         return true;
     }
+
+    @Override
+    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        return nestedScrollingParent.onStartNestedScroll(child, target, nestedScrollAxes);
+    }
+
+    @Override
+    public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
+        nestedScrollingParent.onNestedScrollAccepted(child, target, nestedScrollAxes);
+    }
+
+    @Override
+    public void onStopNestedScroll(View target) {
+        nestedScrollingParent.onStopNestedScroll(target);
+    }
+
+    @Override
+    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        nestedScrollingParent.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+    }
+
+    @Override
+    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+        nestedScrollingParent.onNestedPreScroll(target, dx, dy, consumed);
+    }
+
+    @Override
+    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+        return nestedScrollingParent.onNestedFling(target, velocityX, velocityY, consumed);
+    }
+
+    @Override
+    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
+        return nestedScrollingParent.onNestedPreFling(target, velocityX, velocityY);
+    }
+
+    @Override
+    public int getNestedScrollAxes() {
+        return nestedScrollingParent.getNestedScrollAxes();
+    }
+
+    @Override
+    public int computeHorizontalScrollRange() {
+        return scrollingView.computeHorizontalScrollRange();
+    }
+
+    @Override
+    public int computeHorizontalScrollOffset() {
+        return scrollingView.computeHorizontalScrollOffset();
+    }
+
+    @Override
+    public int computeHorizontalScrollExtent() {
+        return scrollingView.computeHorizontalScrollExtent();
+    }
+
+    @Override
+    public int computeVerticalScrollRange() {
+        return scrollingView.computeVerticalScrollRange();
+    }
+
+    @Override
+    public int computeVerticalScrollOffset() {
+        return scrollingView.computeVerticalScrollOffset();
+    }
+
+    @Override
+    public int computeVerticalScrollExtent() {
+        return scrollingView.computeVerticalScrollExtent();
+    }
+
 }
