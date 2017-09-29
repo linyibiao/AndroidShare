@@ -55,7 +55,7 @@ class DragCallback extends ViewDragHelper.Callback {
 
     @Override
     public boolean tryCaptureView(View child, int pointerId) {
-        return child == userView && headerView != null && footerView != null;
+        return viewDragHelper.getViewDragState() != ViewDragHelper.STATE_SETTLING && child == userView && headerView != null && footerView != null;
     }
 
     @Override
@@ -77,7 +77,9 @@ class DragCallback extends ViewDragHelper.Callback {
     @Override
     public void onViewReleased(View releasedChild, float xvel, float yvel) {
         super.onViewReleased(releasedChild, xvel, yvel);
-        finalReleased(releasedChild);
+        int finalTop = getFinalReleasedPos(releasedChild);
+        viewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), finalTop);
+        refreshLayout.invalidate();
     }
 
     private int getFinalVerticalPos(double preTop, double dy) {
@@ -95,7 +97,7 @@ class DragCallback extends ViewDragHelper.Callback {
         return (int) (finalTop < 0 ? Math.ceil(finalTop) : Math.floor(finalTop));
     }
 
-    private void finalReleased(View releasedChild) {
+    private int getFinalReleasedPos(View releasedChild) {
         int currTop = releasedChild.getTop();
         int top;
         if (currTop >= 0) {
@@ -103,13 +105,7 @@ class DragCallback extends ViewDragHelper.Callback {
         } else {
             top = -currTop >= footerView.getHeight() ? -footerView.getHeight() : 0;
         }
-
-        if (viewDragHelper.getCapturedView() != null) {
-            viewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
-        } else {
-            viewDragHelper.smoothSlideViewTo(releasedChild, releasedChild.getLeft(), top);
-        }
-        refreshLayout.invalidate();
+        return top;
     }
 
     private boolean canScroll(View child, int direction) {
@@ -219,7 +215,9 @@ class DragCallback extends ViewDragHelper.Callback {
         @Override
         public void onStopNestedScroll(View target) {
             nestedScrollingParentHelper.onStopNestedScroll(target);
-            finalReleased(userView);
+            int finalTop = getFinalReleasedPos(userView);
+            viewDragHelper.smoothSlideViewTo(userView, userView.getLeft(), finalTop);
+            refreshLayout.invalidate();
         }
 
         @Override

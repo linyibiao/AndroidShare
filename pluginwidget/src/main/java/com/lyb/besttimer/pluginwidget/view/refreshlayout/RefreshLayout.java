@@ -148,11 +148,6 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, S
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         dragCallback.setCurrMotionEvent(ev);
         return viewDragHelper.shouldInterceptTouchEvent(ev);
