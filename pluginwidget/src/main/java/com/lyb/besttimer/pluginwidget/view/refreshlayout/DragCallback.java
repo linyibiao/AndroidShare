@@ -215,14 +215,17 @@ class DragCallback extends ViewDragHelper.Callback {
         @Override
         public void onStopNestedScroll(View target) {
             nestedScrollingParentHelper.onStopNestedScroll(target);
-            int finalTop = getFinalReleasedPos(userView);
-            viewDragHelper.smoothSlideViewTo(userView, userView.getLeft(), finalTop);
-            refreshLayout.invalidate();
+            if (viewDragHelper.getViewDragState() != ViewDragHelper.STATE_SETTLING) {
+                int finalTop = getFinalReleasedPos(userView);
+                viewDragHelper.smoothSlideViewTo(userView, userView.getLeft(), finalTop);
+                refreshLayout.invalidate();
+            }
         }
 
         @Override
         public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
             if (dyUnconsumed != 0) {
+                viewDragHelper.abort();
                 int finalTop = getFinalVerticalPos(userView.getTop(), -dyUnconsumed);
                 ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
             }
@@ -231,6 +234,7 @@ class DragCallback extends ViewDragHelper.Callback {
         @Override
         public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
             if (userView.getTop() != 0) {
+                viewDragHelper.abort();
                 int finalTop = getFinalVerticalPos(userView.getTop(), -dy);
                 if ((finalTop > 0 && userView.getTop() < 0) || (finalTop < 0 && userView.getTop() > 0)) {
                     finalTop = 0;
