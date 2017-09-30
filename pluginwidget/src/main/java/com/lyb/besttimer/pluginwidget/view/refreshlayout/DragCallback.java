@@ -2,7 +2,6 @@ package com.lyb.besttimer.pluginwidget.view.refreshlayout;
 
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.NestedScrollingParentHelper;
-import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.view.MotionEvent;
@@ -24,7 +23,6 @@ class DragCallback extends ViewDragHelper.Callback {
     private boolean enableHeader;
     private boolean enableFooter;
 
-    private boolean initView = false;
     private View userView;
     private View headerView;
     private View footerView;
@@ -68,7 +66,7 @@ class DragCallback extends ViewDragHelper.Callback {
         if ((nestedScrollingParentHelper.getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_VERTICAL) != 0) {
             return top - dy;
         }
-        if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE && child.getTop() == 0 && canScroll(child, -dy)) {
+        if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE && child.getTop() == 0 && canScrollVertically(child)) {
             return top - dy;
         }
         return getFinalVerticalPos(top - dy, dy);
@@ -83,7 +81,7 @@ class DragCallback extends ViewDragHelper.Callback {
     }
 
     private int getFinalVerticalPos(double preTop, double dy) {
-        double factor = dy > 0 ? 3 : 4;
+        double factor = 4;
         double h = preTop >= 0 ? headerView.getHeight() : footerView.getHeight();
         double H = refreshLayout.getHeight();
         preTop = getValueX(H, h, factor, preTop);
@@ -108,12 +106,12 @@ class DragCallback extends ViewDragHelper.Callback {
         return top;
     }
 
-    private boolean canScroll(View child, int direction) {
+    private boolean canScrollVertically(View child) {
         final int pointerCount = currMotionEvent.getPointerCount();
         for (int i = 0; i < pointerCount; i++) {
             final float x = currMotionEvent.getX(i) + refreshLayout.getScrollX() - child.getLeft();
             final float y = currMotionEvent.getY(i) + refreshLayout.getScrollY() - child.getTop();
-            if (canScroll(child, x, y, direction)) {
+            if (canScrollVertically(child, x, y)) {
                 return true;
             }
         }
@@ -121,17 +119,16 @@ class DragCallback extends ViewDragHelper.Callback {
     }
 
     /**
-     * 是否可以在指定方向滚动
+     * 是否可以滚动
      *
-     * @param v         目标
-     * @param x         x坐标，以v的坐标系为标准
-     * @param y         y坐标，以v的坐标系为标准
-     * @param direction 方向：负数表示向下滚动，0或正数表示向上滚动
+     * @param v 目标
+     * @param x x坐标，以v的坐标系为标准
+     * @param y y坐标，以v的坐标系为标准
      * @return 是否可以滚动
      */
-    private boolean canScroll(View v, float x, float y, int direction) {
+    private boolean canScrollVertically(View v, float x, float y) {
         if (isViewInTouchRange(v, x, y)) {
-            if (ViewCompat.canScrollVertically(v, direction)) {
+            if (ViewCompat.canScrollVertically(v, -1) || ViewCompat.canScrollVertically(v, 1)) {
                 return true;
             }
             if (v instanceof ViewGroup) {
@@ -143,7 +140,7 @@ class DragCallback extends ViewDragHelper.Callback {
                     final View child = group.getChildAt(i);
                     final float childX = child.getLeft();
                     final float childY = child.getTop();
-                    if (canScroll(child, x + scrollX - childX, y + scrollY - childY, direction)) {
+                    if (canScrollVertically(child, x + scrollX - childX, y + scrollY - childY)) {
                         return true;
                     }
                 }
@@ -251,7 +248,7 @@ class DragCallback extends ViewDragHelper.Callback {
 
         @Override
         public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-            return false;
+            return userView.getTop() != 0;
         }
 
         @Override
@@ -260,59 +257,35 @@ class DragCallback extends ViewDragHelper.Callback {
         }
     };
 
-    public ScrollingView getScrollingView() {
-        return scrollingView;
+    public RefreshLayout.RefreshLife getRefreshLife() {
+        return refreshLife;
     }
 
-    private ScrollingView scrollingView = new ScrollingView() {
+    private RefreshLayout.RefreshLife refreshLife = new RefreshLayout.RefreshLife() {
         @Override
-        public int computeHorizontalScrollRange() {
-            return refreshLayout.getWidth();
+        public int getChildDrawingOrder(int childCount, int i) {
+            return i;
         }
 
         @Override
-        public int computeHorizontalScrollOffset() {
-            return refreshLayout.getScrollX();
-        }
-
-        @Override
-        public int computeHorizontalScrollExtent() {
-            return refreshLayout.getWidth();
-        }
-
-        @Override
-        public int computeVerticalScrollRange() {
-            return refreshLayout.getHeight();
-        }
-
-        @Override
-        public int computeVerticalScrollOffset() {
-            return refreshLayout.getScrollY();
-        }
-
-        @Override
-        public int computeVerticalScrollExtent() {
-            return refreshLayout.getHeight();
+        public void onFinishInflate() {
+            for (int index = 0; index < refreshLayout.getChildCount(); index++) {
+                View child = refreshLayout.getChildAt(index);
+                RefreshLayout.LayoutParams layoutParams = (RefreshLayout.LayoutParams) child.getLayoutParams();
+                if (layoutParams.header) {
+                    headerView = child;
+                } else if (layoutParams.footer) {
+                    footerView = child;
+                } else {
+                    userView = child;
+                }
+            }
         }
     };
 
     private ViewTreeObserver.OnPreDrawListener onPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            if (!initView) {
-                for (int index = 0; index < refreshLayout.getChildCount(); index++) {
-                    View child = refreshLayout.getChildAt(index);
-                    RefreshLayout.LayoutParams layoutParams = (RefreshLayout.LayoutParams) child.getLayoutParams();
-                    if (layoutParams.header) {
-                        headerView = child;
-                    } else if (layoutParams.footer) {
-                        footerView = child;
-                    } else {
-                        userView = child;
-                    }
-                }
-                initView = true;
-            }
             ViewCompat.offsetTopAndBottom(headerView, userView.getTop() - headerView.getHeight() - headerView.getTop());
             ViewCompat.offsetTopAndBottom(footerView, userView.getBottom() - footerView.getTop());
             return true;

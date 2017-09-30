@@ -37,9 +37,16 @@
                 android:gravity="center"
                 android:text="不要碰我" />
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -48,7 +55,7 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="1024dp"
+                        android:layout_height="500dp"
                         android:background="#ff0000"
                         android:gravity="center"
                         android:text="文本" />

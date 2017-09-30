@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Px;
 import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -19,12 +18,12 @@ import com.lyb.besttimer.pluginwidget.R;
  * Created by besttimer on 2017/9/17.
  */
 
-public class RefreshLayout extends ViewGroup implements NestedScrollingParent, ScrollingView {
+public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
 
     private ViewDragHelper viewDragHelper;
     private DragCallback dragCallback;
-    private ScrollingView scrollingView;
     private NestedScrollingParent nestedScrollingParent;
+    private RefreshLife refreshLife;
 
     public RefreshLayout(Context context) {
         this(context, null);
@@ -36,6 +35,9 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, S
 
     public RefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        setChildrenDrawingOrderEnabled(true);
+
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RefreshLayout);
         boolean enableHeader = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableHeader, true);
         boolean enableFooter = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableFooter, true);
@@ -43,8 +45,8 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, S
         dragCallback = new DragCallback(this);
         viewDragHelper = ViewDragHelper.create(this, 1, dragCallback);
         dragCallback.setViewDragHelper(viewDragHelper);
-        scrollingView = dragCallback.getScrollingView();
         nestedScrollingParent = dragCallback.getNestedScrollingParent();
+        refreshLife = dragCallback.getRefreshLife();
         setEnableHeader(enableHeader);
         setEnableFooter(enableFooter);
     }
@@ -94,6 +96,23 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, S
                     child.getMeasuredWidth(),
                     child.getMeasuredHeight());
         }
+    }
+
+    @Override
+    protected int getChildDrawingOrder(int childCount, int i) {
+        return refreshLife.getChildDrawingOrder(childCount, i);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        refreshLife.onFinishInflate();
+    }
+
+    public interface RefreshLife {
+        int getChildDrawingOrder(int childCount, int i);
+
+        void onFinishInflate();
     }
 
     @Override
@@ -198,36 +217,6 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, S
     @Override
     public int getNestedScrollAxes() {
         return nestedScrollingParent.getNestedScrollAxes();
-    }
-
-    @Override
-    public int computeHorizontalScrollRange() {
-        return scrollingView.computeHorizontalScrollRange();
-    }
-
-    @Override
-    public int computeHorizontalScrollOffset() {
-        return scrollingView.computeHorizontalScrollOffset();
-    }
-
-    @Override
-    public int computeHorizontalScrollExtent() {
-        return scrollingView.computeHorizontalScrollExtent();
-    }
-
-    @Override
-    public int computeVerticalScrollRange() {
-        return scrollingView.computeVerticalScrollRange();
-    }
-
-    @Override
-    public int computeVerticalScrollOffset() {
-        return scrollingView.computeVerticalScrollOffset();
-    }
-
-    @Override
-    public int computeVerticalScrollExtent() {
-        return scrollingView.computeVerticalScrollExtent();
     }
 
 }
