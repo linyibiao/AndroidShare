@@ -2,10 +2,9 @@ package com.lyb.besttimer.pluginwidget.view.refreshlayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.support.annotation.Px;
 import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,10 +19,9 @@ import com.lyb.besttimer.pluginwidget.R;
 
 public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
 
-    private ViewDragHelper viewDragHelper;
-    private DragCallback dragCallback;
-    private NestedScrollingParent nestedScrollingParent;
     private RefreshLife refreshLife;
+
+    private DragCall dragCall;
 
     public RefreshLayout(Context context) {
         this(context, null);
@@ -38,33 +36,33 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
 
         setChildrenDrawingOrderEnabled(true);
 
+        dragCall = generateDrag();
+        refreshLife = dragCall.getRefreshLife();
+
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RefreshLayout);
         boolean enableHeader = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableHeader, true);
         boolean enableFooter = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableFooter, true);
         typedArray.recycle();
-        dragCallback = new DragCallback(this);
-        viewDragHelper = ViewDragHelper.create(this, 1, dragCallback);
-        dragCallback.setViewDragHelper(viewDragHelper);
-        nestedScrollingParent = dragCallback.getNestedScrollingParent();
-        refreshLife = dragCallback.getRefreshLife();
         setEnableHeader(enableHeader);
         setEnableFooter(enableFooter);
     }
 
+    public DragCall generateDrag() {
+        return new VerticalDragCallback(this);
+    }
+
     public void setEnableHeader(boolean enableHeader) {
-        dragCallback.setEnableHeader(enableHeader);
+        dragCall.setEnableHeader(enableHeader);
     }
 
     public void setEnableFooter(boolean enableFooter) {
-        dragCallback.setEnableFooter(enableFooter);
+        dragCall.setEnableFooter(enableFooter);
     }
 
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if (viewDragHelper.continueSettling(true)) {
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
+        refreshLife.computeScroll();
     }
 
     @Override
@@ -99,6 +97,18 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
     }
 
     @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        refreshLife.draw(canvas);
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        refreshLife.dispatchDraw(canvas);
+    }
+
+    @Override
     protected int getChildDrawingOrder(int childCount, int i) {
         return refreshLife.getChildDrawingOrder(childCount, i);
     }
@@ -107,12 +117,6 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
     protected void onFinishInflate() {
         super.onFinishInflate();
         refreshLife.onFinishInflate();
-    }
-
-    public interface RefreshLife {
-        int getChildDrawingOrder(int childCount, int i);
-
-        void onFinishInflate();
     }
 
     @Override
@@ -168,55 +172,93 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        dragCallback.setCurrMotionEvent(ev);
-        return viewDragHelper.shouldInterceptTouchEvent(ev);
+        return refreshLife.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        dragCallback.setCurrMotionEvent(event);
-        viewDragHelper.processTouchEvent(event);
-        return true;
+        return refreshLife.onTouchEvent(event);
     }
 
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return nestedScrollingParent.onStartNestedScroll(child, target, nestedScrollAxes);
+        return refreshLife.onStartNestedScroll(child, target, nestedScrollAxes);
     }
 
     @Override
     public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-        nestedScrollingParent.onNestedScrollAccepted(child, target, nestedScrollAxes);
+        refreshLife.onNestedScrollAccepted(child, target, nestedScrollAxes);
     }
 
     @Override
     public void onStopNestedScroll(View target) {
-        nestedScrollingParent.onStopNestedScroll(target);
+        refreshLife.onStopNestedScroll(target);
     }
 
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        nestedScrollingParent.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        refreshLife.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
     }
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        nestedScrollingParent.onNestedPreScroll(target, dx, dy, consumed);
+        refreshLife.onNestedPreScroll(target, dx, dy, consumed);
     }
 
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return nestedScrollingParent.onNestedFling(target, velocityX, velocityY, consumed);
+        return refreshLife.onNestedFling(target, velocityX, velocityY, consumed);
     }
 
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return nestedScrollingParent.onNestedPreFling(target, velocityX, velocityY);
+        return refreshLife.onNestedPreFling(target, velocityX, velocityY);
     }
 
     @Override
     public int getNestedScrollAxes() {
-        return nestedScrollingParent.getNestedScrollAxes();
+        return refreshLife.getNestedScrollAxes();
+    }
+
+    public interface RefreshLife {
+
+        void computeScroll();
+
+        void draw(Canvas canvas);
+
+        void dispatchDraw(Canvas canvas);
+
+        int getChildDrawingOrder(int childCount, int i);
+
+        void onFinishInflate();
+
+        boolean onInterceptTouchEvent(MotionEvent ev);
+
+        boolean onTouchEvent(MotionEvent event);
+
+        boolean onStartNestedScroll(View child, View target, int nestedScrollAxes);
+
+        void onNestedScrollAccepted(View child, View target, int nestedScrollAxes);
+
+        void onStopNestedScroll(View target);
+
+        void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed);
+
+        void onNestedPreScroll(View target, int dx, int dy, int[] consumed);
+
+        boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed);
+
+        boolean onNestedPreFling(View target, float velocityX, float velocityY);
+
+        int getNestedScrollAxes();
+    }
+
+    public interface DragCall {
+        RefreshLife getRefreshLife();
+
+        void setEnableHeader(boolean enableHeader);
+
+        void setEnableFooter(boolean enableFooter);
     }
 
 }

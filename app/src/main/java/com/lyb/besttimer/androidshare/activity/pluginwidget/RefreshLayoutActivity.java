@@ -37,7 +37,7 @@ public class RefreshLayoutActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 2;
+            return 10;
         }
 
         class OuterHolder extends BaseHolder<Void> {
