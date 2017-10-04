@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,10 @@ public class RefreshLayoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refresh_layout);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_refresh);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(new OuterAdapter());
@@ -37,7 +42,7 @@ public class RefreshLayoutActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 10;
+            return 30;
         }
 
         class OuterHolder extends BaseHolder<Void> {

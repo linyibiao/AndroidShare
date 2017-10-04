@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.support.annotation.Px;
+import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingParent;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -17,7 +18,7 @@ import com.lyb.besttimer.pluginwidget.R;
  * Created by besttimer on 2017/9/17.
  */
 
-public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
+public class RefreshLayout extends ViewGroup implements NestedScrollingParent, NestedScrollingChild {
 
     private RefreshLife refreshLife;
 
@@ -38,6 +39,7 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
 
         dragCall = generateDrag();
         refreshLife = dragCall.getRefreshLife();
+        dragCall.init();
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RefreshLayout);
         boolean enableHeader = typedArray.getBoolean(R.styleable.RefreshLayout_refresh_enableHeader, true);
@@ -68,6 +70,7 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int childCount = getChildCount();
+        View userView = null;
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
             if (child.getVisibility() == GONE) {
@@ -77,8 +80,11 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
             final int contentWidthSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
             final int contentHeightSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
             child.measure(contentWidthSpec, contentHeightSpec);
+            if (!lp.header && !lp.footer) {
+                userView = child;
+            }
         }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(MeasureSpec.makeMeasureSpec(userView.getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(userView.getMeasuredHeight(), MeasureSpec.EXACTLY));
     }
 
     @Override
@@ -171,13 +177,9 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return refreshLife.onInterceptTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return refreshLife.onTouchEvent(event);
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        refreshLife.dispatchTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -220,6 +222,52 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
         return refreshLife.getNestedScrollAxes();
     }
 
+    @Override
+    public void setNestedScrollingEnabled(boolean enabled) {
+        refreshLife.setNestedScrollingEnabled(enabled);
+    }
+
+    @Override
+    public boolean isNestedScrollingEnabled() {
+        return refreshLife.isNestedScrollingEnabled();
+    }
+
+    @Override
+    public boolean startNestedScroll(int axes) {
+        return refreshLife.startNestedScroll(axes);
+    }
+
+    @Override
+    public void stopNestedScroll() {
+        refreshLife.stopNestedScroll();
+    }
+
+    @Override
+    public boolean hasNestedScrollingParent() {
+        return refreshLife.hasNestedScrollingParent();
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed,
+                                        int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        return refreshLife.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+    }
+
+    @Override
+    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+        return refreshLife.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+    }
+
+    @Override
+    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+        return refreshLife.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
+
+    @Override
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+        return refreshLife.dispatchNestedPreFling(velocityX, velocityY);
+    }
+
     public interface RefreshLife {
 
         void computeScroll();
@@ -232,10 +280,9 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
 
         void onFinishInflate();
 
-        boolean onInterceptTouchEvent(MotionEvent ev);
+        void dispatchTouchEvent(MotionEvent ev);
 
-        boolean onTouchEvent(MotionEvent event);
-
+        //NestedScrollingParent
         boolean onStartNestedScroll(View child, View target, int nestedScrollAxes);
 
         void onNestedScrollAccepted(View child, View target, int nestedScrollAxes);
@@ -251,9 +298,33 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent {
         boolean onNestedPreFling(View target, float velocityX, float velocityY);
 
         int getNestedScrollAxes();
+        //~NestedScrollingParent
+
+        //NestedScrollingChild
+        void setNestedScrollingEnabled(boolean enabled);
+
+        boolean isNestedScrollingEnabled();
+
+        boolean startNestedScroll(int axes);
+
+        void stopNestedScroll();
+
+        boolean hasNestedScrollingParent();
+
+        boolean dispatchNestedScroll(int dxConsumed, int dyConsumed,
+                                     int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow);
+
+        boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow);
+
+        boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed);
+
+        boolean dispatchNestedPreFling(float velocityX, float velocityY);
+        //~NestedScrollingChild
     }
 
     public interface DragCall {
+        void init();
+
         RefreshLife getRefreshLife();
 
         void setEnableHeader(boolean enableHeader);

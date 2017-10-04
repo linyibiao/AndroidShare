@@ -1,7 +1,8 @@
 package com.lyb.besttimer.pluginwidget.view.refreshlayout;
 
 import android.graphics.Canvas;
-import android.support.v4.view.NestedScrollingParent;
+import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.lyb.besttimer.pluginwidget.utils.LogUtil;
 import com.lyb.besttimer.pluginwidget.view.refreshlayout.flinghandle.FlingHandle;
 
 /**
@@ -19,9 +21,15 @@ import com.lyb.besttimer.pluginwidget.view.refreshlayout.flinghandle.FlingHandle
 public class VerticalDragCallback implements RefreshLayout.DragCall {
 
     private final ViewGroup refreshLayout;
-    private ViewDragHelper viewDragHelper;
+    private final ViewDragHelper viewDragHelper;
+
+    private final ViewScrollHelper viewScrollHelper = new ViewScrollHelper();
+    private final DragDistanceHelper dragDistanceHelper = new DragDistanceHelper();
+    //拖拽factor倍距离才能完全拉开头部或尾部
+    private final double factor = 2;
 
     private final NestedScrollingParentHelper nestedScrollingParentHelper;
+    private final NestedScrollingChildHelper nestedScrollingChildHelper;
 
     private boolean enableHeader;
     private boolean enableFooter;
@@ -34,7 +42,19 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
         this.refreshLayout = refreshLayout;
         viewDragHelper = ViewDragHelper.create(refreshLayout, 1, callback);
         refreshLayout.getViewTreeObserver().addOnPreDrawListener(onPreDrawListener);
+
         nestedScrollingParentHelper = new NestedScrollingParentHelper(refreshLayout);
+        nestedScrollingChildHelper = new NestedScrollingChildHelper(refreshLayout);
+    }
+
+    @Override
+    public void init() {
+        ViewCompat.setNestedScrollingEnabled(refreshLayout, true);
+    }
+
+    @Override
+    public RefreshLayout.RefreshLife getRefreshLife() {
+        return refreshLife;
     }
 
     @Override
@@ -47,11 +67,6 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
         this.enableFooter = enableFooter;
     }
 
-    @Override
-    public RefreshLayout.RefreshLife getRefreshLife() {
-        return refreshLife;
-    }
-
     private MotionEvent currMotionEvent;
 
     public void setCurrMotionEvent(MotionEvent currMotionEvent) {
@@ -62,54 +77,33 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            return viewDragHelper.getViewDragState() != ViewDragHelper.STATE_SETTLING && child == userView && headerView != null && footerView != null;
-        }
-
-        @Override
-        public int getViewVerticalDragRange(View child) {
-            return child.getHeight();
-        }
-
-        @Override
-        public int clampViewPositionVertical(View child, int top, int dy) {
-            if ((nestedScrollingParentHelper.getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_VERTICAL) != 0) {
-                stopScroll();
-                return top - dy;
-            }
-            if (isNestedScrollingEnabled(child)) {
-                stopScroll();
-                return top - dy;
-            }
-            if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE && child.getTop() == 0 && canScrollVertically(child)) {
-                stopScroll();
-                return top - dy;
-            }
-            return getFinalVerticalPos(top - dy, dy);
-        }
-
-        @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            super.onViewReleased(releasedChild, xvel, yvel);
-            int finalTop = getFinalReleasedPos(releasedChild);
-            viewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), finalTop);
-            ViewCompat.postInvalidateOnAnimation(refreshLayout);
+            return false;
         }
 
     };
 
+    private int getEdgeDragDistance(boolean header) {
+        if (header) {
+            return (int) Math.floor(dragDistanceHelper.getValueY(headerView.getHeight(), factor, Integer.MAX_VALUE));
+        } else {
+            return (int) Math.ceil(dragDistanceHelper.getValueY(footerView.getHeight(), factor, Integer.MIN_VALUE));
+        }
+    }
+
     private int getFinalVerticalPos(double preTop, double dy) {
-        double factor = 4;
         double h = preTop >= 0 ? headerView.getHeight() : footerView.getHeight();
-        double H = refreshLayout.getHeight();
-        preTop = getValueX(H, h, factor, preTop);
-        double finalTop = getValueY(H, h, factor, Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, preTop + dy)));
+        preTop = dragDistanceHelper.getValueX(h, factor, preTop);
+        double finalTop = dragDistanceHelper.getValueY(h, factor, preTop + dy);
         if (!enableHeader && finalTop > 0) {
             finalTop = 0;
         }
         if (!enableFooter && finalTop < 0) {
             finalTop = 0;
         }
-        return (int) (finalTop < 0 ? Math.ceil(finalTop) : Math.floor(finalTop));
+        if ((preTop > 0 && finalTop < 0) || (preTop < 0 && finalTop > 0)) {
+            finalTop = 0;
+        }
+        return (int) Math.max(getEdgeDragDistance(false), Math.min(getEdgeDragDistance(true), finalTop));
     }
 
     private int getFinalReleasedPos(View releasedChild) {
@@ -129,200 +123,10 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
         viewDragHelper.abort();
     }
 
-    private boolean canScrollVertically(View child) {
-        final int pointerCount = currMotionEvent.getPointerCount();
-        for (int i = 0; i < pointerCount; i++) {
-            final float x = currMotionEvent.getX(i) + refreshLayout.getScrollX() - child.getLeft();
-            final float y = currMotionEvent.getY(i) + refreshLayout.getScrollY() - child.getTop();
-            if (canScrollVertically(child, x, y)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 是否可以滚动
-     *
-     * @param v 目标
-     * @param x x坐标，以v的坐标系为标准
-     * @param y y坐标，以v的坐标系为标准
-     * @return 是否可以滚动
-     */
-    private boolean canScrollVertically(View v, float x, float y) {
-        if (isViewInTouchRange(v, x, y)) {
-            if (ViewCompat.canScrollVertically(v, -1) || ViewCompat.canScrollVertically(v, 1)) {
-                return true;
-            }
-            if (v instanceof ViewGroup) {
-                final ViewGroup group = (ViewGroup) v;
-                final int scrollX = v.getScrollX();
-                final int scrollY = v.getScrollY();
-                final int count = group.getChildCount();
-                for (int i = count - 1; i >= 0; i--) {
-                    final View child = group.getChildAt(i);
-                    final float childX = child.getLeft();
-                    final float childY = child.getTop();
-                    if (canScrollVertically(child, x + scrollX - childX, y + scrollY - childY)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isNestedScrollingEnabled(View child) {
-        final int pointerCount = currMotionEvent.getPointerCount();
-        for (int i = 0; i < pointerCount; i++) {
-            final float x = currMotionEvent.getX(i) + refreshLayout.getScrollX() - child.getLeft();
-            final float y = currMotionEvent.getY(i) + refreshLayout.getScrollY() - child.getTop();
-            if (isNestedScrollingEnabled(child, x, y)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 是否可以滚动
-     *
-     * @param v 目标
-     * @param x x坐标，以v的坐标系为标准
-     * @param y y坐标，以v的坐标系为标准
-     * @return 是否可以滚动
-     */
-    private boolean isNestedScrollingEnabled(View v, float x, float y) {
-        if (isViewInTouchRange(v, x, y)) {
-            if (ViewCompat.isNestedScrollingEnabled(v)) {
-                return true;
-            }
-            if (v instanceof ViewGroup) {
-                final ViewGroup group = (ViewGroup) v;
-                final int scrollX = v.getScrollX();
-                final int scrollY = v.getScrollY();
-                final int count = group.getChildCount();
-                for (int i = count - 1; i >= 0; i--) {
-                    final View child = group.getChildAt(i);
-                    final float childX = child.getLeft();
-                    final float childY = child.getTop();
-                    if (isNestedScrollingEnabled(child, x + scrollX - childX, y + scrollY - childY)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isViewInTouchRange(View v, float x, float y) {
-        return x >= 0 && x < v.getWidth()
-                && y >= 0 && y < v.getHeight();
-    }
-
-    /**
-     * h=-k*k/(H/factor+k)+k)
-     * x=-k*k/(y-k)-k
-     */
-    private double getValueX(double H, double h, double factor, double y) {
-        return y;
-//        double k = H * h / (H - factor * h);
-//        return getFormulaX(k, y);
-    }
-
-    /**
-     * h=-k*k/(H/factor+k)+k)
-     * y=-k*k/(x+k)+k
-     */
-    private double getValueY(double H, double h, double factor, double x) {
-        return x;
-//        double k = H * h / (H - factor * h);
-//        return getFormulaY(k, x);
-    }
-
-    /**
-     * x=-k*k/(y-k)-k
-     */
-    private double getFormulaX(double k, double y) {
-        if (y >= 0) {
-            return k * y / (k - y);
-        } else {
-            return k * y / (k + y);
-        }
-    }
-
-    /**
-     * y=-k*k/(x+k)+k
-     */
-    private double getFormulaY(double k, double x) {
-        if (x >= 0) {
-            return k * x / (k + x);
-        } else {
-            return k * x / (k - x);
-        }
-    }
-
-    private NestedScrollingParent nestedScrollingParent = new NestedScrollingParent() {
-        @Override
-        public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-            return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        }
-
-        @Override
-        public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-            nestedScrollingParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
-        }
-
-        @Override
-        public void onStopNestedScroll(View target) {
-            nestedScrollingParentHelper.onStopNestedScroll(target);
-            if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
-                int finalTop = getFinalReleasedPos(userView);
-                viewDragHelper.smoothSlideViewTo(userView, userView.getLeft(), finalTop);
-                ViewCompat.postInvalidateOnAnimation(refreshLayout);
-            }
-        }
-
-        @Override
-        public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-            if (dyUnconsumed != 0) {
-                int finalTop = getFinalVerticalPos(userView.getTop(), -dyUnconsumed);
-                stopScroll();
-                ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
-            }
-        }
-
-        @Override
-        public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-            if (userView.getTop() != 0) {
-                int finalTop = getFinalVerticalPos(userView.getTop(), -dy);
-                if ((finalTop > 0 && userView.getTop() < 0) || (finalTop < 0 && userView.getTop() > 0)) {
-                    finalTop = 0;
-                }
-                stopScroll();
-                ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
-                consumed[1] = dy;
-            }
-        }
-
-        @Override
-        public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-            handleFling(target);
-            return false;
-        }
-
-        @Override
-        public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-            return userView.getTop() != 0;
-        }
-
-        @Override
-        public int getNestedScrollAxes() {
-            return nestedScrollingParentHelper.getNestedScrollAxes();
-        }
-    };
-
     private RefreshLayout.RefreshLife refreshLife = new RefreshLayout.RefreshLife() {
+
+        private int[] offsetInWindow = new int[2];
+
         @Override
         public void computeScroll() {
             if (viewDragHelper.continueSettling(true)) {
@@ -366,56 +170,141 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
         }
 
         @Override
-        public boolean onInterceptTouchEvent(MotionEvent ev) {
+        public void dispatchTouchEvent(MotionEvent ev) {
             setCurrMotionEvent(ev);
-            return viewDragHelper.shouldInterceptTouchEvent(ev);
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent event) {
-            setCurrMotionEvent(event);
-            viewDragHelper.processTouchEvent(event);
-            return true;
+            final int actionMasked = MotionEventCompat.getActionMasked(ev);
+            switch (actionMasked) {
+                case MotionEvent.ACTION_DOWN: {
+                    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                    break;
+                }
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL: {
+                    stopNestedScroll();
+                    break;
+                }
+            }
         }
 
         @Override
         public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-            return nestedScrollingParent.onStartNestedScroll(child, target, nestedScrollAxes);
+            LogUtil.logE("onStartNestedScroll");
+            return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         }
 
         @Override
         public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-            nestedScrollingParent.onNestedScrollAccepted(child, target, nestedScrollAxes);
+            LogUtil.logE("onNestedScrollAccepted");
+            nestedScrollingParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
+            startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         }
 
         @Override
         public void onStopNestedScroll(View target) {
-            nestedScrollingParent.onStopNestedScroll(target);
+            LogUtil.logE("onStopNestedScroll");
+            nestedScrollingParentHelper.onStopNestedScroll(target);
+            if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
+                int finalTop = getFinalReleasedPos(userView);
+                viewDragHelper.smoothSlideViewTo(userView, userView.getLeft(), finalTop);
+                ViewCompat.postInvalidateOnAnimation(refreshLayout);
+            }
+            if (ViewCompat.canScrollVertically(target, -1) || ViewCompat.canScrollVertically(target, 1)) {
+                stopNestedScroll();
+            }
         }
 
         @Override
         public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-            nestedScrollingParent.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+            if (userView.getTop() == 0) {
+                dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+                if (offsetInWindow[0] == 0 && offsetInWindow[1] == 0) {
+                    int finalTop = getFinalVerticalPos(userView.getTop(), -dyUnconsumed);
+                    stopScroll();
+                    ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
+                }
+            } else {
+                int finalTop = getFinalVerticalPos(userView.getTop(), -dyUnconsumed);
+                stopScroll();
+                ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
+            }
         }
 
         @Override
         public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-            nestedScrollingParent.onNestedPreScroll(target, dx, dy, consumed);
+            LogUtil.logE("onNestedPreScrolldy" + dy);
+            if (userView.getTop() == 0) {
+                dispatchNestedPreScroll(dx, dy, consumed, null);
+                LogUtil.logE("onNestedPreScroll" + consumed[1]);
+            } else {
+                int finalTop = getFinalVerticalPos(userView.getTop(), -dy);
+                if ((finalTop > 0 && userView.getTop() < 0) || (finalTop < 0 && userView.getTop() > 0)) {
+                    finalTop = 0;
+                }
+                stopScroll();
+                ViewCompat.offsetTopAndBottom(userView, finalTop - userView.getTop());
+                consumed[1] = dy;
+            }
         }
 
         @Override
         public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-            return nestedScrollingParent.onNestedFling(target, velocityX, velocityY, consumed);
+            handleFling(target);
+            return dispatchNestedFling(velocityX, velocityY, consumed);
         }
 
         @Override
         public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-            return nestedScrollingParent.onNestedPreFling(target, velocityX, velocityY);
+            return userView.getTop() != 0 || dispatchNestedPreFling(velocityX, velocityY);
         }
 
         @Override
         public int getNestedScrollAxes() {
-            return nestedScrollingParent.getNestedScrollAxes();
+            return nestedScrollingParentHelper.getNestedScrollAxes();
+        }
+
+        @Override
+        public void setNestedScrollingEnabled(boolean enabled) {
+            nestedScrollingChildHelper.setNestedScrollingEnabled(enabled);
+        }
+
+        @Override
+        public boolean isNestedScrollingEnabled() {
+            return nestedScrollingChildHelper.isNestedScrollingEnabled();
+        }
+
+        @Override
+        public boolean startNestedScroll(int axes) {
+            return nestedScrollingChildHelper.startNestedScroll(axes);
+        }
+
+        @Override
+        public void stopNestedScroll() {
+            nestedScrollingChildHelper.stopNestedScroll();
+        }
+
+        @Override
+        public boolean hasNestedScrollingParent() {
+            return nestedScrollingChildHelper.hasNestedScrollingParent();
+        }
+
+        @Override
+        public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+            return nestedScrollingChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+        }
+
+        @Override
+        public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+            return nestedScrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+        }
+
+        @Override
+        public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+            return nestedScrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+        }
+
+        @Override
+        public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+            return nestedScrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY);
         }
     };
 
@@ -443,7 +332,7 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
     private FlingCall flingCall = new FlingCall() {
         @Override
         public void fling(float dy) {
-            int finalTop = (int) dy;
+            int finalTop = (int) Math.max(getEdgeDragDistance(false), Math.min(getEdgeDragDistance(true), dy));
             viewDragHelper.smoothSlideViewTo(userView, userView.getLeft(), finalTop);
             ViewCompat.postInvalidateOnAnimation(refreshLayout);
             unhandleFling();
