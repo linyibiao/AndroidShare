@@ -10,8 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
-import com.lyb.besttimer.pluginwidget.utils.LogUtil;
 import com.lyb.besttimer.pluginwidget.view.refreshlayout.flinghandle.FlingHandle;
 
 /**
@@ -67,10 +65,9 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
         this.enableFooter = enableFooter;
     }
 
-    private MotionEvent currMotionEvent;
+    @Override
+    public void finishLoadMore(boolean success) {
 
-    public void setCurrMotionEvent(MotionEvent currMotionEvent) {
-        this.currMotionEvent = currMotionEvent;
     }
 
     private ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
@@ -159,19 +156,22 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
             for (int index = 0; index < refreshLayout.getChildCount(); index++) {
                 View child = refreshLayout.getChildAt(index);
                 RefreshLayout.LayoutParams layoutParams = (RefreshLayout.LayoutParams) child.getLayoutParams();
-                if (layoutParams.header) {
-                    headerView = child;
-                } else if (layoutParams.footer) {
-                    footerView = child;
-                } else {
-                    userView = child;
+                switch (layoutParams.viewType) {
+                    case HEADER:
+                        headerView = child;
+                        break;
+                    case FOOTER:
+                        footerView = child;
+                        break;
+                    case CONTENT:
+                        userView = child;
+                        break;
                 }
             }
         }
 
         @Override
         public void dispatchTouchEvent(MotionEvent ev) {
-            setCurrMotionEvent(ev);
             final int actionMasked = MotionEventCompat.getActionMasked(ev);
             switch (actionMasked) {
                 case MotionEvent.ACTION_DOWN: {
@@ -188,20 +188,17 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
 
         @Override
         public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-            LogUtil.logE("onStartNestedScroll");
             return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         }
 
         @Override
         public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-            LogUtil.logE("onNestedScrollAccepted");
             nestedScrollingParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
             startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         }
 
         @Override
         public void onStopNestedScroll(View target) {
-            LogUtil.logE("onStopNestedScroll");
             nestedScrollingParentHelper.onStopNestedScroll(target);
             if (viewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
                 int finalTop = getFinalReleasedPos(userView);
@@ -231,10 +228,8 @@ public class VerticalDragCallback implements RefreshLayout.DragCall {
 
         @Override
         public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-            LogUtil.logE("onNestedPreScrolldy" + dy);
             if (userView.getTop() == 0) {
                 dispatchNestedPreScroll(dx, dy, consumed, null);
-                LogUtil.logE("onNestedPreScroll" + consumed[1]);
             } else {
                 int finalTop = getFinalVerticalPos(userView.getTop(), -dy);
                 if ((finalTop > 0 && userView.getTop() < 0) || (finalTop < 0 && userView.getTop() > 0)) {

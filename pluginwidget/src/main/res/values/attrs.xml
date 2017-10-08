@@ -29,8 +29,7 @@
     </declare-styleable>
 
     <declare-styleable name="RefreshLayout_Layout">
-        <attr name="refresh_header" format="boolean" />
-        <attr name="refresh_footer" format="boolean" />
+        <attr name="refresh_view_type" format="string" />
     </declare-styleable>
 
 </resources>

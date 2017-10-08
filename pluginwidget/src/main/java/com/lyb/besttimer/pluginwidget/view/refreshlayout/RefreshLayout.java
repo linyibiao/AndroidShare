@@ -6,11 +6,11 @@ import android.graphics.Canvas;
 import android.support.annotation.Px;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingParent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.lyb.besttimer.pluginwidget.R;
 
 /**
@@ -61,6 +61,10 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, N
         dragCall.setEnableFooter(enableFooter);
     }
 
+    public void finishLoadMore(boolean success) {
+        dragCall.finishLoadMore(success);
+    }
+
     @Override
     public void computeScroll() {
         super.computeScroll();
@@ -80,11 +84,15 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, N
             final int contentWidthSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
             final int contentHeightSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
             child.measure(contentWidthSpec, contentHeightSpec);
-            if (!lp.header && !lp.footer) {
+            if (lp.viewType == LayoutParams.ViewType.CONTENT) {
                 userView = child;
             }
         }
-        super.onMeasure(MeasureSpec.makeMeasureSpec(userView.getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(userView.getMeasuredHeight(), MeasureSpec.EXACTLY));
+        if (userView != null) {
+            super.onMeasure(MeasureSpec.makeMeasureSpec(userView.getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(userView.getMeasuredHeight(), MeasureSpec.EXACTLY));
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override
@@ -151,14 +159,23 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, N
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
 
-        public boolean header;
-        public boolean footer;
+        public enum ViewType {
+            HEADER, FOOTER, CONTENT
+        }
+
+        public ViewType viewType;
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
             TypedArray typedArray = c.obtainStyledAttributes(attrs, R.styleable.RefreshLayout_Layout);
-            header = typedArray.getBoolean(R.styleable.RefreshLayout_Layout_refresh_header, false);
-            footer = typedArray.getBoolean(R.styleable.RefreshLayout_Layout_refresh_footer, false);
+            String typeStr = typedArray.getString(R.styleable.RefreshLayout_Layout_refresh_view_type);
+            if (TextUtils.isEmpty(typeStr) || typeStr.equals("content")) {
+                viewType = ViewType.CONTENT;
+            } else if (typeStr.equals("header")) {
+                viewType = ViewType.HEADER;
+            } else if (typeStr.equals("footer")) {
+                viewType = ViewType.FOOTER;
+            }
             typedArray.recycle();
         }
 
@@ -330,6 +347,8 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, N
         void setEnableHeader(boolean enableHeader);
 
         void setEnableFooter(boolean enableFooter);
+
+        void finishLoadMore(boolean success);
     }
 
 }
