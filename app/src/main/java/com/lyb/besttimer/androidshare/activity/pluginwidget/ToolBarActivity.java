@@ -22,6 +22,7 @@ public class ToolBarActivity extends BaseActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_tb1:
+                        item.setChecked(!item.isChecked());
                         Toast.makeText(ToolBarActivity.this, "menu_tb1", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.menu_tb2:
