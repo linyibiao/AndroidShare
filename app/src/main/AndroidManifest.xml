@@ -47,7 +47,10 @@
         <activity android:name=".activity.pluginwidget.DrawLayoutActivity" />
         <activity android:name=".activity.pluginwidget.RefreshLayoutActivity" />
         <activity android:name=".activity.pluginwidget.ItemTouchHelperActivity" />
-        <activity android:name=".activity.pluginwidget.VideoViewActivity"></activity>
+        <activity android:name=".activity.pluginwidget.VideoViewActivity" />
+        <activity
+            android:name=".activity.pluginwidget.ToolBarActivity"
+            android:theme="@style/WhileTheme" />
     </application>
 
 </manifest>

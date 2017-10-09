@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_tb1"
+        android:icon="@mipmap/refresh_arrow"
+        android:title="菜单一"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_tb2"
+        android:icon="@mipmap/refresh_arrow"
+        android:title="菜单二"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_tb3"
+        android:title="菜单三"
+        app:showAsAction="always" />
+    <group>
+        <item
+            android:id="@+id/menu_tb4"
+            android:icon="@mipmap/refresh_arrow"
+            android:title="菜单四"
+            app:showAsAction="never" />
+    </group>
+</menu>
