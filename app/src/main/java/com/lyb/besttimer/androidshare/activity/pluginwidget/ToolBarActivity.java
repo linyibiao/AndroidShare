@@ -2,7 +2,6 @@ package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -17,6 +16,7 @@ public class ToolBarActivity extends BaseActivity {
         setContentView(R.layout.activity_tool_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolB);
         setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.menu_toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -40,9 +40,4 @@ public class ToolBarActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 }

@@ -21,14 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:contentInsetStart="0dp"
+            app:collapseIcon="@mipmap/ic_launcher"
             app:navigationIcon="@mipmap/refresh_arrow"
             app:title="标题">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:gravity="center"
                 android:layout_height="match_parent"
-                android:text="额外文字"
-                android:visibility="gone" />
+                android:text="额外文字" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
