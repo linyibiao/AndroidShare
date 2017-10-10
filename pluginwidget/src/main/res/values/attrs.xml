@@ -32,4 +32,9 @@
         <attr name="refresh_view_type" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="ImageViewScale">
+        <!-- 高宽比 -->
+        <attr name="ivScale_hwfactor" format="float" />
+    </declare-styleable>
+
 </resources>

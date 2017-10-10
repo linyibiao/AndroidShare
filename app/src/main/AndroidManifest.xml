@@ -51,6 +51,8 @@
         <activity
             android:name=".activity.pluginwidget.ToolBarActivity"
             android:theme="@style/WhileTheme" />
+        <activity android:name=".activity.pluginwidget.ImageScaleActivity" />
+        <activity android:name=".activity.pluginwidget.CountUpTimerActivity"></activity>
     </application>
 
 </manifest>

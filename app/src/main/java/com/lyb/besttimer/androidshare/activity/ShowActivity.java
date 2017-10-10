@@ -14,11 +14,13 @@ import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.CountUpTimerActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DrawLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ImageScaleActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchHelperActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
@@ -92,6 +94,8 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(ItemTouchHelperActivity.class, "列表拖拽尝试"));
             lvData.getLvDatas().add(new LVData(VideoViewActivity.class, "视频播放"));
             lvData.getLvDatas().add(new LVData(ToolBarActivity.class, "ToolBar使用"));
+            lvData.getLvDatas().add(new LVData(ImageScaleActivity.class, "imageview scale"));
+            lvData.getLvDatas().add(new LVData(CountUpTimerActivity.class, "计时器"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
