@@ -21,9 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:contentInsetStart="0dp"
-            app:collapseIcon="@mipmap/ic_launcher"
-            app:navigationIcon="@mipmap/refresh_arrow"
-            app:title="标题">
+            app:navigationIcon="@mipmap/refresh_arrow">
 
             <TextView
                 android:layout_width="wrap_content"
