@@ -1,7 +1,6 @@
 package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +18,7 @@ public class ToolBarActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_bar);
         toolB = (Toolbar) findViewById(R.id.toolB);
+        toolB.setTitle("");
         setSupportActionBar(toolB);
         toolB.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -41,12 +41,6 @@ public class ToolBarActivity extends BaseActivity {
                 return true;
             }
         });
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        toolB.setTitle("这个标题才能最终起作用");
     }
 
     @Override
