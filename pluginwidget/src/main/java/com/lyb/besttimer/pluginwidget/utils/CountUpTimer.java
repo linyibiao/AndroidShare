@@ -32,8 +32,9 @@ public abstract class CountUpTimer {
      */
     public synchronized final void cancel() {
         if (!mCancelled) {
-            onTick(mSartTime > 0 ? SystemClock.elapsedRealtime() - mSartTime : 0);
-            onFinish(mSartTime > 0 ? SystemClock.elapsedRealtime() - mSartTime : 0);
+            long millisHasPassed = mSartTime > 0 ? SystemClock.elapsedRealtime() - mSartTime : 0;
+            onTick(millisHasPassed);
+            onFinish(millisHasPassed);
         }
         mCancelled = true;
         mHandler.removeMessages(MSG);
