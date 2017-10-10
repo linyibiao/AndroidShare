@@ -35,7 +35,7 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
         for (int i = 0; i < 9; i++) {
             strings.add("item" + i);
         }
-        rv.addItemDecoration(new BaseItemDecoration(10, new ColorDecorateDetail(0)));
+        rv.addItemDecoration(new BaseItemDecoration(5, 5, 5, 5, new ColorDecorateDetail(0)));
         rv.setAdapter(new TouchAdapter(strings));
         final ItemTouchHelper itemTouchHelper = new BetterItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
             @Override

@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
+import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
 
 public class RefreshLayoutActivity extends AppCompatActivity {
 
@@ -26,6 +28,7 @@ public class RefreshLayoutActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_refresh);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.addItemDecoration(new BaseItemDecoration(10, 10, 10, 10, new ColorDecorateDetail(0)));
         recyclerView.setAdapter(new OuterAdapter());
     }
 

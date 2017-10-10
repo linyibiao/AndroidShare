@@ -12,17 +12,22 @@ import android.view.View;
  */
 public class BaseItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int lineSize = 2;
+    private int outLeft = 2;
+    private int outTop = 2;
+    private int outRight = 2;
+    private int outBottom = 2;
 
     private DecorateDetail decorateDetail;
 
-    public BaseItemDecoration(int lineSize, DecorateDetail decorateDetail) {
-        this.lineSize = lineSize;
+    public BaseItemDecoration(int outLeft, int outTop, int outRight, int outBottom, DecorateDetail decorateDetail) {
+        this.outLeft = outLeft;
+        this.outTop = outTop;
+        this.outRight = outRight;
+        this.outBottom = outBottom;
         this.decorateDetail = decorateDetail;
     }
 
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        parent.setPadding(0, 0, -lineSize, -lineSize);
         c.save();
         for (int index = 0; index < parent.getChildCount(); index++) {
             View childView = parent.getChildAt(index);
@@ -35,17 +40,17 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
             int decoratedBottom = parent.getLayoutManager().getDecoratedBottom(childView);
             int bottom = childView.getBottom();
             if (decorateDetail != null) {
-                decorateDetail.drawLeft(c, decoratedLeft, decoratedTop, left, decoratedBottom);
-                decorateDetail.drawTop(c, decoratedLeft, decoratedTop, decoratedRight, top);
-                decorateDetail.drawRight(c, right, decoratedTop, decoratedRight, decoratedBottom);
-                decorateDetail.drawBottom(c, decoratedLeft, bottom, decoratedRight, decoratedBottom);
+                decorateDetail.drawLeft(c, decoratedLeft, decoratedTop, left, bottom);
+                decorateDetail.drawTop(c, left, decoratedTop, decoratedRight, top);
+                decorateDetail.drawRight(c, right, top, decoratedRight, decoratedBottom);
+                decorateDetail.drawBottom(c, decoratedLeft, bottom, right, decoratedBottom);
             }
         }
         c.restore();
     }
 
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.set(0, 0, lineSize, lineSize);
+        outRect.set(outLeft, outTop, outRight, outBottom);
     }
 
 }

@@ -41,7 +41,7 @@ public class PorterDuffActivity extends BaseActivity {
         modes.add(new Pair<>("OVERLAY", PorterDuff.Mode.OVERLAY));
         RecyclerView brv = ((RecyclerView) findViewById(R.id.brv));
         brv.setAdapter(new PorterDuffAdapter(modes));
-        brv.addItemDecoration(new BaseItemDecoration(10, new ColorDecorateDetail(0)));
+        brv.addItemDecoration(new BaseItemDecoration(10, 10, 10, 10, new ColorDecorateDetail(0)));
     }
 
 }
