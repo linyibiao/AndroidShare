@@ -1,28 +1,31 @@
-package com.lyb.besttimer.pluginwidget.view.imageview;
+package com.lyb.besttimer.pluginwidget.view.framelayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.AppCompatImageView;
+import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 
 import com.lyb.besttimer.pluginwidget.R;
 
 /**
- * 自定义长宽比的imageview
- * Created by linyibiao on 2017/10/10.
+ * 自定义长宽比的framelayout(宽度决定高度)
+ * Created by linyibiao on 2017/10/12.
  */
 
-public class ImageViewScale extends AppCompatImageView {
+public class FrameLayoutScale extends FrameLayout {
 
-    public ImageViewScale(Context context) {
+    public FrameLayoutScale(@NonNull Context context) {
         this(context, null);
     }
 
-    public ImageViewScale(Context context, AttributeSet attrs) {
+    public FrameLayoutScale(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImageViewScale(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FrameLayoutScale(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -31,8 +34,8 @@ public class ImageViewScale extends AppCompatImageView {
     private float hwfactor;
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ImageViewScale);
-        hwfactor = typedArray.getFloat(R.styleable.ImageViewScale_ivScale_hwfactor, -1);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FrameLayoutScale);
+        hwfactor = typedArray.getFloat(R.styleable.FrameLayoutScale_flScale_hwfactor, -1);
         typedArray.recycle();
     }
 

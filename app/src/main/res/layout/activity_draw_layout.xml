@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.DrawLayoutActivity">
 
-    <android.support.v4.widget.DrawerLayout
+    <com.lyb.besttimer.pluginwidget.view.drawerlayout.FreeDrawerLayout
+        android:id="@+id/freeDL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:freeDL_contentMoveFactor="0.3">
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:background="#00ff00"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="内容" />
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:gravity="center"-->
+                <!--android:text="内容"-->
+                <!--android:layout_height="match_parent" />-->
+
+            <com.lyb.besttimer.pluginwidget.view.viewpager.FreeViewPager
+                android:id="@+id/vp_drawLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="left">
+            android:background="#ff0000"
+            android:layout_gravity="end">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -31,6 +42,6 @@
                 android:layout_centerInParent="true"
                 android:text="菜单" />
         </RelativeLayout>
-    </android.support.v4.widget.DrawerLayout>
+    </com.lyb.besttimer.pluginwidget.view.drawerlayout.FreeDrawerLayout>
 
 </FrameLayout>

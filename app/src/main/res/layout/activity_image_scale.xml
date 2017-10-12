@@ -6,13 +6,18 @@
     android:layout_height="match_parent"
     tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.ImageScaleActivity">
 
-    <com.lyb.besttimer.pluginwidget.view.imageview.ImageViewScale
+    <com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="#ff0000"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher"
-        app:ivScale_hwfactor="2"
+        app:flScale_hwfactor="2"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ff0000"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+    </com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale>
 </android.support.constraint.ConstraintLayout>

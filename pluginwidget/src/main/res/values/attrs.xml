@@ -32,9 +32,13 @@
         <attr name="refresh_view_type" format="string" />
     </declare-styleable>
 
-    <declare-styleable name="ImageViewScale">
+    <declare-styleable name="FrameLayoutScale">
         <!-- 高宽比 -->
-        <attr name="ivScale_hwfactor" format="float" />
+        <attr name="flScale_hwfactor" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="FreeDrawerLayout">
+        <attr name="freeDL_contentMoveFactor" format="float" />
     </declare-styleable>
 
 </resources>
