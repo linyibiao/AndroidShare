@@ -19,6 +19,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DrawLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.EditTextActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.HeadFootAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ImageScaleActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
@@ -41,6 +42,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.TestTabLayoutActivit
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ToolBarActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.VideoViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ViewTestActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
@@ -96,6 +98,8 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(ToolBarActivity.class, "ToolBar使用"));
             lvData.getLvDatas().add(new LVData(ImageScaleActivity.class, "imageview scale"));
             lvData.getLvDatas().add(new LVData(CountUpTimerActivity.class, "计时器"));
+            lvData.getLvDatas().add(new LVData(ViewTestActivity.class, "view show"));
+            lvData.getLvDatas().add(new LVData(HeadFootAdapterActivity.class, "带有头部尾部的adapter"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

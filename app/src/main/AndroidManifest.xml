@@ -52,7 +52,9 @@
             android:name=".activity.pluginwidget.ToolBarActivity"
             android:theme="@style/WhileTheme" />
         <activity android:name=".activity.pluginwidget.ImageScaleActivity" />
-        <activity android:name=".activity.pluginwidget.CountUpTimerActivity"></activity>
+        <activity android:name=".activity.pluginwidget.CountUpTimerActivity" />
+        <activity android:name=".activity.pluginwidget.ViewTestActivity" />
+        <activity android:name=".activity.pluginwidget.HeadFootAdapterActivity"></activity>
     </application>
 
 </manifest>
