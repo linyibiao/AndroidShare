@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.lyb.besttimer.pluginwidget.R;
 
 /**
@@ -195,8 +196,9 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, N
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean handle = super.dispatchTouchEvent(ev);
         refreshLife.dispatchTouchEvent(ev);
-        return super.dispatchTouchEvent(ev);
+        return handle;
     }
 
     @Override

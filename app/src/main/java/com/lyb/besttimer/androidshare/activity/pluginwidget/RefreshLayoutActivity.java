@@ -54,7 +54,7 @@ public class RefreshLayoutActivity extends AppCompatActivity {
 
             OuterHolder(View itemView) {
                 super(itemView);
-                rv_childRefresh = (RecyclerView) itemView.findViewById(R.id.rv_childRefresh);
+                rv_childRefresh = itemView.findViewById(R.id.rv_childRefresh);
                 rv_childRefresh.setLayoutManager(new GridLayoutManager(itemView.getContext(), 3));
             }
 
