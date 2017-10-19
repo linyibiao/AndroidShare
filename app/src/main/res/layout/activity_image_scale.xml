@@ -8,7 +8,7 @@
 
     <com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="10dp"
         app:flScale_hwfactor="2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">

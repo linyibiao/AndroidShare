@@ -42,8 +42,27 @@ public class FrameLayoutScale extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-        if (hwfactor > 0 && widthSpecSize > 0) {
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (widthSpecSize * hwfactor), MeasureSpec.EXACTLY);
+        final int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        final int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        if (hwfactor > 0) {
+            if (widthSpecMode != MeasureSpec.UNSPECIFIED || heightSpecMode != MeasureSpec.UNSPECIFIED) {
+                if (widthSpecMode != MeasureSpec.UNSPECIFIED && heightSpecMode != MeasureSpec.UNSPECIFIED) {
+                    if (heightSpecSize / widthSpecSize > hwfactor) {
+                        widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSpecSize, MeasureSpec.EXACTLY);
+                        heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (widthSpecSize * hwfactor), MeasureSpec.EXACTLY);
+                    } else {
+                        widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (heightSpecSize / hwfactor), MeasureSpec.EXACTLY);
+                        heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSpecSize, MeasureSpec.EXACTLY);
+                    }
+                } else if (widthSpecMode != MeasureSpec.UNSPECIFIED) {
+                    widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSpecSize, MeasureSpec.EXACTLY);
+                    heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (widthSpecSize * hwfactor), MeasureSpec.EXACTLY);
+                } else {
+                    widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (heightSpecSize / hwfactor), MeasureSpec.EXACTLY);
+                    heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSpecSize, MeasureSpec.EXACTLY);
+                }
+            }
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
