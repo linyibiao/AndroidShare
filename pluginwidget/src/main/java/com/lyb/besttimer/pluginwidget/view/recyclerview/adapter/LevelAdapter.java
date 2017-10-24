@@ -10,14 +10,35 @@ import java.util.List;
 
 public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H> {
 
-    private LevelAdapter<? extends LevelHolder> nextLevelAdapter;
+    private LevelAdapter<? extends LevelHolder> preLevelAdapter;//前面的levelAdapter
+    private LevelAdapter<? extends LevelHolder> nextLevelAdapter;//后面的levelAdapter
     private List<LevelData> levelDatas = new ArrayList<>();
     private boolean singleCheck = true;
 
+    private AdapterPosClick<LevelData> adapterPosClick;
+    private AdapterDataCheck<LevelData> adapterDataCheck;
+
     public LevelAdapter(LevelAdapter<? extends LevelHolder> nextLevelAdapter, List<LevelData> levelDatas, boolean singleCheck) {
+        this(nextLevelAdapter, levelDatas, singleCheck, null, null);
+    }
+
+    public LevelAdapter(LevelAdapter<? extends LevelHolder> nextLevelAdapter, List<LevelData> levelDatas, boolean singleCheck, AdapterPosClick<LevelData> adapterPosClick, AdapterDataCheck<LevelData> adapterDataCheck) {
         this.nextLevelAdapter = nextLevelAdapter;
+        if (nextLevelAdapter != null) {
+            nextLevelAdapter.setPreLevelAdapter(this);
+        }
         this.levelDatas = levelDatas;
         this.singleCheck = singleCheck;
+        this.adapterPosClick = adapterPosClick;
+        this.adapterDataCheck = adapterDataCheck;
+    }
+
+    public LevelAdapter<? extends LevelHolder> getPreLevelAdapter() {
+        return preLevelAdapter;
+    }
+
+    public void setPreLevelAdapter(LevelAdapter<? extends LevelHolder> preLevelAdapter) {
+        this.preLevelAdapter = preLevelAdapter;
     }
 
     public List<LevelData> getLevelDatas() {
@@ -26,11 +47,14 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
 
     public void setLevelDatas(List<LevelData> levelDatas) {
         this.levelDatas = levelDatas;
+        if (adapterDataCheck != null) {
+            adapterDataCheck.dataCheck(levelDatas);
+        }
     }
 
     @Override
     public void onBindViewHolder(H holder, int position) {
-        holder.fillview(this, nextLevelAdapter, levelDatas, position, singleCheck);
+        holder.fillview(preLevelAdapter, this, nextLevelAdapter, levelDatas, position, singleCheck, adapterPosClick);
     }
 
     @Override
@@ -39,7 +63,7 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
     }
 
     /**
-     * mark to first show
+     * 是否选择并且标记，用于初始化那些已经选择的数据
      *
      * @return whether selected
      */

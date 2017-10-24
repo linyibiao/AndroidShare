@@ -10,11 +10,14 @@ import java.util.List;
  */
 public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements View.OnClickListener {
 
-    protected LevelAdapter<? extends LevelHolder> currLevelAdapter;
-    protected LevelAdapter<? extends LevelHolder> nextLevelAdapter;
+    protected LevelAdapter<? extends LevelHolder> preLevelAdapter;//前面的levelAdapter
+    protected LevelAdapter<? extends LevelHolder> currLevelAdapter;//当前的levelAdapter
+    protected LevelAdapter<? extends LevelHolder> nextLevelAdapter;//后面的levelAdapter
     protected List<LevelAdapter.LevelData> levelDatas;
     protected int position;
     protected boolean singleCheck = true;
+
+    private AdapterPosClick<LevelAdapter.LevelData> adapterPosClick;
 
     public LevelHolder(View itemView) {
         super(itemView);
@@ -26,13 +29,17 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
 
     }
 
-    public void fillview(LevelAdapter<? extends LevelHolder> currLevelAdapter, LevelAdapter<? extends LevelHolder> nextLevelAdapter, List<LevelAdapter.LevelData> levelDatas, int position, boolean singleCheck) {
+    public void fillview(LevelAdapter<? extends LevelHolder> preLevelAdapter, LevelAdapter<? extends LevelHolder> currLevelAdapter, LevelAdapter<? extends LevelHolder> nextLevelAdapter,
+                         List<LevelAdapter.LevelData> levelDatas, int position, boolean singleCheck,
+                         AdapterPosClick<LevelAdapter.LevelData> adapterPosClick) {
         this.fillView(levelDatas.get(position), position);
+        this.preLevelAdapter = preLevelAdapter;
         this.currLevelAdapter = currLevelAdapter;
         this.nextLevelAdapter = nextLevelAdapter;
         this.levelDatas = levelDatas;
         this.position = position;
         this.singleCheck = singleCheck;
+        this.adapterPosClick = adapterPosClick;
 
         LevelAdapter.LevelData currData = levelDatas.get(position);
 
@@ -54,6 +61,7 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
         itemView.setSelected(selectToShow);
         statusChange(selectToShow);
 
+        //将数据变动延伸到下一个adapter
         if (nextLevelAdapter != null && currData.isChecked()) {
             nextLevelAdapter.setLevelDatas(currData.getNextLevelDatas());
             nextLevelAdapter.notifyDataSetChanged();
@@ -101,6 +109,9 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
                     }
                 }
             }
+        }
+        if (adapterPosClick != null) {
+            adapterPosClick.onClick(data, position);
         }
         currLevelAdapter.notifyDataSetChanged();
     }
