@@ -15,8 +15,8 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
     private List<LevelData> levelDatas = new ArrayList<>();
     private boolean singleCheck = true;
 
-    private AdapterPosClick<LevelData> adapterPosClick;
-    private AdapterDataCheck<LevelData> adapterDataCheck;
+    private AdapterPosClick<LevelData> adapterPosClick;//元素点击回调
+    private AdapterDataCheck<LevelData> adapterDataCheck;//上层或以上的adapter的数据变动时反馈到当前adapter的数据
 
     public LevelAdapter(LevelAdapter<? extends LevelHolder> nextLevelAdapter, List<LevelData> levelDatas, boolean singleCheck) {
         this(nextLevelAdapter, levelDatas, singleCheck, null, null);
@@ -45,11 +45,14 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
         return levelDatas;
     }
 
-    public void setLevelDatas(List<LevelData> levelDatas) {
-        this.levelDatas = levelDatas;
+    public void dataCheck(){
         if (adapterDataCheck != null) {
             adapterDataCheck.dataCheck(levelDatas);
         }
+    }
+
+    public void setLevelDatas(List<LevelData> levelDatas) {
+        this.levelDatas = levelDatas;
     }
 
     @Override
@@ -60,6 +63,22 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
     @Override
     public int getItemCount() {
         return levelDatas.size();
+    }
+
+    public void clearAllLastLevelCheckedStatusExcept(LevelData exceptLevelData) {
+        clearAllLastLevelCheckedStatusExcept(levelDatas, exceptLevelData);
+    }
+
+    public void clearAllLastLevelCheckedStatusExcept(List<LevelData> levelDatas, LevelData exceptLevelData) {
+        for (LevelData levelData : levelDatas) {
+            if (levelData.isLastLevel()) {
+                if (levelData != exceptLevelData) {
+                    levelData.setChecked(false);
+                }
+            } else {
+                clearAllLastLevelCheckedStatusExcept(levelData.getNextLevelDatas(), exceptLevelData);
+            }
+        }
     }
 
     /**

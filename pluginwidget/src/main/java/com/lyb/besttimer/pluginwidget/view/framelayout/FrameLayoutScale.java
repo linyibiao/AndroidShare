@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import com.lyb.besttimer.pluginwidget.R;
 
 /**
- * 自定义长宽比的framelayout(宽度决定高度)
+ * 自定义长宽比的framelayout
  * Created by linyibiao on 2017/10/12.
  */
 

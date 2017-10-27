@@ -54,7 +54,7 @@ public class LevelAdapterActivity extends AppCompatActivity {
         brv_2.setLayoutManager(new LinearLayoutManager(this));
         brv_3.setLayoutManager(new LinearLayoutManager(this));
 
-        TestLevelAdapter testLevelAdapter3 = new TestLevelAdapter(null, new ArrayList<LevelAdapter.LevelData>(), false);
+        TestLevelAdapter testLevelAdapter3 = new TestLevelAdapter(null, new ArrayList<LevelAdapter.LevelData>(), true);
         TestLevelAdapter testLevelAdapter2 = new TestLevelAdapter(testLevelAdapter3, new ArrayList<LevelAdapter.LevelData>(), true);
         final TestLevelAdapter testLevelAdapter1 = new TestLevelAdapter(testLevelAdapter2, levelDatas, true);
 

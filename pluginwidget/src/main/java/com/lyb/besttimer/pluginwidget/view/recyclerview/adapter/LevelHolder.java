@@ -63,7 +63,9 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
 
         //将数据变动延伸到下一个adapter
         if (nextLevelAdapter != null && currData.isChecked()) {
-            nextLevelAdapter.setLevelDatas(currData.getNextLevelDatas());
+            nextLevelAdapter.getLevelDatas().clear();
+            nextLevelAdapter.getLevelDatas().addAll(currData.getNextLevelDatas());
+            nextLevelAdapter.dataCheck();
             nextLevelAdapter.notifyDataSetChanged();
         }
     }
@@ -82,12 +84,29 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
     @Override
     public void onClick(View view) {
         LevelAdapter.LevelData currData = levelDatas.get(position);
-        currData.setChecked(!currData.isChecked());
+        boolean canChange = true;
+        if (!currData.isLastLevel() && currData.isChecked()) {
+            canChange = false;
+        }
+        if (singleCheck && currData.isLastLevel() && currData.isChecked()) {
+            canChange = false;
+        }
+        if (canChange) {
+            currData.setChecked(!currData.isChecked());
+        }
         if (singleCheck) {
             if (currData.isChecked()) {
-                for (LevelAdapter.LevelData otherData : levelDatas) {
-                    if (otherData != currData) {
-                        otherData.setChecked(false);
+                if (currData.isLastLevel()) {
+                    LevelAdapter<? extends LevelHolder> topLevelAdapter = currLevelAdapter;
+                    while (topLevelAdapter.getPreLevelAdapter() != null) {
+                        topLevelAdapter = topLevelAdapter.getPreLevelAdapter();
+                    }
+                    topLevelAdapter.clearAllLastLevelCheckedStatusExcept(currData);
+                } else {
+                    for (LevelAdapter.LevelData otherData : levelDatas) {
+                        if (otherData != currData) {
+                            otherData.setChecked(false);
+                        }
                     }
                 }
             }
