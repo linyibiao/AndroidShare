@@ -7,7 +7,6 @@ import java.util.List;
  * level adapter
  * Created by linyibiao on 2017/9/1.
  */
-
 public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H> {
 
     private LevelAdapter<? extends LevelHolder> preLevelAdapter;//前面的levelAdapter
@@ -41,11 +40,15 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
         this.preLevelAdapter = preLevelAdapter;
     }
 
+    public boolean isSingleCheck() {
+        return singleCheck;
+    }
+
     public List<LevelData> getLevelDatas() {
         return levelDatas;
     }
 
-    public void dataCheck(){
+    public void dataCheck() {
         if (adapterDataCheck != null) {
             adapterDataCheck.dataCheck(levelDatas);
         }
@@ -53,6 +56,26 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
 
     public void setLevelDatas(List<LevelData> levelDatas) {
         this.levelDatas = levelDatas;
+        if (preLevelAdapter != null && preLevelAdapter.isSingleCheck()) {
+            List<LevelData> levelDataList = preLevelAdapter.getCurrSelectDataList();
+            if (levelDataList.size() == 1 && levelDataList.get(0).getNextLevelDatas() != levelDatas) {
+                levelDataList.get(0).getNextLevelDatas().clear();
+                levelDataList.get(0).getNextLevelDatas().addAll(levelDatas);
+            }
+        }
+    }
+
+    /**
+     * 获取当前选中的数据列表
+     */
+    public List<LevelData> getCurrSelectDataList() {
+        List<LevelData> levelDataList = new ArrayList<>();
+        for (LevelData levelData : levelDatas) {
+            if (levelData.isChecked()) {
+                levelDataList.add(levelData);
+            }
+        }
+        return levelDataList;
     }
 
     @Override
@@ -174,6 +197,14 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
         private boolean isAll = false;
         private boolean lastLevel = false;
 
+        /**
+         * 级别数据
+         *
+         * @param data      包含的内容
+         * @param checked   是否选中
+         * @param isAll     是否具有选中全部的属性
+         * @param lastLevel 是不是最后一个级别的数据
+         */
         public LevelData(Object data, boolean checked, boolean isAll, boolean lastLevel) {
             this.data = data;
             this.checked = checked;

@@ -63,8 +63,7 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
 
         //将数据变动延伸到下一个adapter
         if (nextLevelAdapter != null && currData.isChecked()) {
-            nextLevelAdapter.getLevelDatas().clear();
-            nextLevelAdapter.getLevelDatas().addAll(currData.getNextLevelDatas());
+            nextLevelAdapter.setLevelDatas(currData.getNextLevelDatas());
             nextLevelAdapter.dataCheck();
             nextLevelAdapter.notifyDataSetChanged();
         }
