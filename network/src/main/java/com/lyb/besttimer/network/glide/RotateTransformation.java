@@ -1,11 +1,13 @@
 package com.lyb.besttimer.network.glide;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
+
+import java.security.MessageDigest;
 
 /**
  * glide rotate
@@ -14,10 +16,12 @@ import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 
 public class RotateTransformation extends BitmapTransformation {
 
+    private static final String ID = "com.lyb.besttimer.network.glide.RotateTransformation";
+    private static final byte[] ID_BYTES = ID.getBytes(Key.CHARSET);
+
     private int degreesToRotate;
 
-    public RotateTransformation(Context context, int degreesToRotate) {
-        super(context);
+    public RotateTransformation(int degreesToRotate) {
         this.degreesToRotate = degreesToRotate;
     }
 
@@ -27,8 +31,18 @@ public class RotateTransformation extends BitmapTransformation {
     }
 
     @Override
-    public String getId() {
-        return "RotateTransformation.com.cailele.android.thirdUtils.glide";
+    public boolean equals(Object o) {
+        return o instanceof RotateTransformation;
+    }
+
+    @Override
+    public int hashCode() {
+        return ID.hashCode();
+    }
+
+    @Override
+    public void updateDiskCacheKey(MessageDigest messageDigest) {
+        messageDigest.update(ID_BYTES);
     }
 
 }

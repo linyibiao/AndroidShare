@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.network.glide.RotateTransformation;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
@@ -58,16 +61,20 @@ public class GlideActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                iv = (ImageView) itemView.findViewById(R.id.iv);
+                iv = itemView.findViewById(R.id.iv);
             }
 
             @Override
             public void fillView(Data data, int position) {
                 if (data.type == 0) {
-                    Glide.with(getRecyclerView().getContext()).load(data.resID).transform(new RotateTransformation(getRecyclerView().getContext(), 180)).into(iv);
+                    RequestOptions requestOptions = new RequestOptions();
+                    requestOptions.transform(new RotateTransformation(180));
+                    Glide.with(getRecyclerView().getContext()).load(data.resID).apply(requestOptions).into(iv);
 //                    iv.setImageResource(data.resID);
                 } else if (data.type == 1) {
-                    Glide.with(getRecyclerView().getContext()).load(data.url).placeholder(R.mipmap.refresh_arrow).transform(new RotateTransformation(getRecyclerView().getContext(), 180)).into(iv);
+                    RequestOptions requestOptions = new RequestOptions();
+                    requestOptions.placeholder(R.mipmap.refresh_arrow).transforms(new CenterCrop(),new RoundedCorners(10));
+                    Glide.with(getRecyclerView().getContext()).load(data.url).apply(requestOptions).into(iv);
                 }
             }
         }
