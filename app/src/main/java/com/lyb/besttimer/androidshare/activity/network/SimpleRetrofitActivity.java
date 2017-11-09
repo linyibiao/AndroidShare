@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
@@ -22,12 +27,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class SimpleRetrofitActivity extends AppCompatActivity {
 
@@ -103,30 +104,30 @@ public class SimpleRetrofitActivity extends AppCompatActivity {
                 .baseUrl("https://api.github.com/")
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         GitHubService service = retrofit.create(GitHubService.class);
         Observable<Response<List<Repo>>> repos = service.listReposByRX("octocat");
         repos.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Response<List<Repo>>>() {
+                .subscribe(new Consumer<Response<List<Repo>>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Response<List<Repo>> repos) {
-                        Log.e("what", repos.headers().toString() + ";;;");
-                        Log.e("what", repos.body().size() + ";;;");
-                        for (Repo repo : repos.body()) {
+                    public void accept(Response<List<Repo>> listResponse) throws Exception {
+                        Log.e("what", listResponse.headers().toString() + ";;;");
+                        Log.e("what", listResponse.body().size() + ";;;");
+                        for (Repo repo : listResponse.body()) {
                             Log.e("what", repo.getId() + ";");
                         }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+
                     }
                 });
     }
