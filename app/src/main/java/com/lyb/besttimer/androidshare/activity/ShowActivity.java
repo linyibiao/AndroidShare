@@ -22,6 +22,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.FragmentUtilActivity
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeadFootAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.HeaderRecyclerViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ImageScaleActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.InfinityNestedScrollViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchHelperActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
@@ -104,6 +105,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(HeadFootAdapterActivity.class, "带有头部尾部的adapter"));
             lvData.getLvDatas().add(new LVData(ListScrollInfinityActivity.class, "循环滚动列表"));
             lvData.getLvDatas().add(new LVData(RecyclerViewInfinityActivity.class, "循环滚动列表(recyclerview)"));
+            lvData.getLvDatas().add(new LVData(InfinityNestedScrollViewActivity.class, "循环滚动列表(nestedscrollview)"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

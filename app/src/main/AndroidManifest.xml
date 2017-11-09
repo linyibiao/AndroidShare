@@ -56,7 +56,8 @@
         <activity android:name=".activity.pluginwidget.ViewTestActivity" />
         <activity android:name=".activity.pluginwidget.HeadFootAdapterActivity" />
         <activity android:name=".activity.pluginwidget.ListScrollInfinityActivity" />
-        <activity android:name=".activity.pluginwidget.RecyclerViewInfinityActivity"></activity>
+        <activity android:name=".activity.pluginwidget.RecyclerViewInfinityActivity" />
+        <activity android:name=".activity.pluginwidget.InfinityNestedScrollViewActivity"></activity>
     </application>
 
 </manifest>

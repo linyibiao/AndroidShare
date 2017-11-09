@@ -49,4 +49,8 @@
         <attr name="infinityRecyclerView_speed" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="InfinityNestedScrollView">
+        <attr name="infinityScrollView_speed" format="integer" />
+    </declare-styleable>
+
 </resources>

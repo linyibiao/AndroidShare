@@ -21,6 +21,10 @@ public class BaseLinearLayout extends LinearLayout {
 
     private LinearAdapter linearAdapter;
 
+    public LinearAdapter getLinearAdapter() {
+        return linearAdapter;
+    }
+
     public void setAdapter(LinearAdapter linearAdapter) {
         this.linearAdapter = linearAdapter;
         if (linearAdapter != null) {
