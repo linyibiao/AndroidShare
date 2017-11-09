@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+import io.reactivex.subjects.BehaviorSubject;
+
 
 /**
  * rx activity
@@ -28,39 +31,40 @@ public class RxAppCompatActivity extends AppCompatActivity {
 
     protected final BehaviorSubject<ActivityEvent> lifeSubject = BehaviorSubject.create();
 
-    public <T> Observable.Transformer<T, T> bindUntilEvent(Class<T> tClass, final ActivityEvent bindEvent) {
-        final Observable<ActivityEvent> observable = lifeSubject.takeFirst(new Func1<ActivityEvent, Boolean>() {
+    public <T> ObservableTransformer<T, T> bindUntilEvent(Class<T> tClass, final ActivityEvent bindEvent) {
+
+        final Observable<ActivityEvent> observable = lifeSubject.filter(new Predicate<ActivityEvent>() {
             @Override
-            public Boolean call(ActivityEvent event) {
+            public boolean test(ActivityEvent event) throws Exception {
                 return event.equals(bindEvent);
             }
         });
 
-        return new Observable.Transformer<T, T>() {
+        return new ObservableTransformer<T, T>() {
             @Override
-            public Observable<T> call(Observable<T> sourceOb) {
-                return sourceOb.takeUntil(observable);
+            public ObservableSource<T> apply(Observable<T> upstream) {
+                return upstream.takeUntil(observable);
             }
         };
     }
 
-    private Subscription bindSubscription;
+    private Disposable bindSubscription;
 
     private void bindEvent() {
-        if (bindSubscription != null && !bindSubscription.isUnsubscribed()) {
+        if (bindSubscription != null && !bindSubscription.isDisposed()) {
             unBindEvent();
         }
-        bindSubscription = lifeSubject.subscribe(new Action1<ActivityEvent>() {
+        bindSubscription = lifeSubject.subscribe(new Consumer<ActivityEvent>() {
             @Override
-            public void call(ActivityEvent activityEvent) {
+            public void accept(ActivityEvent activityEvent) throws Exception {
                 eventCall(activityEvent);
             }
         });
     }
 
     private void unBindEvent() {
-        if (bindSubscription != null && !bindSubscription.isUnsubscribed()) {
-            bindSubscription.unsubscribe();
+        if (bindSubscription != null && !bindSubscription.isDisposed()) {
+            bindSubscription.dispose();
         }
     }
 

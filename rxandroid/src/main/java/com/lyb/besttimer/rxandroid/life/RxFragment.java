@@ -6,11 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * rx fragment
@@ -35,40 +37,40 @@ public class RxFragment extends Fragment {
     protected final BehaviorSubject<FragmentEvent> lifeSubject = BehaviorSubject.create();
 
 
-    public <T> Observable.Transformer<T, T> bindUntilEvent(Class<T> tClass, final FragmentEvent bindEvent) {
-        final Observable<FragmentEvent> observable = lifeSubject.takeFirst(new Func1<FragmentEvent, Boolean>() {
+    public <T> ObservableTransformer<T, T> bindUntilEvent(Class<T> tClass, final FragmentEvent bindEvent) {
+
+        final Observable<FragmentEvent> observable = lifeSubject.filter(new Predicate<FragmentEvent>() {
             @Override
-            public Boolean call(FragmentEvent event) {
+            public boolean test(FragmentEvent event) throws Exception {
                 return event.equals(bindEvent);
             }
         });
 
-        return new Observable.Transformer<T, T>() {
-
+        return new ObservableTransformer<T, T>() {
             @Override
-            public Observable<T> call(Observable<T> sourceOb) {
-                return sourceOb.takeUntil(observable);
+            public ObservableSource<T> apply(Observable<T> upstream) {
+                return upstream.takeUntil(observable);
             }
         };
     }
 
-    private Subscription bindSubscription;
+    private Disposable bindSubscription;
 
     private void bindEvent() {
-        if (bindSubscription != null && !bindSubscription.isUnsubscribed()) {
+        if (bindSubscription != null && !bindSubscription.isDisposed()) {
             unBindEvent();
         }
-        bindSubscription = lifeSubject.subscribe(new Action1<RxFragment.FragmentEvent>() {
+        bindSubscription = lifeSubject.subscribe(new Consumer<FragmentEvent>() {
             @Override
-            public void call(RxFragment.FragmentEvent fragmentEvent) {
+            public void accept(FragmentEvent fragmentEvent) throws Exception {
                 eventCall(fragmentEvent);
             }
         });
     }
 
     private void unBindEvent() {
-        if (bindSubscription != null && !bindSubscription.isUnsubscribed()) {
-            bindSubscription.unsubscribe();
+        if (bindSubscription != null && !bindSubscription.isDisposed()) {
+            bindSubscription.dispose();
         }
     }
 

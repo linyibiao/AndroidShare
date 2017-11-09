@@ -2,10 +2,11 @@ package com.lyb.besttimer.rxandroid.interval;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 
 /**
  * rx interval
@@ -29,21 +30,21 @@ public class RxInterval {
         this.intervalCall = intervalCall;
     }
 
-    private Subscription currSubscription;
+    private Disposable currDisposable;
 
     public void startInterval() {
-        stopInterval(currSubscription);
-        currSubscription = startInterval(initialDelay, period, unit, scheduler);
+        stopInterval(currDisposable);
+        currDisposable = startInterval(initialDelay, period, unit, scheduler);
     }
 
     public void stopInterval() {
-        stopInterval(currSubscription);
+        stopInterval(currDisposable);
     }
 
-    private Subscription startInterval(long initialDelay, long period, TimeUnit unit, Scheduler scheduler) {
-        return Observable.interval(initialDelay, period, unit, scheduler).subscribe(new Action1<Long>() {
+    private Disposable startInterval(long initialDelay, long period, TimeUnit unit, Scheduler scheduler) {
+        return Observable.interval(initialDelay, period, unit, scheduler).subscribe(new Consumer<Long>() {
             @Override
-            public void call(Long aLong) {
+            public void accept(Long aLong) throws Exception {
                 if (intervalCall != null) {
                     intervalCall.callStep(aLong);
                 }
@@ -51,9 +52,9 @@ public class RxInterval {
         });
     }
 
-    private void stopInterval(Subscription subscription) {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+    private void stopInterval(Disposable disposable) {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
         }
     }
 

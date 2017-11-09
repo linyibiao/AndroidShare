@@ -7,10 +7,13 @@ import android.view.View;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
 
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class SimpleRxActivity extends BaseActivity {
 
@@ -27,24 +30,22 @@ public class SimpleRxActivity extends BaseActivity {
     }
 
     private void simpleRX() {
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext("wtf");
-//                subscriber.onCompleted();
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                e.onNext("wtf");
             }
         });
-        Observer<String> observer = new Subscriber<String>() {
+        Observer<String> observer = new Observer<String>() {
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onSubscribe(Disposable d) {
                 Log.e("onStart", "onStart");
             }
 
             @Override
-            public void onCompleted() {
-
+            public void onNext(String s) {
+                Log.e("onNext", "onNext" + s);
             }
 
             @Override
@@ -53,8 +54,8 @@ public class SimpleRxActivity extends BaseActivity {
             }
 
             @Override
-            public void onNext(String s) {
-                Log.e("onNext", "onNext" + s);
+            public void onComplete() {
+
             }
         };
         observable.subscribeOn(Schedulers.newThread()).observeOn(Schedulers.newThread()).subscribe(observer);

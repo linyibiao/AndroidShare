@@ -11,18 +11,21 @@ import com.lyb.besttimer.rxandroid.interval.RxInterval;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 
 public class RxIntervalActivity extends AppCompatActivity {
+
+    private RxInterval rxInterval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx_interval);
-        Button start = (Button) findViewById(R.id.start);
-        Button stop = (Button) findViewById(R.id.stop);
-        final AppCompatTextView appTV = (AppCompatTextView) findViewById(R.id.appTV);
-        final RxInterval rxInterval = new RxInterval(1000, 1000, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread(), new RxInterval.IntervalCall() {
+        Button start = findViewById(R.id.start);
+        Button stop = findViewById(R.id.stop);
+        final AppCompatTextView appTV = findViewById(R.id.appTV);
+        rxInterval = new RxInterval(1000, 1000, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread(), new RxInterval.IntervalCall() {
             @Override
             public void callStep(long currIndex) {
                 appTV.append(currIndex + "\n");
@@ -40,5 +43,11 @@ public class RxIntervalActivity extends AppCompatActivity {
                 rxInterval.stopInterval();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rxInterval.stopInterval();
     }
 }

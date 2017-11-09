@@ -10,16 +10,17 @@ import android.widget.TextView;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.rxandroid.rxbus.RxBus;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 
 public class RxBusActivity extends AppCompatActivity {
 
     private TextView tv;
     private Button btn;
 
-    private Subscription subscription;
+    private Disposable subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +28,15 @@ public class RxBusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rx_bus);
         tv = (TextView) findViewById(R.id.tv);
         btn = (Button) findViewById(R.id.btn);
-        subscription = RxBus.getInstance().toObserverable(String.class).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                tv.setText(s);
-            }
-        });
+        subscription = RxBus.getInstance()
+                .toObserverable(String.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        tv.setText(s);
+                    }
+                });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +48,6 @@ public class RxBusActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        subscription.unsubscribe();
+        subscription.dispose();
     }
 }

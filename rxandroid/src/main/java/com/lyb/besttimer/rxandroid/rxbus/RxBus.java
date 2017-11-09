@@ -1,8 +1,8 @@
 package com.lyb.besttimer.rxandroid.rxbus;
 
-import rx.Observable;
-import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * rxbus
