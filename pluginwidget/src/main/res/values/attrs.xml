@@ -41,4 +41,12 @@
         <attr name="freeDL_contentMoveFactor" format="float" />
     </declare-styleable>
 
+    <declare-styleable name="ScrollInfinityListView">
+        <attr name="infinityList_speed" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="ScrollInfinityRecyclerView">
+        <attr name="infinityRecyclerView_speed" format="integer" />
+    </declare-styleable>
+
 </resources>

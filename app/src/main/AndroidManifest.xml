@@ -54,7 +54,9 @@
         <activity android:name=".activity.pluginwidget.ImageScaleActivity" />
         <activity android:name=".activity.pluginwidget.CountUpTimerActivity" />
         <activity android:name=".activity.pluginwidget.ViewTestActivity" />
-        <activity android:name=".activity.pluginwidget.HeadFootAdapterActivity"></activity>
+        <activity android:name=".activity.pluginwidget.HeadFootAdapterActivity" />
+        <activity android:name=".activity.pluginwidget.ListScrollInfinityActivity" />
+        <activity android:name=".activity.pluginwidget.RecyclerViewInfinityActivity"></activity>
     </application>
 
 </manifest>

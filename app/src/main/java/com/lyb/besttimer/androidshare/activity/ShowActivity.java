@@ -27,11 +27,13 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTouchHelperActiv
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ItemTreeActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.LevelAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.LinearLayoutActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.ListScrollInfinityActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.NestedScrollViewControlActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.NumberEditActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PorterDuffActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.PullRefreshActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewInfinityActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewShowMoreActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RefreshLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity;
@@ -100,6 +102,8 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(CountUpTimerActivity.class, "计时器"));
             lvData.getLvDatas().add(new LVData(ViewTestActivity.class, "view show"));
             lvData.getLvDatas().add(new LVData(HeadFootAdapterActivity.class, "带有头部尾部的adapter"));
+            lvData.getLvDatas().add(new LVData(ListScrollInfinityActivity.class, "循环滚动列表"));
+            lvData.getLvDatas().add(new LVData(RecyclerViewInfinityActivity.class, "循环滚动列表(recyclerview)"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
