@@ -6,6 +6,6 @@ ext {
             targetSdkVersion : 26,
     ]
     dependencies = [
-            supportVersion: "27.0.0",
+            supportVersion: "27.0.1",
     ]
 }

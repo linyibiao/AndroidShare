@@ -83,47 +83,65 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
     @Override
     public void onClick(View view) {
         LevelAdapter.LevelData currData = levelDatas.get(position);
-        boolean canChange = true;
-        if (!currData.isLastLevel() && currData.isChecked()) {
-            canChange = false;
-        }
-        if (singleCheck && currData.isLastLevel() && currData.isChecked()) {
-            canChange = false;
-        }
-        if (canChange) {
-            currData.setChecked(!currData.isChecked());
-        }
-        if (singleCheck) {
-            if (currData.isChecked()) {
-                if (currData.isLastLevel()) {
+        if (currData.isLastLevel()) {//最后一个等级
+            if (singleCheck) {
+                //如果是最后一个等级，单选模式，并且点击的元素未选中，那么选中他，并且取消其他处于最后一个等级的元素的选中状态
+                if (!currData.isChecked()) {
+                    currData.setChecked(true);
                     LevelAdapter<? extends LevelHolder> topLevelAdapter = currLevelAdapter;
                     while (topLevelAdapter.getPreLevelAdapter() != null) {
                         topLevelAdapter = topLevelAdapter.getPreLevelAdapter();
                     }
                     topLevelAdapter.clearAllLastLevelCheckedStatusExcept(currData);
+                }
+            } else {
+                LevelAdapter.LevelData allLevelData = getAllLevelData();
+                if (allLevelData == null) {
+                    //如果是最后一个等级，多选模式，并且没有全部元素，那么切换他的选中状态
+                    currData.setChecked(!currData.isChecked());
                 } else {
-                    for (LevelAdapter.LevelData otherData : levelDatas) {
-                        if (otherData != currData) {
-                            otherData.setChecked(false);
+                    if (allLevelData == currData) {
+                        //如果是最后一个等级，多选模式，并且点击的是全部元素，那么切换全部的选中状态，并且更新和全部同等级的元素为同状态
+                        currData.setChecked(!currData.isChecked());
+                        for (LevelAdapter.LevelData otherData : levelDatas) {
+                            if (otherData != allLevelData) {
+                                otherData.setChecked(currData.isChecked());
+                            }
+                        }
+                    } else if (allLevelData.isChecked()) {
+                        //如果是最后一个等级，多选模式，并且点击的不是全部元素，但是全部元素为选中状态，那么选中他，并且更新和他同等级的元素状态为false
+                        allLevelData.setChecked(false);
+                        currData.setChecked(true);
+                        for (LevelAdapter.LevelData otherData : levelDatas) {
+                            if (otherData != allLevelData) {
+                                otherData.setChecked(otherData == currData);
+                            }
+                        }
+                    } else {
+                        //如果是最后一个等级，多选模式，并且点击的不是全部元素，但是全部元素为不选中状态，那么切换他的选中状态，并且检查此等级的元素是不是已经全选了，如果是那就选中全部元素
+                        currData.setChecked(!currData.isChecked());
+                        boolean allChecked = true;
+                        for (LevelAdapter.LevelData otherData : levelDatas) {
+                            if (otherData != allLevelData) {
+                                if (!otherData.isChecked()) {
+                                    allChecked = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (allChecked) {
+                            allLevelData.setChecked(true);
                         }
                     }
                 }
             }
-        } else {
-            LevelAdapter.LevelData allLevelData = getAllLevelData();
-            if (allLevelData != null) {
-                if (allLevelData == currData) {
-                    for (LevelAdapter.LevelData otherData : levelDatas) {
-                        if (otherData != allLevelData) {
-                            otherData.setChecked(currData.isChecked());
-                        }
-                    }
-                } else if (allLevelData.isChecked()) {
-                    allLevelData.setChecked(false);
-                    for (LevelAdapter.LevelData otherData : levelDatas) {
-                        if (otherData != allLevelData) {
-                            otherData.setChecked(!otherData.isChecked());
-                        }
+        } else {//不是最后一个等级
+            //如果不是最后一个等级，并且点击的元素未选中，那么选中他，并且取消和他同等级的元素的选中状态
+            if (!currData.isChecked()) {
+                currData.setChecked(!currData.isChecked());
+                for (LevelAdapter.LevelData otherData : levelDatas) {
+                    if (otherData != currData) {
+                        otherData.setChecked(false);
                     }
                 }
             }
