@@ -7,14 +7,13 @@ import android.view.View;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
@@ -82,31 +81,37 @@ public class SimpleRxActivity extends BaseActivity {
         Observable<String> observable1 = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
+                Thread.sleep(3000);
                 e.onNext("observable1");
             }
-        }).delay(3000, TimeUnit.MILLISECONDS);
+        });
         Observable<String> observable2 = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
+                Thread.sleep(1000);
                 e.onNext("observable2");
             }
-        }).delay(5000, TimeUnit.MILLISECONDS);
-        Observable.merge(observable1, observable2).subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String s) throws Exception {
-                Log.e("accept", "accept" + s);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-
-            }
-        }, new Action() {
-            @Override
-            public void run() throws Exception {
-
-            }
         });
+        Observable
+                .merge(observable1, observable2)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("accept", "accept" + s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+
+                    }
+                });
     }
 
     private void zipRX() {
@@ -114,27 +119,33 @@ public class SimpleRxActivity extends BaseActivity {
         Observable<String> observable1 = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
+                Thread.sleep(3000);
                 e.onNext("observable1");
             }
-        }).delay(3000, TimeUnit.MILLISECONDS);
+        });
         Observable<String> observable2 = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
+                Thread.sleep(1000);
                 e.onNext("observable2");
             }
-        }).delay(5000, TimeUnit.MILLISECONDS);
-        Observable.zip(observable1, observable2, new BiFunction<String, String, String>() {
-            @Override
-            public String apply(String s, String s2) throws Exception {
-                Log.e("zipRX", "apply");
-                return s + s2;
-            }
-        }).subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String s) throws Exception {
-                Log.e("accept", "accept" + s);
-            }
         });
+        Observable
+                .zip(observable1, observable2, new BiFunction<String, String, String>() {
+                    @Override
+                    public String apply(String s, String s2) throws Exception {
+                        Log.e("zipRX", "apply");
+                        return s + s2;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("accept", "accept" + s);
+                    }
+                });
     }
 
 }
