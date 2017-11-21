@@ -8,12 +8,16 @@ import android.view.ViewGroup;
  * Created by linyibiao on 2017/10/17.
  */
 
-public abstract class HeadFootAdapter extends BaseAdapter {
+public abstract class HeadFootAdapter<T extends RecyclerView.Adapter> extends BaseAdapter {
 
-    private RecyclerView.Adapter coreAdapter;
+    private T coreAdapter;
 
-    public HeadFootAdapter(RecyclerView.Adapter coreAdapter) {
+    public HeadFootAdapter(T coreAdapter) {
         this.coreAdapter = coreAdapter;
+    }
+
+    public T getCoreAdapter() {
+        return coreAdapter;
     }
 
     @Override
@@ -60,7 +64,7 @@ public abstract class HeadFootAdapter extends BaseAdapter {
         } else if (position >= getHeaderCount() + coreAdapter.getItemCount()) {
             return FOOTERTYPE;
         } else {
-            return coreAdapter.getItemViewType(position);
+            return coreAdapter.getItemViewType(position - getHeaderCount());
         }
     }
 

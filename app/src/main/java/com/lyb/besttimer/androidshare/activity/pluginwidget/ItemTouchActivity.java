@@ -50,13 +50,13 @@ public class ItemTouchActivity extends BaseActivity {
                 }
             }
         }
-        recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
+        recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
+                recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
             }
         }, 5000);
 
@@ -237,6 +237,7 @@ public class ItemTouchActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                        notifyDataSetChanged();
                     }
                 });
             }

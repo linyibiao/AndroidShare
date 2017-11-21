@@ -1,7 +1,5 @@
 package com.lyb.besttimer.pluginwidget.data;
 
-import android.support.v7.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,14 +10,11 @@ import java.util.List;
  */
 public class TreeDataManager {
 
-    private RecyclerView recyclerView;
-
     private List<ItemTree> itemTrees = new ArrayList<>();
 
     private List<ItemTree> activedTrees = new ArrayList<>();
 
-    public TreeDataManager(RecyclerView recyclerView, List<ItemTree> itemTrees) {
-        this.recyclerView = recyclerView;
+    public TreeDataManager(List<ItemTree> itemTrees) {
         this.itemTrees = itemTrees;
         updateActivedData();
     }
@@ -34,18 +29,12 @@ public class TreeDataManager {
             return;
         }
         ItemTree targetTree = activedTrees.get(position);
-        int positionStart = position + 1;
-        int itemCount;
         if (targetTree.isExpand()) {
-            itemCount = ItemTree.getShowTreeList(targetTree).size() - 1;
             targetTree.setExpand(!targetTree.isExpand());
             updateActivedData();
-            recyclerView.getAdapter().notifyItemRangeRemoved(positionStart, itemCount);
         } else {
             targetTree.setExpand(!targetTree.isExpand());
-            itemCount = ItemTree.getShowTreeList(targetTree).size() - 1;
             updateActivedData();
-            recyclerView.getAdapter().notifyItemRangeInserted(positionStart, itemCount);
         }
     }
 
@@ -126,10 +115,6 @@ public class TreeDataManager {
 
     public List<ItemTree> getActivedTrees() {
         return activedTrees;
-    }
-
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
     }
 
 }

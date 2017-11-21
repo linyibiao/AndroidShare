@@ -51,7 +51,7 @@ public class PullRefreshActivity extends BaseActivity {
                 }
             }
         }
-        final LoadMoreAdapter<MyAdapter> loadMoreAdapter = new LoadMoreAdapter<>(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)), new LoadMoreAdapter.MoreListener() {
+        final LoadMoreAdapter<MyAdapter> loadMoreAdapter = new LoadMoreAdapter<>(new MyAdapter(new TreeDataManager(itemTrees)), new LoadMoreAdapter.MoreListener() {
 
             private Runnable runnable = new Runnable() {
                 @Override
@@ -265,6 +265,7 @@ public class PullRefreshActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                        notifyDataSetChanged();
                     }
                 });
             }

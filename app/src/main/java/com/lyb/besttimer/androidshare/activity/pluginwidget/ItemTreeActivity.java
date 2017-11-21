@@ -47,7 +47,7 @@ public class ItemTreeActivity extends BaseActivity {
                 }
             }
         }
-        recyclerView.setAdapter(new MyAdapter(new TreeDataManager(recyclerView, itemTrees)));
+        recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
 
         new HeaderFeature(recyclerView, (FrameLayout) findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
 
@@ -143,7 +143,7 @@ public class ItemTreeActivity extends BaseActivity {
                 if (v.getId() == itemView.getId()) {
                     int position = treeDataManager.indexOf(data);
                     treeDataManager.flex(position);
-                    notifyItemChanged(position);
+                    notifyDataSetChanged();
                 } else if (v.getId() == btn.getId()) {
                     Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }
