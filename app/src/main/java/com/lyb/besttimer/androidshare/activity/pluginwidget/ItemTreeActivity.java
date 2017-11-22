@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +15,8 @@ import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
-import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
-import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
-import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,16 +45,16 @@ public class ItemTreeActivity extends BaseActivity {
         }
         recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
 
-        new HeaderFeature(recyclerView, (FrameLayout) findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
-
-            @Override
-            public boolean isHeader(RecyclerView recyclerView, int position) {
-                int type = recyclerView.getAdapter().getItemViewType(position);
-                return type == 1;
-            }
-        }.applyFeature();
-
-        recyclerView.addItemDecoration(new BaseItemDecoration(0, 0, 0, 100, new ColorDecorateDetail(0xaaff0000)));
+//        new HeaderFeature(recyclerView, (FrameLayout) findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
+//
+//            @Override
+//            public boolean isHeader(RecyclerView recyclerView, int position) {
+//                int type = recyclerView.getAdapter().getItemViewType(position);
+//                return type == 1;
+//            }
+//        }.applyFeature();
+//
+//        recyclerView.addItemDecoration(new BaseItemDecoration(0, 0, 0, 100, new ColorDecorateDetail(0xaaff0000)));
 
     }
 
@@ -142,8 +138,12 @@ public class ItemTreeActivity extends BaseActivity {
                 RVData rvData = (RVData) data.getObject();
                 if (v.getId() == itemView.getId()) {
                     int position = treeDataManager.indexOf(data);
-                    treeDataManager.flex(position);
-                    notifyDataSetChanged();
+                    int itemCount = treeDataManager.flex(position);
+                    if (itemCount > 0) {
+                        notifyItemRangeInserted(position + 1, itemCount);
+                    } else {
+                        notifyItemRangeRemoved(position + 1, -itemCount);
+                    }
                 } else if (v.getId() == btn.getId()) {
                     Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                 }

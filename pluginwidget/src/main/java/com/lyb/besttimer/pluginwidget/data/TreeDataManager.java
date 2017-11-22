@@ -20,22 +20,27 @@ public class TreeDataManager {
     }
 
     /**
-     * flex operation
+     * 伸缩操作
      *
      * @param position position
+     * @return 返回影响到的行数，正数表示增加，负数表示减少
      */
-    public void flex(int position) {
+    public int flex(int position) {
         if (position < 0 || position >= activedTrees.size()) {
-            return;
+            return 0;
         }
         ItemTree targetTree = activedTrees.get(position);
+        int itemCount;
         if (targetTree.isExpand()) {
+            itemCount = -(ItemTree.getShowTreeList(targetTree).size() - 1);
             targetTree.setExpand(!targetTree.isExpand());
             updateActivedData();
         } else {
             targetTree.setExpand(!targetTree.isExpand());
+            itemCount = ItemTree.getShowTreeList(targetTree).size() - 1;
             updateActivedData();
         }
+        return itemCount;
     }
 
     public ItemTree getItem(int position) {
@@ -100,7 +105,7 @@ public class TreeDataManager {
         return false;
     }
 
-    private void updateActivedData() {
+    public void updateActivedData() {
         activedTrees = ItemTree.getShowTreeList(itemTrees);
     }
 

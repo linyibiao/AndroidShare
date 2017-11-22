@@ -264,8 +264,13 @@ public class PullRefreshActivity extends BaseActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        treeDataManager.flex(treeDataManager.indexOf(itemTree));
-                        notifyDataSetChanged();
+                        int position = treeDataManager.indexOf(itemTree);
+                        int itemCount = treeDataManager.flex(treeDataManager.indexOf(itemTree));
+                        if (itemCount > 0) {
+                            notifyItemRangeInserted(position + 1, itemCount);
+                        } else {
+                            notifyItemRangeRemoved(position + 1, -itemCount);
+                        }
                     }
                 });
             }
