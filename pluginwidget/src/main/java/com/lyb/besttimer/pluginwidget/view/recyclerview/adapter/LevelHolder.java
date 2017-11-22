@@ -109,13 +109,25 @@ public class LevelHolder extends BaseHolder<LevelAdapter.LevelData> implements V
                             }
                         }
                     } else if (allLevelData.isChecked()) {
-                        //如果是最后一个等级，多选模式，并且点击的不是全部元素，但是全部元素为选中状态，那么选中他，并且更新和他同等级的元素状态为false
+                        //如果是最后一个等级，多选模式，并且点击的不是全部元素，但是全部元素为选中状态，那么选中他，并且更新和他同等级的元素状态为false，并且检查此等级的元素是不是已经全选了，如果是那就选中全部元素
                         allLevelData.setChecked(false);
                         currData.setChecked(true);
                         for (LevelAdapter.LevelData otherData : levelDatas) {
                             if (otherData != allLevelData) {
                                 otherData.setChecked(otherData == currData);
                             }
+                        }
+                        boolean allChecked = true;
+                        for (LevelAdapter.LevelData otherData : levelDatas) {
+                            if (otherData != allLevelData) {
+                                if (!otherData.isChecked()) {
+                                    allChecked = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (allChecked) {
+                            allLevelData.setChecked(true);
                         }
                     } else {
                         //如果是最后一个等级，多选模式，并且点击的不是全部元素，但是全部元素为不选中状态，那么切换他的选中状态，并且检查此等级的元素是不是已经全选了，如果是那就选中全部元素
