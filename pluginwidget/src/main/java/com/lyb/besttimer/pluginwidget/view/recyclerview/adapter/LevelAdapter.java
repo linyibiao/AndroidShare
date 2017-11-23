@@ -1,5 +1,6 @@
 package com.lyb.besttimer.pluginwidget.view.recyclerview.adapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,10 +216,10 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
         return allLevelData;
     }
 
-    public static class LevelData {
+    public static class LevelData implements Serializable {
 
         private List<LevelData> nextLevelDatas = new ArrayList<>();
-        private Object data;
+        private Serializable data;
         private boolean checked = false;
         private boolean isAll = false;
         private boolean lastLevel = false;
@@ -231,7 +232,7 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
          * @param isAll     是否具有选中全部的属性
          * @param lastLevel 是不是最后一个级别的数据（这个条件用户自己定，如果是最后一个等级的adapter，那么就是true，其他都是false）
          */
-        public LevelData(Object data, boolean checked, boolean isAll, boolean lastLevel) {
+        public LevelData(Serializable data, boolean checked, boolean isAll, boolean lastLevel) {
             this.data = data;
             this.checked = checked;
             this.isAll = isAll;
@@ -246,7 +247,7 @@ public abstract class LevelAdapter<H extends LevelHolder> extends BaseAdapter<H>
             return nextLevelDatas;
         }
 
-        public Object getData() {
+        public Serializable getData() {
             return data;
         }
 
