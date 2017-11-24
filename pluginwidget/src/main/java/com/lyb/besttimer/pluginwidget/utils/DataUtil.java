@@ -15,4 +15,12 @@ public class DataUtil {
         }
     }
 
+    public static long strToLong(String str) {
+        try {
+            return Long.parseLong(str);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
 }
