@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,11 +7,10 @@
     tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.ImageScaleActivity">
 
     <com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale
-        android:layout_width="100dp"
-        android:layout_height="10dp"
-        app:flScale_hwfactor="2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:background="@android:color/black"
+        app:flScale_hwfactor="2">
 
         <ImageView
             android:layout_width="match_parent"
@@ -20,4 +19,4 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher" />
     </com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale>
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
