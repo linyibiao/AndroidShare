@@ -2,21 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lyb.besttimer.androidshare.activity.pluginwidget.ImageScaleActivity">
 
-    <com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale
-        android:layout_width="300dp"
+    <View
+        android:layout_width="50dp"
         android:layout_height="100dp"
-        android:background="@android:color/black"
-        app:flScale_hwfactor="2">
+        android:layout_centerInParent="true"
+        android:background="@android:color/holo_blue_dark" />
 
-        <ImageView
+    <!--<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ff0000"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
-    </com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">-->
+
+    <!--<FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">-->
+
+            <com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale
+                android:layout_width="50dp"
+                android:layout_height="200dp"
+                android:layout_centerInParent="true"
+                app:flScale_hwfactor="2">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ff0000"
+                    android:src="@mipmap/ic_launcher" />
+            </com.lyb.besttimer.pluginwidget.view.framelayout.FrameLayoutScale>
+    <!--</FrameLayout>-->
+        <!--</LinearLayout>
+    </ScrollView>-->
 </RelativeLayout>

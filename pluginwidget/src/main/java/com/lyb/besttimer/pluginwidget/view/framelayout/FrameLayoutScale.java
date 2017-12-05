@@ -6,12 +6,13 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.lyb.besttimer.pluginwidget.R;
 
 /**
- * 自定义长宽比的framelayout
+ * 自定义长宽比的framelayout(宽度决定高度)
  * Created by linyibiao on 2017/10/12.
  */
 
@@ -40,28 +41,18 @@ public class FrameLayoutScale extends FrameLayout {
     }
 
     @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        super.setLayoutParams(params);
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
         final int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-        final int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
         final int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
         if (hwfactor > 0) {
-            if (widthSpecMode != MeasureSpec.UNSPECIFIED || heightSpecMode != MeasureSpec.UNSPECIFIED) {
-                if (widthSpecMode != MeasureSpec.UNSPECIFIED && heightSpecMode != MeasureSpec.UNSPECIFIED) {
-                    if (heightSpecSize / widthSpecSize > hwfactor) {
-                        widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSpecSize, MeasureSpec.EXACTLY);
-                        heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (widthSpecSize * hwfactor), MeasureSpec.EXACTLY);
-                    } else {
-                        widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (heightSpecSize / hwfactor), MeasureSpec.EXACTLY);
-                        heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSpecSize, MeasureSpec.EXACTLY);
-                    }
-                } else if (widthSpecMode != MeasureSpec.UNSPECIFIED) {
-                    widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSpecSize, MeasureSpec.EXACTLY);
-                    heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (widthSpecSize * hwfactor), MeasureSpec.EXACTLY);
-                } else {
-                    widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (heightSpecSize / hwfactor), MeasureSpec.EXACTLY);
-                    heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSpecSize, MeasureSpec.EXACTLY);
-                }
+            if (widthSpecSize > 0) {
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (widthSpecSize * hwfactor), MeasureSpec.EXACTLY);
             }
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
