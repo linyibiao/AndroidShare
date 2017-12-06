@@ -12,9 +12,8 @@
 
     <com.lyb.besttimer.pluginwidget.view.textview.BaseTextView
         android:id="@+id/btv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="what the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hellwhat the hell" />
 
     <com.lyb.besttimer.pluginwidget.view.textview.BaseTextView
@@ -23,7 +22,7 @@
         android:layout_weight="1"
         android:ellipsize="middle"
         android:gravity="center"
-        android:maxLines="1"
+        android:singleLine="true"
         android:text="whatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhatwhat" />
 
 </LinearLayout>
