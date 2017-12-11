@@ -6,14 +6,8 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.text.Editable;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
-import android.view.View;
-import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
@@ -21,8 +15,6 @@ import com.lyb.besttimer.androidshare.view.ImageMovementMethod;
 import com.lyb.besttimer.androidshare.view.ImageSaveGetter;
 import com.lyb.besttimer.pluginwidget.caller.DrawCaller;
 import com.lyb.besttimer.pluginwidget.view.textview.BaseTextView;
-
-import org.xml.sax.XMLReader;
 
 public class TextViewActivity extends BaseActivity {
 
@@ -51,58 +43,6 @@ public class TextViewActivity extends BaseActivity {
         btv.setText(Html.fromHtml(sourceText, imageGetter, null));
 
         btv.setMovementMethod(ImageMovementMethod.getInstance());
-    }
-
-    public class MTagHandler implements Html.TagHandler {
-        private int sIndex = 0;
-        private int eIndex = 0;
-
-        public void handleTag(boolean opening, String tag, Editable output,
-                              XMLReader xmlReader) {
-            // TODO Auto-generated method stub
-            if (tag.toLowerCase().equals("img")) {
-                if (opening) {
-                    sIndex = output.length();
-                } else {
-                    eIndex = output.length();
-                    output.setSpan(new MSpan(), sIndex, eIndex,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-        }
-
-        private class MSpan extends ClickableSpan implements View.OnClickListener {
-
-
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "sdfdsfsdfdsf", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void setLinkClickable(final SpannableStringBuilder clickableHtmlBuilder,
-                                  final URLSpan urlSpan) {
-        int start = clickableHtmlBuilder.getSpanStart(urlSpan);
-        int end = clickableHtmlBuilder.getSpanEnd(urlSpan);
-        int flags = clickableHtmlBuilder.getSpanFlags(urlSpan);
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            public void onClick(View view) {
-                //Do something with URL here.
-                String url = urlSpan.getURL();
-                Toast.makeText(TextViewActivity.this, "链接：" + url, Toast.LENGTH_SHORT).show();
-            }
-        };
-        clickableHtmlBuilder.setSpan(clickableSpan, start, end, flags);
-    }
-
-    private CharSequence getClickableHtml(Spanned spannedHtml) {
-        SpannableStringBuilder clickableHtmlBuilder = new SpannableStringBuilder(spannedHtml);
-        URLSpan[] urls = clickableHtmlBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
-        for (final URLSpan span : urls) {
-            setLinkClickable(clickableHtmlBuilder, span);
-        }
-        return clickableHtmlBuilder;
     }
 
     private class OneDrawCaller implements DrawCaller {
