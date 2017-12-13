@@ -10,9 +10,6 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-add_library(native-lib SHARED IMPORTED)
-set_target_properties(native-lib PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libnative-lib.so)
-
 add_library( # Sets the name of the library.
              serial_port
 
