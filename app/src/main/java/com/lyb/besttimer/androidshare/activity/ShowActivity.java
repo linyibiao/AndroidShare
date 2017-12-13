@@ -50,6 +50,7 @@ import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
+import com.lyb.besttimer.androidshare.activity.serialport.sample.MainMenu;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -117,6 +118,10 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "monitorCheck");
             lvData.getLvDatas().add(new LVData(MemoryCheckActivity.class, "memoryCheck"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "serialport");
+            lvData.getLvDatas().add(new LVData(MainMenu.class, "串口通信"));
             lvDatas.add(lvData);
 
         }

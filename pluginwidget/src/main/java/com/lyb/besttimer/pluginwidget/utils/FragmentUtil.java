@@ -74,7 +74,11 @@ public class FragmentUtil {
         if (preFragment != null && preFragment.getClass() == fragmentClass) {
             showAndHideOthers(fragmentManager, containerViewId, fragmentClass, args, tag);
         } else {
-            fragmentManager.beginTransaction().replace(containerViewId, newInstance(fragmentClass, args), tag).commit();
+            try {
+                fragmentManager.beginTransaction().replace(containerViewId, newInstance(fragmentClass, args), tag).commit();
+            }catch (IllegalStateException ignored){
+
+            }
         }
     }
 
@@ -90,7 +94,11 @@ public class FragmentUtil {
     public static void add(FragmentManager fragmentManager, @IdRes int containerViewId, Class<? extends Fragment> fragmentClass, Bundle args, @Nullable String tag) {
         Fragment preFragment = findFragment(fragmentManager, containerViewId, tag);
         if (!(preFragment != null && preFragment.getClass() == fragmentClass)) {
-            fragmentManager.beginTransaction().add(containerViewId, newInstance(fragmentClass, args), tag).commit();
+            try {
+                fragmentManager.beginTransaction().add(containerViewId, newInstance(fragmentClass, args), tag).commit();
+            }catch (IllegalStateException ignored){
+
+            }
         }
     }
 
@@ -106,7 +114,11 @@ public class FragmentUtil {
     public static void show(FragmentManager fragmentManager, @IdRes int containerViewId, Class<? extends Fragment> fragmentClass, Bundle args, @Nullable String tag) {
         Fragment preFragment = findFragment(fragmentManager, containerViewId, tag);
         if (preFragment != null && preFragment.getClass() == fragmentClass) {
-            fragmentManager.beginTransaction().show(preFragment).commit();
+            try {
+                fragmentManager.beginTransaction().show(preFragment).commit();
+            }catch (IllegalStateException ignored){
+
+            }
         } else {
             add(fragmentManager, containerViewId, fragmentClass, args, tag);
         }
@@ -131,7 +143,11 @@ public class FragmentUtil {
                     transaction.hide(fragment);
                 }
             }
-            transaction.commit();
+            try {
+                transaction.commit();
+            }catch (IllegalStateException ignored){
+
+            }
         }
     }
 
