@@ -38,6 +38,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewInfinity
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RecyclerViewShowMoreActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.RefreshLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SimpleFragmentActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.SnapHelperActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.SwipeLayoutActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableComplexActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.TableLayoutActivity;
@@ -107,6 +108,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(ListScrollInfinityActivity.class, "循环滚动列表"));
             lvData.getLvDatas().add(new LVData(RecyclerViewInfinityActivity.class, "循环滚动列表(recyclerview)"));
             lvData.getLvDatas().add(new LVData(InfinityNestedScrollViewActivity.class, "循环滚动列表(nestedscrollview)"));
+            lvData.getLvDatas().add(new LVData(SnapHelperActivity.class, "SnapHelper"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");

@@ -58,13 +58,12 @@
         <activity android:name=".activity.pluginwidget.ListScrollInfinityActivity" />
         <activity android:name=".activity.pluginwidget.RecyclerViewInfinityActivity" />
         <activity android:name=".activity.pluginwidget.InfinityNestedScrollViewActivity" />
-
         <activity android:name=".activity.serialport.sample.MainMenu" />
         <activity android:name=".activity.serialport.sample.SerialPortPreferences" />
         <activity android:name=".activity.serialport.sample.ConsoleActivity" />
         <activity android:name=".activity.serialport.sample.LoopbackActivity" />
         <activity android:name=".activity.serialport.sample.Sending01010101Activity" />
-
+        <activity android:name=".activity.pluginwidget.SnapHelperActivity"></activity>
     </application>
 
 </manifest>
