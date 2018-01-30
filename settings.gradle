@@ -1,1 +1,1 @@
-include ':app', ':pluginwidget', ':network', ':rxandroid', ':serialport'
+include ':app', ':pluginwidget', ':network', ':rxandroid', ':serialport', ':X5WebDemo'
