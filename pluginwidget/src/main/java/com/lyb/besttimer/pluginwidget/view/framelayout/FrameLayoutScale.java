@@ -40,6 +40,11 @@ public class FrameLayoutScale extends FrameLayout {
         typedArray.recycle();
     }
 
+    public void setHwfactor(float hwfactor) {
+        this.hwfactor = hwfactor;
+        requestLayout();
+    }
+
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params) {
         super.setLayoutParams(params);
