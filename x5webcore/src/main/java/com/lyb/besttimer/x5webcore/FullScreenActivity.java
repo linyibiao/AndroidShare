@@ -1,4 +1,4 @@
-package com.example.test_webview_demo;
+package com.lyb.besttimer.x5webcore;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -8,8 +8,9 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import com.example.test_webview_demo.utils.WebViewJavaScriptFunction;
-import com.example.test_webview_demo.utils.X5WebView;
+import com.lyb.besttimer.x5webcore.utils.WebViewJavaScriptFunction;
+import com.lyb.besttimer.x5webcore.utils.X5WebView;
+
 
 public class FullScreenActivity extends Activity {
 

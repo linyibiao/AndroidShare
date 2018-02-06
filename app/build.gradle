@@ -13,6 +13,13 @@ android {
         targetSdkVersion cfg.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        multiDexEnabled = true
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+
     }
     buildTypes {
         release {
@@ -29,6 +36,7 @@ dependencies {
     implementation project(':network')
     implementation project(':rxandroid')
     implementation project(':serialport')
+    implementation project(':x5webcore')
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
@@ -36,4 +44,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    compile 'com.android.support:multidex:1.0.2'
 }

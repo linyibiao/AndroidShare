@@ -1,7 +1,10 @@
 package com.lyb.besttimer.androidshare;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
+import com.lyb.besttimer.x5webcore.X5Init;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
@@ -10,6 +13,11 @@ import com.squareup.leakcanary.LeakCanary;
  */
 
 public class ShareApp extends Application {
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {
@@ -21,5 +29,8 @@ public class ShareApp extends Application {
         }
         LeakCanary.install(this);
         // Normal app init code...
+
+        X5Init.init(this);
+
     }
 }

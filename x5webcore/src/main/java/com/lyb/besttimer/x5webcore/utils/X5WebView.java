@@ -1,4 +1,4 @@
-package com.example.test_webview_demo.utils;
+package com.lyb.besttimer.x5webcore.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -1,7 +1,4 @@
-package com.example.test_webview_demo;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+package com.lyb.besttimer.x5webcore;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,9 +13,7 @@ import android.os.Message;
 import android.os.Process;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -31,11 +26,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.test_webview_demo.utils.X5WebView;
+import com.lyb.besttimer.x5webcore.utils.X5WebView;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import com.tencent.smtt.export.external.interfaces.JsResult;
-import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
-import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.ValueCallback;
@@ -45,6 +38,9 @@ import com.tencent.smtt.sdk.WebSettings.LayoutAlgorithm;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 import com.tencent.smtt.utils.TbsLog;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class BrowserActivity extends Activity {
 	/**
@@ -105,7 +101,7 @@ public class BrowserActivity extends Activity {
 		 * getWindow().addFlags(
 		 * android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		 */
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main_web);
 		mViewParent = (ViewGroup) findViewById(R.id.webView1);
 
 		initBtnListenser();

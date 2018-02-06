@@ -1,4 +1,4 @@
-package com.example.test_webview_demo;
+package com.lyb.besttimer.x5webcore;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.test_webview_demo.utils.X5WebView;
+import com.lyb.besttimer.x5webcore.utils.X5WebView;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 

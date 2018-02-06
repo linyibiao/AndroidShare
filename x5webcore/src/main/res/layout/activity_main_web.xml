@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context="com.lyb.besttimer.x5webcore.MainActivity" >
 
     <LinearLayout
         android:id="@+id/navigation1"

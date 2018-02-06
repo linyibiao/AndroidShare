@@ -52,6 +52,8 @@ import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 import com.lyb.besttimer.androidshare.activity.serialport.sample.MainMenu;
+import com.lyb.besttimer.x5webcore.BrowserActivity;
+import com.lyb.besttimer.x5webcore.FileWebActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -124,6 +126,11 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "serialport");
             lvData.getLvDatas().add(new LVData(MainMenu.class, "串口通信"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "x5web");
+            lvData.getLvDatas().add(new LVData(BrowserActivity.class, "x5web"));
+            lvData.getLvDatas().add(new LVData(FileWebActivity.class, "x5web file"));
             lvDatas.add(lvData);
 
         }
