@@ -7,13 +7,13 @@
         android:id="@+id/frame_web_video"></FrameLayout>
     
 
-    <com.example.test_webview_demo.utils.X5WebView 
+    <com.lyb.besttimer.x5webcore.utils.X5WebView
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:id="@+id/web_filechooser">
         
         
-    </com.example.test_webview_demo.utils.X5WebView>
+    </com.lyb.besttimer.x5webcore.utils.X5WebView>
     
 
 </RelativeLayout>

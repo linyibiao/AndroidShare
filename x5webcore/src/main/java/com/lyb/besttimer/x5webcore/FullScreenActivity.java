@@ -26,7 +26,8 @@ public class FullScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.filechooser_layout);
 		webView = (X5WebView) findViewById(R.id.web_filechooser);
-		webView.loadUrl("file:///android_asset/webpage/fullscreenVideo.html");
+//		webView.loadUrl("file:///android_asset/webpage/fullscreenVideo.html");
+		webView.loadUrl("http://www.baokaodaxue.com/bkdx/video/zuowen?type=1");
 
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 

@@ -54,6 +54,7 @@ import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 import com.lyb.besttimer.androidshare.activity.serialport.sample.MainMenu;
 import com.lyb.besttimer.x5webcore.BrowserActivity;
 import com.lyb.besttimer.x5webcore.FileWebActivity;
+import com.lyb.besttimer.x5webcore.MainActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class ShowActivity extends BaseActivity {
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "x5web");
-            lvData.getLvDatas().add(new LVData(BrowserActivity.class, "x5web"));
+            lvData.getLvDatas().add(new LVData(MainActivity.class, "x5web"));
             lvData.getLvDatas().add(new LVData(FileWebActivity.class, "x5web file"));
             lvDatas.add(lvData);
 
