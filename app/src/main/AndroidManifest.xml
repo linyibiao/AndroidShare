@@ -65,7 +65,9 @@
         <activity android:name=".activity.serialport.sample.Sending01010101Activity" />
         <activity android:name=".activity.pluginwidget.SnapHelperActivity" />
         <activity android:name=".activity.mvvm.SimpleMVVMActivity" />
-        <activity android:name=".activity.mix.IntentFindActivity"></activity>
+        <activity android:name=".activity.mix.IntentFindActivity" />
+        <activity android:name=".activity.processor.RouterActivity" />
+        <activity android:name=".activity.processor.RouterTargetActivity"></activity>
     </application>
 
 </manifest>

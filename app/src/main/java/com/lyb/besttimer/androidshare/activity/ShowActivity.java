@@ -49,6 +49,7 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ToolBarActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.VideoViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ViewTestActivity;
+import com.lyb.besttimer.androidshare.activity.processor.RouterActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
@@ -141,6 +142,10 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "混合");
             lvData.getLvDatas().add(new LVData(IntentFindActivity.class, "intent_find"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "processor");
+            lvData.getLvDatas().add(new LVData(RouterActivity.class, "router"));
             lvDatas.add(lvData);
 
         }
