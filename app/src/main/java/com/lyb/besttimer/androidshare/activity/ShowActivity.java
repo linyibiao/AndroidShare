@@ -10,7 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.mix.IntentFindActivity;
 import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
+import com.lyb.besttimer.androidshare.activity.mvvm.SimpleMVVMActivity;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
@@ -52,7 +54,6 @@ import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.SimpleRxActivity;
 import com.lyb.besttimer.androidshare.activity.serialport.sample.MainMenu;
-import com.lyb.besttimer.x5webcore.BrowserActivity;
 import com.lyb.besttimer.x5webcore.FileWebActivity;
 import com.lyb.besttimer.x5webcore.MainActivity;
 
@@ -132,6 +133,14 @@ public class ShowActivity extends BaseActivity {
             lvData = new LVData(ShowActivity.class, "x5web");
             lvData.getLvDatas().add(new LVData(MainActivity.class, "x5web"));
             lvData.getLvDatas().add(new LVData(FileWebActivity.class, "x5web file"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "mvvm");
+            lvData.getLvDatas().add(new LVData(SimpleMVVMActivity.class, "simple_mvvm"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "混合");
+            lvData.getLvDatas().add(new LVData(IntentFindActivity.class, "intent_find"));
             lvDatas.add(lvData);
 
         }

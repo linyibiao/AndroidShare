@@ -63,7 +63,9 @@
         <activity android:name=".activity.serialport.sample.ConsoleActivity" />
         <activity android:name=".activity.serialport.sample.LoopbackActivity" />
         <activity android:name=".activity.serialport.sample.Sending01010101Activity" />
-        <activity android:name=".activity.pluginwidget.SnapHelperActivity"></activity>
+        <activity android:name=".activity.pluginwidget.SnapHelperActivity" />
+        <activity android:name=".activity.mvvm.SimpleMVVMActivity" />
+        <activity android:name=".activity.mix.IntentFindActivity"></activity>
     </application>
 
 </manifest>
