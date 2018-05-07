@@ -2,6 +2,8 @@ package com.lyb.besttimer.pluginwidget.view.recyclerview.decoration;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * color decorate detail
@@ -16,25 +18,25 @@ public class ColorDecorateDetail implements DecorateDetail {
     }
 
     @Override
-    public void drawLeft(Canvas c, int left, int top, int right, int bottom) {
+    public void drawLeft(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         colorDrawable.setBounds(left, top, right, bottom);
         colorDrawable.draw(c);
     }
 
     @Override
-    public void drawTop(Canvas c, int left, int top, int right, int bottom) {
+    public void drawTop(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         colorDrawable.setBounds(left, top, right, bottom);
         colorDrawable.draw(c);
     }
 
     @Override
-    public void drawRight(Canvas c, int left, int top, int right, int bottom) {
+    public void drawRight(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         colorDrawable.setBounds(left, top, right, bottom);
         colorDrawable.draw(c);
     }
 
     @Override
-    public void drawBottom(Canvas c, int left, int top, int right, int bottom) {
+    public void drawBottom(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         colorDrawable.setBounds(left, top, right, bottom);
         colorDrawable.draw(c);
     }

@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * 虚线decoration
@@ -24,25 +26,25 @@ public class RepeatDecorateDetail implements DecorateDetail {
     }
 
     @Override
-    public void drawLeft(Canvas c, int left, int top, int right, int bottom) {
+    public void drawLeft(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         bitmapDrawable.setBounds(left, top, right, bottom);
         bitmapDrawable.draw(c);
     }
 
     @Override
-    public void drawTop(Canvas c, int left, int top, int right, int bottom) {
+    public void drawTop(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         bitmapDrawable.setBounds(left, top, right, bottom);
         bitmapDrawable.draw(c);
     }
 
     @Override
-    public void drawRight(Canvas c, int left, int top, int right, int bottom) {
+    public void drawRight(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         bitmapDrawable.setBounds(left, top, right, bottom);
         bitmapDrawable.draw(c);
     }
 
     @Override
-    public void drawBottom(Canvas c, int left, int top, int right, int bottom) {
+    public void drawBottom(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom) {
         bitmapDrawable.setBounds(left, top, right, bottom);
         bitmapDrawable.draw(c);
     }

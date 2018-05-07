@@ -42,10 +42,10 @@ public class BaseItemDecoration extends RecyclerView.ItemDecoration {
             int decoratedBottom = parent.getLayoutManager().getDecoratedBottom(childView);
             int bottom = childView.getBottom();
             if (decorateDetail != null) {
-                decorateDetail.drawLeft(c, decoratedLeft, decoratedTop, left, bottom);
-                decorateDetail.drawTop(c, left, decoratedTop, decoratedRight, top);
-                decorateDetail.drawRight(c, right, top, decoratedRight, decoratedBottom);
-                decorateDetail.drawBottom(c, decoratedLeft, bottom, right, decoratedBottom);
+                decorateDetail.drawLeft(c, childView, parent, decoratedLeft, decoratedTop, left, bottom);
+                decorateDetail.drawTop(c, childView, parent, left, decoratedTop, decoratedRight, top);
+                decorateDetail.drawRight(c, childView, parent, right, top, decoratedRight, decoratedBottom);
+                decorateDetail.drawBottom(c, childView, parent, decoratedLeft, bottom, right, decoratedBottom);
             }
         }
         c.restore();

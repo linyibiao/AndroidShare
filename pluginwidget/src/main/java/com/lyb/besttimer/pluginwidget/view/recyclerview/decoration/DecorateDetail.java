@@ -1,6 +1,8 @@
 package com.lyb.besttimer.pluginwidget.view.recyclerview.decoration;
 
 import android.graphics.Canvas;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * decorate detail
@@ -8,12 +10,12 @@ import android.graphics.Canvas;
  */
 public interface DecorateDetail {
 
-    void drawLeft(Canvas c, int left, int top, int right, int bottom);
+    void drawLeft(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom);
 
-    void drawTop(Canvas c, int left, int top, int right, int bottom);
+    void drawTop(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom);
 
-    void drawRight(Canvas c, int left, int top, int right, int bottom);
+    void drawRight(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom);
 
-    void drawBottom(Canvas c, int left, int top, int right, int bottom);
+    void drawBottom(Canvas c, View childView, RecyclerView parent, int left, int top, int right, int bottom);
 
 }
