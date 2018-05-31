@@ -20,6 +20,10 @@ public abstract class LinearHorizontalAdapter {
 
     public abstract int getItemCount();
 
+    public void removeView() {
+        linearLayout.removeAllViews();
+    }
+
     public void notifyDataSetChanged() {
         notifyDataSetChanged(0, getItemCount() - 1);
     }
