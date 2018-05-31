@@ -53,4 +53,9 @@
         <attr name="infinityScrollView_speed" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="InfinityHorizontalScrollView">
+        <attr name="infinityHScrollView_speed" format="integer" />
+        <attr name="infinityHScrollView_timeUnit" format="integer" />
+    </declare-styleable>
+
 </resources>
