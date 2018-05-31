@@ -11,6 +11,7 @@
         android:id="@+id/infinitySV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:infinityScrollView_timeUnit="30"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         app:infinityScrollView_speed="10" />
@@ -22,5 +23,5 @@
         app:infinityHScrollView_timeUnit="30"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        app:infinityHScrollView_speed="1" />
+        app:infinityHScrollView_speed="10" />
 </LinearLayout>

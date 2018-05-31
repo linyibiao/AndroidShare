@@ -51,6 +51,7 @@
 
     <declare-styleable name="InfinityNestedScrollView">
         <attr name="infinityScrollView_speed" format="integer" />
+        <attr name="infinityScrollView_timeUnit" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="InfinityHorizontalScrollView">

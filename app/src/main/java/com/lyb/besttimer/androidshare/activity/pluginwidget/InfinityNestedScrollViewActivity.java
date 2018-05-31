@@ -38,82 +38,115 @@ public class InfinityNestedScrollViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infinity_nested_scroll_view);
         ButterKnife.bind(this);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             strings.add("string" + i);
         }
-        infinitySV.setAdapter(linearVerticalAdapter = new LinearVerticalAdapter() {
-
-            class Holder extends BaseLinearHolder<String> implements View.OnClickListener {
-
-                public Holder(View itemView) {
-                    super(itemView);
-                }
-
-                @Override
-                public void fillView(String data, int position) {
-                    super.fillView(data, position);
-                    ((TextView) itemView.findViewById(android.R.id.text1)).setText(data);
-                    itemView.setOnClickListener(this);
-                }
-
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(InfinityNestedScrollViewActivity.this, "data" + data + position, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onBindViewHolder(BaseLinearHolder holder, int position) {
-                holder.fillView(strings.get(position), position);
-            }
-
-            @Override
-            public BaseLinearHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new Holder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
-            }
-
-            @Override
-            public int getItemCount() {
-                return strings.size();
-            }
-        });
+        infinitySV.setAdapter(linearVerticalAdapter = new MyVerticalAdapter(strings));
         linearVerticalAdapter.notifyDataSetChanged();
-        infinityHSV.setAdapter(linearHorizontalAdapter = new LinearHorizontalAdapter() {
-
-            class Holder extends BaseLinearHolder<String> implements View.OnClickListener {
-
-                public Holder(View itemView) {
-                    super(itemView);
-                }
-
-                @Override
-                public void fillView(String data, int position) {
-                    super.fillView(data, position);
-                    ((TextView) itemView.findViewById(android.R.id.text1)).setText(data);
-                    itemView.setOnClickListener(this);
-                }
-
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(InfinityNestedScrollViewActivity.this, "data" + data + position, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onBindViewHolder(BaseLinearHolder holder, int position) {
-                holder.fillView(strings.get(position), position);
-            }
-
-            @Override
-            public BaseLinearHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new Holder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
-            }
-
-            @Override
-            public int getItemCount() {
-                return strings.size();
-            }
-        });
+        infinityHSV.setAdapter(linearHorizontalAdapter = new MyHorizontalAdapter(strings));
         linearHorizontalAdapter.notifyDataSetChanged();
     }
+
+    private class MyVerticalAdapter extends LinearVerticalAdapter implements InfinityNestedScrollView.ScrollInfinityOperate {
+
+        private List<String> strings = new ArrayList<>();
+
+        public MyVerticalAdapter(List<String> strings) {
+            this.strings = strings;
+        }
+
+        @Override
+        public void copyData() {
+            int preSize = strings.size();
+            strings.addAll(strings);
+            notifyDataSetChanged(preSize, strings.size() - 1);
+        }
+
+        class Holder extends BaseLinearHolder<String> implements View.OnClickListener {
+
+            public Holder(View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void fillView(String data, int position) {
+                super.fillView(data, position);
+                ((TextView) itemView.findViewById(android.R.id.text1)).setText(data);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(InfinityNestedScrollViewActivity.this, "data" + data + position, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(BaseLinearHolder holder, int position) {
+            holder.fillView(strings.get(position), position);
+        }
+
+        @Override
+        public BaseLinearHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new Holder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
+        }
+
+        @Override
+        public int getItemCount() {
+            return strings.size();
+        }
+
+    }
+
+    private class MyHorizontalAdapter extends LinearHorizontalAdapter implements InfinityHorizontalScrollView.ScrollInfinityOperate {
+
+        private List<String> strings = new ArrayList<>();
+
+        public MyHorizontalAdapter(List<String> strings) {
+            this.strings = strings;
+        }
+
+        @Override
+        public void copyData() {
+            int preSize = strings.size();
+            strings.addAll(strings);
+            notifyDataSetChanged(preSize, strings.size() - 1);
+        }
+
+        class Holder extends BaseLinearHolder<String> implements View.OnClickListener {
+
+            public Holder(View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void fillView(String data, int position) {
+                super.fillView(data, position);
+                ((TextView) itemView.findViewById(android.R.id.text1)).setText(data);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(InfinityNestedScrollViewActivity.this, "data" + data + position, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(BaseLinearHolder holder, int position) {
+            holder.fillView(strings.get(position), position);
+        }
+
+        @Override
+        public BaseLinearHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new Holder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
+        }
+
+        @Override
+        public int getItemCount() {
+            return strings.size();
+        }
+
+    }
+
 }

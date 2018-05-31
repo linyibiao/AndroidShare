@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * 循环滚动的ScrollView
@@ -49,8 +55,33 @@ public class InfinityNestedScrollView extends NestedScrollView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.InfinityNestedScrollView);
         speed = typedArray.getInteger(R.styleable.InfinityNestedScrollView_infinityScrollView_speed, 1);
+        int timeUnit = typedArray.getInteger(R.styleable.InfinityNestedScrollView_infinityScrollView_timeUnit, 50);
         typedArray.recycle();
+
+        Observable
+                .create(new ObservableOnSubscribe<Integer>() {
+                    @Override
+                    public void subscribe(final ObservableEmitter<Integer> e) throws Exception {
+                        InfinityNestedScrollView.this.setComputeScrollCallback(new ComputeScrollCallback() {
+                            @Override
+                            public void callback() {
+                                e.onNext(1);
+                            }
+                        });
+                    }
+                }).debounce(timeUnit, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                .subscribe(new io.reactivex.functions.Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        realScrollWork();
+                    }
+                });
+
     }
+
+    private List<View> reSortViews = new ArrayList<>();
+    private List<View> toStartViews = new ArrayList<>();
+    private List<View> toEndViews = new ArrayList<>();
 
     private Comparator<View> viewComparator = new Comparator<View>() {
         @Override
@@ -64,12 +95,20 @@ public class InfinityNestedScrollView extends NestedScrollView {
         }
     };
 
-    @Override
-    public void computeScroll() {
-        super.computeScroll();
+    private ComputeScrollCallback computeScrollCallback;
+
+    private void setComputeScrollCallback(ComputeScrollCallback computeScrollCallback) {
+        this.computeScrollCallback = computeScrollCallback;
+    }
+
+    private interface ComputeScrollCallback {
+        void callback();
+    }
+
+    private void realScrollWork() {
         if (canScrollVertically(-1) && !canScrollVertically(1)) {
-            List<View> toEndViews = new ArrayList<>();
-            List<View> toStartViews = new ArrayList<>();
+            toEndViews.clear();
+            toStartViews.clear();
             for (int index = 0; index < verticalLinearLayout.getChildCount(); index++) {
                 View childView = verticalLinearLayout.getChildAt(index);
                 if (childView.getY() + childView.getHeight() - getScrollY() < 0) {
@@ -78,25 +117,44 @@ public class InfinityNestedScrollView extends NestedScrollView {
                     toStartViews.add(childView);
                 }
             }
-            Collections.sort(toEndViews, viewComparator);
-            Collections.sort(toStartViews, viewComparator);
-            List<View> reSortViews = new ArrayList<>();
-            reSortViews.addAll(toStartViews);
-            reSortViews.addAll(toEndViews);
-            int finalScrollY = (int) (getScrollY() - reSortViews.get(0).getY());
-            int lastY = 0;
-            for (View view : reSortViews) {
-                view.setY(lastY);
-                lastY += view.getHeight();
+            if (toEndViews.size() > 0) {
+                Collections.sort(toEndViews, viewComparator);
+                Collections.sort(toStartViews, viewComparator);
+                reSortViews.clear();
+                reSortViews.addAll(toStartViews);
+                reSortViews.addAll(toEndViews);
+                int finalScrollY = (int) (getScrollY() - reSortViews.get(0).getY());
+                int lastY = 0;
+                for (View view : reSortViews) {
+                    view.setY(lastY);
+                    lastY += view.getHeight();
+                }
+                scrollTo(0, finalScrollY + speed);
+            } else {
+                ((ScrollInfinityOperate) verticalLinearLayout.getLinearVerticalAdapter()).copyData();
             }
-            scrollTo(0, finalScrollY + speed);
         } else if (canScrollVertically(1)) {
             scrollBy(0, speed);
         }
     }
 
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (computeScrollCallback != null) {
+            computeScrollCallback.callback();
+        }
+    }
+
     public void setAdapter(LinearVerticalAdapter linearVerticalAdapter) {
+        if (!(linearVerticalAdapter instanceof ScrollInfinityOperate)) {
+            throw new RuntimeException("linearVerticalAdapter 需要继承接口 ScrollInfinityOperate");
+        }
         verticalLinearLayout.setAdapter(linearVerticalAdapter);
+    }
+
+    public interface ScrollInfinityOperate {
+        void copyData();
     }
 
 }

@@ -79,6 +79,10 @@ public class InfinityHorizontalScrollView extends HorizontalScrollView {
                 });
     }
 
+    private List<View> reSortViews = new ArrayList<>();
+    private List<View> toStartViews = new ArrayList<>();
+    private List<View> toEndViews = new ArrayList<>();
+
     private Comparator<View> viewComparator = new Comparator<View>() {
         @Override
         public int compare(View o1, View o2) {
@@ -103,8 +107,8 @@ public class InfinityHorizontalScrollView extends HorizontalScrollView {
 
     private void realScrollWork() {
         if (canScrollHorizontally(-1) && !canScrollHorizontally(1)) {
-            List<View> toEndViews = new ArrayList<>();
-            List<View> toStartViews = new ArrayList<>();
+            toEndViews.clear();
+            toStartViews.clear();
             for (int index = 0; index < horizontalLinearLayout.getChildCount(); index++) {
                 View childView = horizontalLinearLayout.getChildAt(index);
                 if (childView.getX() + childView.getWidth() - getScrollX() < 0) {
@@ -113,18 +117,22 @@ public class InfinityHorizontalScrollView extends HorizontalScrollView {
                     toStartViews.add(childView);
                 }
             }
-            Collections.sort(toEndViews, viewComparator);
-            Collections.sort(toStartViews, viewComparator);
-            List<View> reSortViews = new ArrayList<>();
-            reSortViews.addAll(toStartViews);
-            reSortViews.addAll(toEndViews);
-            int finalScrollX = (int) (getScrollX() - reSortViews.get(0).getX());
-            int lastX = 0;
-            for (View view : reSortViews) {
-                view.setX(lastX);
-                lastX += view.getWidth();
+            if (toEndViews.size() > 0) {
+                Collections.sort(toEndViews, viewComparator);
+                Collections.sort(toStartViews, viewComparator);
+                List<View> reSortViews = new ArrayList<>();
+                reSortViews.addAll(toStartViews);
+                reSortViews.addAll(toEndViews);
+                int finalScrollX = (int) (getScrollX() - reSortViews.get(0).getX());
+                int lastX = 0;
+                for (View view : reSortViews) {
+                    view.setX(lastX);
+                    lastX += view.getWidth();
+                }
+                scrollTo(finalScrollX + speed, 0);
+            } else {
+                ((ScrollInfinityOperate) horizontalLinearLayout.getLinearHorizontalAdapter()).copyData();
             }
-            scrollTo(finalScrollX + speed, 0);
         } else if (canScrollHorizontally(1)) {
             scrollBy(speed, 0);
         }
@@ -139,7 +147,14 @@ public class InfinityHorizontalScrollView extends HorizontalScrollView {
     }
 
     public void setAdapter(LinearHorizontalAdapter linearHorizontalAdapter) {
+        if (!(linearHorizontalAdapter instanceof ScrollInfinityOperate)) {
+            throw new RuntimeException("linearVerticalAdapter 需要继承接口 ScrollInfinityOperate");
+        }
         horizontalLinearLayout.setAdapter(linearHorizontalAdapter);
+    }
+
+    public interface ScrollInfinityOperate {
+        void copyData();
     }
 
 }

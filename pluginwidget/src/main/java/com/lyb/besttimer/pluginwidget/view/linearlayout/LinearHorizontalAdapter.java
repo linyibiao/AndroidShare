@@ -21,10 +21,14 @@ public abstract class LinearHorizontalAdapter {
     public abstract int getItemCount();
 
     public void notifyDataSetChanged() {
+        notifyDataSetChanged(0, getItemCount() - 1);
+    }
+
+    public void notifyDataSetChanged(int startPos, int endPos) {
 
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        for (int position = 0; position < getItemCount(); position++) {
+        for (int position = startPos; position <= endPos; position++) {
             BaseLinearHolder baseLinearHolder = onCreateViewHolder(linearLayout, getItemViewType(position));
             linearLayout.addView(baseLinearHolder.itemView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             onBindViewHolder(baseLinearHolder, position);
