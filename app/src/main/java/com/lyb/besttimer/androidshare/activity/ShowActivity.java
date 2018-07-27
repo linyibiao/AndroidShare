@@ -1,7 +1,10 @@
 package com.lyb.besttimer.androidshare.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,6 +153,16 @@ public class ShowActivity extends BaseActivity {
 
         }
         listView.setAdapter(new LVAdapter(lvDatas));
+
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            // 根据isOpened结果，判断是否需要提醒用户跳转AppInfo页面，去打开App通知权限
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
+
     }
 
     @Override
