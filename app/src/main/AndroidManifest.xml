@@ -67,7 +67,8 @@
         <activity android:name=".activity.mvvm.SimpleMVVMActivity" />
         <activity android:name=".activity.mix.IntentFindActivity" />
         <activity android:name=".activity.processor.RouterActivity" />
-        <activity android:name=".activity.processor.RouterTargetActivity"></activity>
+        <activity android:name=".activity.processor.RouterTargetActivity" />
+        <activity android:name=".activity.pluginwidget.CommonAdapterActivity"></activity>
     </application>
 
 </manifest>

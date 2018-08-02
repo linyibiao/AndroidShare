@@ -19,6 +19,7 @@ import com.lyb.besttimer.androidshare.activity.mvvm.SimpleMVVMActivity;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.CommonAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CountUpTimerActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DecorationActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.DrawLayoutActivity;
@@ -117,6 +118,7 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(RecyclerViewInfinityActivity.class, "循环滚动列表(recyclerview)"));
             lvData.getLvDatas().add(new LVData(InfinityNestedScrollViewActivity.class, "循环滚动列表(nestedscrollview)"));
             lvData.getLvDatas().add(new LVData(SnapHelperActivity.class, "SnapHelper"));
+            lvData.getLvDatas().add(new LVData(CommonAdapterActivity.class, "通用adapter"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "rxandroid");
