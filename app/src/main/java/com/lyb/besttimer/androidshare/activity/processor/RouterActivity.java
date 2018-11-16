@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.processor.Router$$Real;
+import com.lyb.besttimer.annotation_api.BindClassCenter;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,11 +22,7 @@ public class RouterActivity extends AppCompatActivity {
 
     @OnClick({R.id.btn_jump})
     public void onClick(View view) {
-        try {
-            startActivity(new Intent(this, Class.forName(new Router$$Real().findClass("router_target"))));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        startActivity(new Intent(this, BindClassCenter.findClass_T("router_target")));
     }
 
 }

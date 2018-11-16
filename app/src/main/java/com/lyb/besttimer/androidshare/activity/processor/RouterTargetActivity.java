@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.java_annotation.BindClass;
+import com.lyb.besttimer.annotation_bean.BindClass;
 
 @BindClass(path = "router_target")
 public class RouterTargetActivity extends AppCompatActivity {
