@@ -54,14 +54,16 @@ public class BindInitHandle {
 
         inputs.each { TransformInput input ->
             input.jarInputs.each { JarInput jarInput ->
+                println("ZipEntry:" + jarInput.file.absolutePath)
                 insertClassPath(jarInput.file.absolutePath)
             }
             input.directoryInputs.each { DirectoryInput directoryInput ->
+                println("ClassPath:" + directoryInput.file.absolutePath)
                 insertClassPath(directoryInput.file.absolutePath)
             }
         }
 
-        CtClass appClass = pool.getCtClass("android.app.Application")
+//        CtClass appClass = pool.getCtClass("android.app.Application")
         List<KeyValue> targetClassAndPathList = new ArrayList<>()//目标信息列表
         List<CtClass> initClassList = new ArrayList<>()//需要初始化列表
 
@@ -76,18 +78,10 @@ public class BindInitHandle {
                         String filePath = entry.getName()
                         println("ZipEntry:" + filePath)
                         if (filePath.endsWith(SdkConstants.DOT_CLASS)) {
-                            String debugStr = "debug"
-                            String releaseStr = "release"
-                            final String classPath
-                            //截出正确的类路径
-                            if (filePath.contains(debugStr)) {
-                                classPath = filePath.replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
-                            } else {
-                                classPath = filePath.replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
-                            }
+                            final String classPath = filePath.replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
                             CtClass ctClass = pool.getCtClass(classPath)
                             CtClass[] interfaces = ctClass.getInterfaces()
-                            if (appClass == ctClass.getSuperclass() || appClass == ctClass) {
+                            if (pool.getCtClass("android.app.Application") == ctClass.getSuperclass()) {
                                 println("target:" + filePath)
                                 targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
                             } else if (interfaces != null) {
@@ -110,7 +104,6 @@ public class BindInitHandle {
             }
             input.directoryInputs.each { DirectoryInput directoryInput ->
                 String dirPath = directoryInput.file.absolutePath
-                insertClassPath(dirPath)
                 List<File> childFiles = getAllFiles(directoryInput.file)
                 for (File file : childFiles) {
                     String filePath = file.absolutePath
@@ -127,7 +120,7 @@ public class BindInitHandle {
                         }
                         CtClass ctClass = pool.getCtClass(classPath)
                         CtClass[] interfaces = ctClass.getInterfaces()
-                        if (appClass == ctClass.getSuperclass() || appClass == ctClass) {
+                        if (pool.getCtClass("android.app.Application") == ctClass.getSuperclass()) {
                             println("target:" + filePath)
                             targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
                         } else if (interfaces != null) {
@@ -189,82 +182,6 @@ public class BindInitHandle {
                 FileUtils.copyDirectory(directoryInput.file, dest)
             }
 
-        }
-
-    }
-
-    static void inject(Collection<DirectoryInput> directoryInputs, Collection<JarInput> jarInputs) {
-
-        for (DirectoryInput directoryInput : directoryInputs) {
-
-        }
-
-        CtClass appClass = pool.getCtClass("android.app.Application")
-        List<KeyValue> targetClassAndPathList = new ArrayList<>()//目标信息列表
-        List<CtClass> initClassList = new ArrayList<>()//需要初始化列表
-
-        for (DirectoryInput directoryInput : directoryInputs) {
-            String dirPath = directoryInput.file.absolutePath
-            insertClassPath(dirPath)
-            List<File> childFiles = getAllFiles(directoryInput.file)
-            for (File file : childFiles) {
-                String filePath = file.absolutePath
-                println(filePath)
-                if (filePath.endsWith(SdkConstants.DOT_CLASS)) {
-                    String debugStr = "debug"
-                    String releaseStr = "release"
-                    final String classPath
-                    //截出正确的类路径
-                    if (filePath.contains(debugStr)) {
-                        classPath = filePath.substring(filePath.indexOf(debugStr) + debugStr.length() + 1).replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
-                    } else {
-                        classPath = filePath.substring(filePath.indexOf(releaseStr) + releaseStr.length() + 1).replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
-                    }
-                    CtClass ctClass = pool.getCtClass(classPath)
-                    CtClass[] interfaces = ctClass.getInterfaces()
-                    if (appClass == ctClass.getSuperclass() || appClass == ctClass) {
-                        println("target:" + filePath)
-                        targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
-                    } else if (interfaces != null) {
-                        if (interfaces.contains(pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit"))) {
-                            println("toInit:" + filePath)
-                            initClassList.add(ctClass)
-                        }
-                    }
-                }
-            }
-        }
-
-        //加一个bindInit方法到目标
-        for (KeyValue targetClassAndPath : targetClassAndPathList) {
-            CtClass targetClass = targetClassAndPath.key
-            String targetPath = targetClassAndPath.value
-            String methodStr = "void bindInit(){"
-            if (targetClass.isFrozen()) {
-                targetClass.defrost()
-            }
-            for (CtClass oneInitClass : initClassList) {
-                if (oneInitClass.isFrozen()) {
-                    oneInitClass.defrost()
-                }
-                methodStr += "new " + oneInitClass.getName() + "().init(this);"
-            }
-            methodStr += "}"
-            CtMethod initMethod = CtMethod.make(methodStr, targetClass)
-            targetClass.addMethod(initMethod)
-
-            CtMethod createMethod = targetClass.getDeclaredMethod("onCreate")
-            createMethod.insertAfter("""bindInit();""")
-
-            targetClass.writeFile(targetPath)
-
-        }
-
-        for (KeyValue targetClassAndPath : targetClassAndPathList) {
-            targetClassAndPath.key.detach()
-        }
-        for (CtClass ctClass : initClassList) {
-            ctClass.detach()
         }
 
     }

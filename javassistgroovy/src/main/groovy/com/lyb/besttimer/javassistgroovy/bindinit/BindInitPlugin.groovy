@@ -15,8 +15,11 @@ public class BindInitPlugin implements Plugin<Project> {
             def android = project.extensions.getByType(AppExtension)
 ////        def android = project.extensions.getByType(LibraryExtension)
 //
-            def classTransform = new BindInitTransform(project)
-            android.registerTransform(classTransform)
+//            def classTransform = new BindInitTransform(project)
+//            android.registerTransform(classTransform)
+
+            project.android.registerTransform(new BindInitTransform(project))
+
         } catch (Exception e) {
             e.printStackTrace()
         }
