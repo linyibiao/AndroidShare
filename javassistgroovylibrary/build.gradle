@@ -1,5 +1,5 @@
-apply plugin: 'com.android.application'
-//apply plugin: 'testPlugin'
+apply plugin: 'com.android.library'
+
 apply plugin: 'com.lyb.besttimer.plugin_bindinit'
 
 Map<String, String> cfg = rootProject.ext.android
@@ -10,7 +10,6 @@ android {
     buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.lyb.besttimer.javassistgroovyapp"
         minSdkVersion cfg.minSdkVersion
         targetSdkVersion cfg.targetSdkVersion
         versionCode 1
@@ -37,8 +36,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    api project(':javassistgroovylibrary')
 
     api project(':annotation_api')
     annotationProcessor project(':annotation_compiler')

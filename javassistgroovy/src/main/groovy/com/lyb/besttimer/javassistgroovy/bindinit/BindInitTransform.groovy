@@ -2,8 +2,6 @@ package com.lyb.besttimer.javassistgroovy.bindinit
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
-import org.apache.commons.codec.digest.DigestUtils
-import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 
 public class BindInitTransform extends Transform {
@@ -42,29 +40,7 @@ public class BindInitTransform extends Transform {
 
         System.out.println("-------------------------transform bindinit begin-----------------------------")
 
-        BindInitHandle.initHandle(project)
-
-        inputs.each { TransformInput input ->
-
-            input.jarInputs.each { JarInput jarInput ->
-                BindInitHandle.insertClassPath(jarInput.file.absolutePath)
-                def jarName = jarInput.name
-                println("jar=" + jarInput.file.getAbsolutePath())
-                def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
-                if (jarName.endsWith(".jar")) {
-                    jarName = jarName.substring(0, jarName.length() - 4)
-                }
-                def dest = outputProvider.getContentLocation(jarName + md5Name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
-                FileUtils.copyFile(jarInput.file, dest)
-            }
-
-            BindInitHandle.inject(input.directoryInputs)
-            input.directoryInputs.each { DirectoryInput directoryInput ->
-                def dest = outputProvider.getContentLocation(directoryInput.name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
-                FileUtils.copyDirectory(directoryInput.file, dest)
-            }
-
-        }
+        BindInitHandle.injectInput(project, outputProvider, inputs)
 
         System.out.println("-------------------------transform bindinit end-----------------------------")
 
