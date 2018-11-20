@@ -8,17 +8,17 @@ public class BindInitPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        System.out.println("---------------------------------- plugin bindInit begin -------------------------------")
+        System.out.println("---------------------------------- plugin bindInit init begin -------------------------------")
 
         try {
 
-            def android = project.extensions.getByType(AppExtension)
+            AppExtension android = project.extensions.getByType(AppExtension)
 ////        def android = project.extensions.getByType(LibraryExtension)
 //
-//            def classTransform = new BindInitTransform(project)
-//            android.registerTransform(classTransform)
+            def classTransform = new BindInitTransform(project,android)
+            android.registerTransform(classTransform)
 
-            project.android.registerTransform(new BindInitTransform(project))
+//            project.android.registerTransform(new BindInitTransform(project))
 
         } catch (Exception e) {
             e.printStackTrace()
@@ -26,7 +26,7 @@ public class BindInitPlugin implements Plugin<Project> {
 
 //        project.android.registerTransform(new BindInitTransform(project))
 
-        System.out.println("---------------------------------- plugin bindInit end -------------------------------")
+        System.out.println("---------------------------------- plugin bindInit init end -------------------------------")
     }
 
 }

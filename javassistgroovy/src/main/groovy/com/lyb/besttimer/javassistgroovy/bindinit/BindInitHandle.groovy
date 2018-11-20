@@ -2,6 +2,7 @@ package com.lyb.besttimer.javassistgroovy.bindinit
 
 import com.android.SdkConstants
 import com.android.build.api.transform.*
+import com.android.build.gradle.AppExtension
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
@@ -15,16 +16,6 @@ import java.util.zip.ZipInputStream
 public class BindInitHandle {
 
     private final static ClassPool pool = ClassPool.getDefault()
-
-    public static void initHandle(Project project) {
-        project.android.bootClasspath.each {
-            pool.appendClassPath(it.absolutePath)
-        }
-    }
-
-    public static void insertClassPath(String path) {
-        pool.insertClassPath(path)
-    }
 
     static class KeyValue {
         public CtClass key
@@ -48,22 +39,65 @@ public class BindInitHandle {
         }
     }
 
+    public static void appendClassPath_android(Project project, AppExtension android) {
+        if (null == project) return
+//        def androidJar = new StringBuffer().append(project.android.getSdkDirectory())
+//                .append(File.separator).append("platforms")
+//                .append(File.separator).append(project.android.compileSdkVersion)
+//                .append(File.separator).append("android.jar").toString()
+//
+//        File file = new File(androidJar);
+//        if (!file.exists()) {
+            def androidJar = new StringBuffer().append(project.rootDir.absolutePath)
+                    .append(File.separator).append("local.properties").toString()
+
+            Properties properties = new Properties()
+            properties.load(new File(androidJar).newDataInputStream())
+
+            def sdkDir = properties.getProperty("sdk.dir")
+
+            androidJar = new StringBuffer().append(sdkDir)
+                    .append(File.separator).append("platforms")
+//                    .append(File.separator).append(android.compileSdkVersion)
+                    .append(File.separator).append("android-26")
+                    .append(File.separator).append("android.jar").toString()
+
+            def file = new File(androidJar)
+//        }
+
+        println("android.jar path???:"+androidJar)
+
+        if (file.exists()) {
+            pool.appendClassPath(androidJar)
+            println("android.jar path:"+androidJar)
+        } else {
+            println("couldn't find android.jar file !!!")
+        }
+    }
+
     static void injectInput(Project project, TransformOutputProvider outputProvider, Collection<TransformInput> inputs) {
 
-        initHandle(project)
+//        println("bootClasspath[0]:" + android.bootClasspath[0].toString())
+//        pool.appendClassPath(android.bootClasspath[0].toString())
+
+        project.android.bootClasspath.each {
+            println("bootClasspath:" + it.absolutePath)
+            pool.appendClassPath(it.absolutePath)
+        }
+
+//        appendClassPath_android(project)
 
         inputs.each { TransformInput input ->
             input.jarInputs.each { JarInput jarInput ->
                 println("ZipEntry:" + jarInput.file.absolutePath)
-                insertClassPath(jarInput.file.absolutePath)
+                pool.appendClassPath(jarInput.file.absolutePath)
             }
             input.directoryInputs.each { DirectoryInput directoryInput ->
                 println("ClassPath:" + directoryInput.file.absolutePath)
-                insertClassPath(directoryInput.file.absolutePath)
+                pool.appendClassPath(directoryInput.file.absolutePath)
             }
         }
 
-//        CtClass appClass = pool.getCtClass("android.app.Application")
         List<KeyValue> targetClassAndPathList = new ArrayList<>()//目标信息列表
         List<CtClass> initClassList = new ArrayList<>()//需要初始化列表
 
@@ -81,21 +115,29 @@ public class BindInitHandle {
                             final String classPath = filePath.replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
                             CtClass ctClass = pool.getCtClass(classPath)
                             CtClass[] interfaces = ctClass.getInterfaces()
-                            if (pool.getCtClass("android.app.Application") == ctClass.getSuperclass()) {
+
+                            /*if (ctClass.getSuperclass()!=null&& ctClass.getSuperclass().getName() == "android.app.Application") {
                                 println("target:" + filePath)
-                                targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
-                            } else if (interfaces != null) {
-                                if (interfaces.contains(pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit"))) {
-                                    println("toInit:" + filePath)
-                                    initClassList.add(ctClass)
+                                targetClassAndPathList.add(new KeyValue(ctClass, filePath))
+                            } else */if (interfaces != null) {
+                                for (CtClass interfaceOne:interfaces){
+                                    if (interfaceOne.getName() == "com.lyb.besttimer.annotation_bean.IAppInit"){
+                                        println("toInit:" + filePath)
+                                        initClassList.add(ctClass)
+                                        break
+                                    }
                                 }
+//                                if (interfaces.contains(pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit"))) {
+//                                    println("toInit:" + filePath)
+//                                    initClassList.add(ctClass)
+//                                }
                             }
                         }
                         entry = inputStream.getNextEntry()
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace()
+//                    e.printStackTrace()
                 } finally {
                     if (inputStream != null) {
                         inputStream.close()
@@ -107,27 +149,63 @@ public class BindInitHandle {
                 List<File> childFiles = getAllFiles(directoryInput.file)
                 for (File file : childFiles) {
                     String filePath = file.absolutePath
-                    println(filePath)
+                    println("directoryInputs:" + filePath)
                     if (filePath.endsWith(SdkConstants.DOT_CLASS)) {
                         String debugStr = "debug"
                         String releaseStr = "release"
-                        final String classPath
+                        String classPath
                         //截出正确的类路径
                         if (filePath.contains(debugStr)) {
                             classPath = filePath.substring(filePath.indexOf(debugStr) + debugStr.length() + 1).replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
                         } else {
                             classPath = filePath.substring(filePath.indexOf(releaseStr) + releaseStr.length() + 1).replace("\\", ".").replace("/", ".").replace(SdkConstants.DOT_CLASS, "")
                         }
-                        CtClass ctClass = pool.getCtClass(classPath)
-                        CtClass[] interfaces = ctClass.getInterfaces()
-                        if (pool.getCtClass("android.app.Application") == ctClass.getSuperclass()) {
-                            println("target:" + filePath)
-                            targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
-                        } else if (interfaces != null) {
-                            if (interfaces.contains(pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit"))) {
-                                println("toInit:" + filePath)
-                                initClassList.add(ctClass)
+                        while ((classPath.charAt(0) >= '0' && classPath.charAt(0) <= '9') || classPath.charAt(0) == '.') {
+                            classPath = classPath.substring(1)
+                        }
+                        try {
+                            CtClass ctClass = pool.getCtClass(classPath)
+                            CtClass[] interfaces = ctClass.getInterfaces()
+
+                            boolean isApp=false
+                            String applicationClassStr="android.app.Application"
+                            CtClass copyCtClass=ctClass
+                            while (copyCtClass.getSuperclass()!=null){
+                                if (copyCtClass.getSuperclass().getName() == applicationClassStr){
+                                    isApp=true
+                                    break
+                                }
+                                copyCtClass=copyCtClass.getSuperclass()
                             }
+
+                            if (isApp) {
+                                println("target:" + filePath)
+                                targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
+                            } else if (interfaces != null) {
+                                for (CtClass interfaceOne:interfaces){
+                                    if (interfaceOne.getName() == "com.lyb.besttimer.annotation_bean.IAppInit"){
+                                        println("toInit:" + filePath)
+                                        initClassList.add(ctClass)
+                                        break
+                                    }
+                                }
+//                                if (interfaces.contains(pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit"))) {
+//                                    println("toInit:" + filePath)
+//                                    initClassList.add(ctClass)
+//                                }
+                            }
+
+//                            if (pool.getCtClass("android.app.Application") == ctClass.getSuperclass()) {
+//                                println("target:" + filePath)
+//                                targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
+//                            } else if (interfaces != null) {
+//                                if (interfaces.contains(pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit"))) {
+//                                    println("toInit:" + filePath)
+//                                    initClassList.add(ctClass)
+//                                }
+//                            }
+                        } catch (Exception e) {
+                            e.printStackTrace()
                         }
                     }
                 }

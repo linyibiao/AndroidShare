@@ -1,6 +1,7 @@
 package com.lyb.besttimer.javassistgroovy.bindinit
 
 import com.android.build.api.transform.*
+import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
 import org.gradle.api.Project
 
@@ -8,8 +9,9 @@ public class BindInitTransform extends Transform {
 
     private final Project project
 
-    public BindInitTransform(Project project) {
+    public BindInitTransform(Project project, AppExtension android) {
         this.project = project
+        BindInitHandle.appendClassPath_android(project,android)
     }
 
     @Override
