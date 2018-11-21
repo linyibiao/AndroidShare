@@ -17,28 +17,28 @@ repositories {
 }
 //以上都为固定写法
 
-//group = "com.lyb.besttimer.gradle"    // 这里是groupId ,必须填写  一般填你唯一的包名
-//version = "1.0.6"       //这个是版本号，必须填写
-//
-//// 应用插件
-//apply from: '../gradle_groovy.gradle'
+group = "com.lyb.besttimer.gradle"    // 这里是groupId ,必须填写  一般填你唯一的包名
+version = "1.0.7"       //这个是版本号，必须填写
+
+// 应用插件
+apply from: '../gradle_groovy.gradle'
 
 //group和version
-group='com.lyb.besttimer.gradle'
-version='1.0.6'
-
-//打包到本地或者远程Maven库
-uploadArchives {
-    repositories {
-        mavenDeployer {
-//            //提交到远程服务器：
-////             repository(url: "https://github.com/linyibiao/javassistGroovy.git") {
-//             repository(url: "https://dl.bintray.com/linyibiao/besttimer_groovy") {
-////             repository(url: "https://raw.githubusercontent.com/linyibiao/javassistGroovy/master/repository") {
-//                authentication(userName: "295243617@qq.com", password: "qb20090921")
-//             }
-            //本地的Maven地址设置为E:/Maven
-            repository(url: uri('../../repo'))
-        }
-    }
-}
+//group='com.lyb.besttimer.gradle'
+//version='1.0.6'
+//
+////打包到本地或者远程Maven库
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+////            //提交到远程服务器：
+//////             repository(url: "https://github.com/linyibiao/javassistGroovy.git") {
+////             repository(url: "https://dl.bintray.com/linyibiao/besttimer_groovy") {
+//////             repository(url: "https://raw.githubusercontent.com/linyibiao/javassistGroovy/master/repository") {
+////                authentication(userName: "295243617@qq.com", password: "qb20090921")
+////             }
+//            //本地的Maven地址设置为E:/Maven
+//            repository(url: uri('../../repo'))
+//        }
+//    }
+//}

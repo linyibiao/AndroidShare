@@ -39,16 +39,20 @@ public class BindInitHandle {
         }
     }
 
-    public static void appendClassPath_android(Project project, AppExtension android) {
+    static void appendClassPath_android(Project project) {
         if (null == project) return
-//        def androidJar = new StringBuffer().append(project.android.getSdkDirectory())
-//                .append(File.separator).append("platforms")
-//                .append(File.separator).append(project.android.compileSdkVersion)
-//                .append(File.separator).append("android.jar").toString()
-//
-//        File file = new File(androidJar);
-//        if (!file.exists()) {
-            def androidJar = new StringBuffer().append(project.rootDir.absolutePath)
+
+        //这一部非常关键，需要动态获取app信息，不能用project.android
+        AppExtension android = project.extensions.getByType(AppExtension)
+
+        def androidJar = new StringBuffer().append(android.getSdkDirectory())
+                .append(File.separator).append("platforms")
+                .append(File.separator).append(android.compileSdkVersion)
+                .append(File.separator).append("android.jar").toString()
+
+        File file = new File(androidJar)
+        if (!file.exists()) {
+            androidJar = new StringBuffer().append(project.rootDir.absolutePath)
                     .append(File.separator).append("local.properties").toString()
 
             Properties properties = new Properties()
@@ -58,18 +62,15 @@ public class BindInitHandle {
 
             androidJar = new StringBuffer().append(sdkDir)
                     .append(File.separator).append("platforms")
-//                    .append(File.separator).append(android.compileSdkVersion)
-                    .append(File.separator).append("android-26")
+                    .append(File.separator).append(android.compileSdkVersion)
                     .append(File.separator).append("android.jar").toString()
 
-            def file = new File(androidJar)
-//        }
-
-        println("android.jar path???:"+androidJar)
+            file = new File(androidJar)
+        }
 
         if (file.exists()) {
             pool.appendClassPath(androidJar)
-            println("android.jar path:"+androidJar)
+            println("android.jar path:" + androidJar)
         } else {
             println("couldn't find android.jar file !!!")
         }
@@ -77,15 +78,12 @@ public class BindInitHandle {
 
     static void injectInput(Project project, TransformOutputProvider outputProvider, Collection<TransformInput> inputs) {
 
-//        println("bootClasspath[0]:" + android.bootClasspath[0].toString())
-//        pool.appendClassPath(android.bootClasspath[0].toString())
+        appendClassPath_android(project)
 
         project.android.bootClasspath.each {
             println("bootClasspath:" + it.absolutePath)
             pool.appendClassPath(it.absolutePath)
         }
-
-//        appendClassPath_android(project)
 
         inputs.each { TransformInput input ->
             input.jarInputs.each { JarInput jarInput ->
@@ -119,9 +117,9 @@ public class BindInitHandle {
                             /*if (ctClass.getSuperclass()!=null&& ctClass.getSuperclass().getName() == "android.app.Application") {
                                 println("target:" + filePath)
                                 targetClassAndPathList.add(new KeyValue(ctClass, filePath))
-                            } else */if (interfaces != null) {
-                                for (CtClass interfaceOne:interfaces){
-                                    if (interfaceOne.getName() == "com.lyb.besttimer.annotation_bean.IAppInit"){
+                            } else */ if (interfaces != null) {
+                                for (CtClass interfaceOne : interfaces) {
+                                    if (interfaceOne.getName() == "com.lyb.besttimer.annotation_bean.IAppInit") {
                                         println("toInit:" + filePath)
                                         initClassList.add(ctClass)
                                         break
@@ -167,23 +165,23 @@ public class BindInitHandle {
                             CtClass ctClass = pool.getCtClass(classPath)
                             CtClass[] interfaces = ctClass.getInterfaces()
 
-                            boolean isApp=false
-                            String applicationClassStr="android.app.Application"
-                            CtClass copyCtClass=ctClass
-                            while (copyCtClass.getSuperclass()!=null){
-                                if (copyCtClass.getSuperclass().getName() == applicationClassStr){
-                                    isApp=true
+                            boolean isApp = false
+                            String applicationClassStr = "android.app.Application"
+                            CtClass copyCtClass = ctClass
+                            while (copyCtClass.getSuperclass() != null) {
+                                if (copyCtClass.getSuperclass().getName() == applicationClassStr) {
+                                    isApp = true
                                     break
                                 }
-                                copyCtClass=copyCtClass.getSuperclass()
+                                copyCtClass = copyCtClass.getSuperclass()
                             }
 
                             if (isApp) {
                                 println("target:" + filePath)
                                 targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
                             } else if (interfaces != null) {
-                                for (CtClass interfaceOne:interfaces){
-                                    if (interfaceOne.getName() == "com.lyb.besttimer.annotation_bean.IAppInit"){
+                                for (CtClass interfaceOne : interfaces) {
+                                    if (interfaceOne.getName() == "com.lyb.besttimer.annotation_bean.IAppInit") {
                                         println("toInit:" + filePath)
                                         initClassList.add(ctClass)
                                         break

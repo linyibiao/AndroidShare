@@ -9,9 +9,8 @@ public class BindInitTransform extends Transform {
 
     private final Project project
 
-    public BindInitTransform(Project project, AppExtension android) {
+    public BindInitTransform(Project project) {
         this.project = project
-        BindInitHandle.appendClassPath_android(project,android)
     }
 
     @Override
