@@ -3,6 +3,8 @@ package com.lyb.besttimer.javassistgroovy.bindinit
 import com.android.SdkConstants
 import com.android.build.api.transform.*
 import com.android.build.gradle.AppExtension
+import groovy.util.slurpersupport.GPathResult
+import groovy.util.slurpersupport.Node
 import javassist.*
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
@@ -55,11 +57,34 @@ public class BindInitHandle {
             }
         }
 
+        Set<CtClass> applicationClassList = new HashSet<>()
+        android.sourceSets.each {
+            File file = it.getManifest().getSrcFile()
+            if (file.exists()) {
+                GPathResult gPathResult = new XmlSlurper().parse(file)
+                String packageName = gPathResult.getProperty("@package")
+                Iterator<Node> childIterator = gPathResult.childNodes()
+                while (childIterator.hasNext()) {
+                    Node childNode = childIterator.next()
+                    if (childNode.name() == "application") {
+                        String appName = childNode.attributes().get("{http://schemas.android.com/apk/res/android}name")
+                        if (appName != null && appName.length() != 0) {
+                            if (appName.charAt(0) == ".") {
+                                applicationClassList.add(pool.getCtClass(packageName + appName))
+                            } else {
+                                applicationClassList.add(pool.getCtClass(appName))
+                            }
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
         List<KeyValue> targetClassAndPathList = new ArrayList<>()//目标信息列表
         List<CtClass> initClassList = new ArrayList<>()//需要初始化列表
 
         CtClass appInitClass = pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit")
-        CtClass appBeanClass = pool.getCtClass("android.app.Application")
 
         inputs.each { TransformInput input ->
             input.jarInputs.each { JarInput jarInput ->
@@ -124,17 +149,7 @@ public class BindInitHandle {
                             CtClass ctClass = pool.getCtClass(classPath)
                             CtClass[] interfaces = ctClass.getInterfaces()
 
-                            boolean isApp = false
-                            CtClass copyCtClass = ctClass
-                            while (copyCtClass.getSuperclass() != null) {
-                                if (copyCtClass.getSuperclass() == appBeanClass) {
-                                    isApp = true
-                                    break
-                                }
-                                copyCtClass = copyCtClass.getSuperclass()
-                            }
-
-                            if (isApp) {
+                            if (applicationClassList.contains(ctClass)) {
                                 println("target:" + filePath)
                                 targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
                             } else if (interfaces != null) {
