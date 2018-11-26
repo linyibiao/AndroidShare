@@ -8,8 +8,12 @@ import groovy.util.slurpersupport.Node
 import javassist.*
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
 import org.gradle.api.Project
 
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -88,9 +92,18 @@ public class BindInitHandle {
 
         inputs.each { TransformInput input ->
             input.jarInputs.each { JarInput jarInput ->
+
+                def jarName = jarInput.name
+                def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
+                if (jarName.endsWith(".jar")) {
+                    jarName = jarName.substring(0, jarName.length() - 4)
+                }
+                File dest = outputProvider.getContentLocation(jarName + md5Name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
+                FileUtils.copyFile(jarInput.file, dest)
+
                 ZipInputStream inputStream = null
                 try {
-                    inputStream = new ZipInputStream(new FileInputStream(jarInput.file))
+                    inputStream = new ZipInputStream(new FileInputStream(dest))
 
                     ZipEntry entry = inputStream.getNextEntry()
                     while (entry != null) {
@@ -103,7 +116,10 @@ public class BindInitHandle {
                                 CtClass ctClass = pool.getCtClass(classPath)
                                 CtClass[] interfaces = ctClass.getInterfaces()
 
-                                if (interfaces != null) {
+                                if (applicationClassList.contains(ctClass)) {
+                                    println("target:" + filePath)
+                                    targetClassAndPathList.add(new KeyValue(ctClass, dest.absolutePath))
+                                } else if (interfaces != null) {
                                     if (interfaces.contains(appInitClass)) {
                                         println("toInit:" + filePath)
                                         initClassList.add(ctClass)
@@ -118,7 +134,7 @@ public class BindInitHandle {
                     }
 
                 } catch (Exception e) {
-                    println("jar error path:" + jarInput.file.absolutePath)
+                    println("jar error path:" + dest)
                     e.printStackTrace()
                 } finally {
                     if (inputStream != null) {
@@ -127,8 +143,12 @@ public class BindInitHandle {
                 }
             }
             input.directoryInputs.each { DirectoryInput directoryInput ->
-                String dirPath = directoryInput.file.absolutePath
-                List<File> childFiles = getAllFiles(directoryInput.file)
+
+                File dest = outputProvider.getContentLocation(directoryInput.name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
+                FileUtils.copyDirectory(directoryInput.file, dest)
+
+                String dirPath = dest.absolutePath
+                List<File> childFiles = getAllFiles(dest)
                 for (File file : childFiles) {
                     String filePath = file.absolutePath
                     if (filePath.endsWith(SdkConstants.DOT_CLASS)) {
@@ -189,7 +209,46 @@ public class BindInitHandle {
             CtMethod createMethod = targetClass.getDeclaredMethod("onCreate")
             createMethod.insertAfter("""bindInit();""")
 
-            targetClass.writeFile(targetPath)
+            if (targetPath.endsWith(".jar")) {
+                File jarFile = new File(targetPath)
+                def optJar = new File(jarFile.getParent(), jarFile.name + ".opt")
+                if (optJar.exists())
+                    optJar.delete()
+                def file = new JarFile(jarFile)
+                Enumeration enumeration = file.entries()
+                JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(optJar))
+
+                while (enumeration.hasMoreElements()) {
+                    JarEntry jarEntry = (JarEntry) enumeration.nextElement()
+                    String entryName = jarEntry.getName()
+                    ZipEntry zipEntry = new ZipEntry(entryName)
+                    InputStream inputStream = file.getInputStream(jarEntry)
+                    jarOutputStream.putNextEntry(zipEntry)
+
+                    String entryClassPath = entryName.replace("\\", ".").replace("/", ".")
+                    entryClassPath = entryClassPath.substring(0, entryClassPath.length() - SdkConstants.DOT_CLASS.length())
+
+                    CtClass entryClass = pool.getCtClass(entryClassPath)
+
+                    if (targetClass == entryClass) {
+                        println('generate code into:' + entryName)
+                        jarOutputStream.write(targetClass.toBytecode())
+                    } else {
+                        jarOutputStream.write(IOUtils.toByteArray(inputStream))
+                    }
+                    inputStream.close()
+                    jarOutputStream.closeEntry()
+                }
+                jarOutputStream.close()
+                file.close()
+
+                if (jarFile.exists()) {
+                    jarFile.delete()
+                }
+                optJar.renameTo(jarFile)
+            } else {
+                targetClass.writeFile(targetPath)
+            }
 
         }
 
@@ -202,23 +261,6 @@ public class BindInitHandle {
             ctClass.detach()
         }
         initClassList.clear()
-
-        inputs.each { TransformInput input ->
-            input.jarInputs.each { JarInput jarInput ->
-                def jarName = jarInput.name
-                def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
-                if (jarName.endsWith(".jar")) {
-                    jarName = jarName.substring(0, jarName.length() - 4)
-                }
-                def dest = outputProvider.getContentLocation(jarName + md5Name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
-                FileUtils.copyFile(jarInput.file, dest)
-            }
-            input.directoryInputs.each { DirectoryInput directoryInput ->
-                def dest = outputProvider.getContentLocation(directoryInput.name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
-                FileUtils.copyDirectory(directoryInput.file, dest)
-            }
-
-        }
 
         poolClassPathList.each {
             pool.removeClassPath(it)

@@ -41,6 +41,6 @@ dependencies {
     api project(':javassistgroovylibrary')
 
     api project(':annotation_api')
-    annotationProcessor project(':annotation_compiler')
+//    annotationProcessor project(':annotation_compiler')
 
 }
