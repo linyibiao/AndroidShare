@@ -21,7 +21,7 @@ import com.lyb.besttimer.pluginwidget.view.recyclerview.HeaderFeature;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.ItemTouchFeature;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
-import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeLayout;
+import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +53,12 @@ public class ItemTouchActivity extends BaseActivity {
         recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
-            }
-        }, 5000);
+//        recyclerView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                recyclerView.setAdapter(new MyAdapter(new TreeDataManager(itemTrees)));
+//            }
+//        }, 5000);
 
         new ItemTouchFeature(recyclerView, ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
 
@@ -122,14 +122,14 @@ public class ItemTouchActivity extends BaseActivity {
             }
         }.applyFeature();
 
-        new HeaderFeature(recyclerView, (FrameLayout) findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
-
-            @Override
-            public boolean isHeader(RecyclerView recyclerView, int position) {
-                int type = recyclerView.getAdapter().getItemViewType(position);
-                return type == 0;
-            }
-        }.applyFeature();
+//        new HeaderFeature(recyclerView, (FrameLayout) findViewById(R.id.rv_header), HeaderFeature.HEADER_ORIENTION.VERTICAL) {
+//
+//            @Override
+//            public boolean isHeader(RecyclerView recyclerView, int position) {
+//                int type = recyclerView.getAdapter().getItemViewType(position);
+//                return type == 0;
+//            }
+//        }.applyFeature();
 
     }
 
@@ -171,7 +171,7 @@ public class ItemTouchActivity extends BaseActivity {
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_level2, parent, false);
                     break;
             }
-            SwipeLayout swipeLayout = new SwipeLayout(parent.getContext());
+            SwipeFrameLayout swipeLayout = new SwipeFrameLayout(parent.getContext());
             swipeLayout.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             swipeLayout.addView(view);
             return new Holder(swipeLayout);
@@ -216,16 +216,16 @@ public class ItemTouchActivity extends BaseActivity {
                     }
                 });
                 getRecyclerView().getContext();
-                ((SwipeLayout) itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                ((SwipeFrameLayout) itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     @Override
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new RecyclerView.ViewHolder(new TextView(parent.getContext())) {
+                        return new RecyclerView.ViewHolder(new Button(parent.getContext())) {
                         };
                     }
 
                     @Override
                     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                        ((TextView) holder.itemView).setText(position + ";;;");
+                        ((Button) holder.itemView).setText(position + ";;;");
                     }
 
                     @Override
@@ -233,7 +233,7 @@ public class ItemTouchActivity extends BaseActivity {
                         return 1;
                     }
                 });
-                ((SwipeLayout) itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
+                ((SwipeFrameLayout) itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         int position = treeDataManager.indexOf(itemTree);

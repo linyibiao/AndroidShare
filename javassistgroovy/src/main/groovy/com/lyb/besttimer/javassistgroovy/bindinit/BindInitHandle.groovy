@@ -206,7 +206,19 @@ public class BindInitHandle {
             CtMethod initMethod = CtMethod.make(methodStr, targetClass)
             targetClass.addMethod(initMethod)
 
-            CtMethod createMethod = targetClass.getDeclaredMethod("onCreate")
+            CtMethod createMethod
+            try {
+                createMethod = targetClass.getDeclaredMethod("onCreate")
+            } catch (Exception ignored) {
+                String createStr = "public void onCreate() {"
+                if (targetClass.isFrozen()) {
+                    targetClass.defrost()
+                }
+                createStr += "super.onCreate();}"
+                createStr += "}"
+                createMethod = CtMethod.make(createStr, targetClass)
+                targetClass.addMethod(createMethod)
+            }
             createMethod.insertAfter("""bindInit();""")
 
             if (targetPath.endsWith(".jar")) {
