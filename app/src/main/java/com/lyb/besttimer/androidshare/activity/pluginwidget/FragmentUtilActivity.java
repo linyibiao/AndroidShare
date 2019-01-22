@@ -56,7 +56,7 @@ public class FragmentUtilActivity extends AppCompatActivity {
                 FragmentUtil.showAndHideOthers(getSupportFragmentManager(), R.id.fl_fragment, SimpleFragment.class, args1, "111");
                 break;
             case R.id.btn_showAndHideOthers2:
-                FragmentUtil.showAndHideOthers(getSupportFragmentManager(), R.id.fl_fragment, SimpleFragment.class, args2, "222");
+                FragmentUtil.showAndHideOthers(getSupportFragmentManager(), R.id.fl_fragment_2, SimpleFragment.class, args2, "222");
                 break;
         }
     }

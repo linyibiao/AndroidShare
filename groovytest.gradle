@@ -1,0 +1,10 @@
+def haveFun(){
+    println "卧槽？"
+}
+task(firstBlood).doLast{
+    println "start"
+    haveFun()
+}
+task myTask{
+    println "config"
+}

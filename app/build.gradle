@@ -51,3 +51,4 @@ dependencies {
     api project(':annotation_api')
     annotationProcessor project(':annotation_compiler')
 }
+apply from: '../groovytest.gradle'

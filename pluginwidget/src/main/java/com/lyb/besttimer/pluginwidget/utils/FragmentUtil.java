@@ -76,7 +76,7 @@ public class FragmentUtil {
         } else {
             try {
                 fragmentManager.beginTransaction().replace(containerViewId, newInstance(fragmentClass, args), tag).commit();
-            }catch (IllegalStateException ignored){
+            } catch (IllegalStateException ignored) {
 
             }
         }
@@ -96,7 +96,7 @@ public class FragmentUtil {
         if (!(preFragment != null && preFragment.getClass() == fragmentClass)) {
             try {
                 fragmentManager.beginTransaction().add(containerViewId, newInstance(fragmentClass, args), tag).commit();
-            }catch (IllegalStateException ignored){
+            } catch (IllegalStateException ignored) {
 
             }
         }
@@ -116,7 +116,7 @@ public class FragmentUtil {
         if (preFragment != null && preFragment.getClass() == fragmentClass) {
             try {
                 fragmentManager.beginTransaction().show(preFragment).commit();
-            }catch (IllegalStateException ignored){
+            } catch (IllegalStateException ignored) {
 
             }
         } else {
@@ -139,13 +139,13 @@ public class FragmentUtil {
         if (childFragments != null && childFragments.size() > 0) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             for (Fragment fragment : childFragments) {
-                if (fragment != null && !(fragment.getClass() == fragmentClass && TextUtils.equals(fragment.getTag(), tag))) {
+                if (fragment != null && fragment.getId() == containerViewId && !(fragment.getClass() == fragmentClass && TextUtils.equals(fragment.getTag(), tag))) {
                     transaction.hide(fragment);
                 }
             }
             try {
                 transaction.commit();
-            }catch (IllegalStateException ignored){
+            } catch (IllegalStateException ignored) {
 
             }
         }
