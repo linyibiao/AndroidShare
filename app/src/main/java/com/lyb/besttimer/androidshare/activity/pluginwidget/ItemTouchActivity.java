@@ -201,6 +201,7 @@ public class ItemTouchActivity extends BaseActivity {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv);
                 btn = (Button) itemView.findViewById(R.id.btn);
+                ((SwipeFrameLayout) itemView).setLeftPos(false);
             }
 
             @Override
@@ -212,6 +213,7 @@ public class ItemTouchActivity extends BaseActivity {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ((SwipeFrameLayout) itemView).open();
                         Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                     }
                 });

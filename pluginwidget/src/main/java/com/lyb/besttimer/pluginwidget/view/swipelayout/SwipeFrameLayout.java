@@ -1,6 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.swipelayout;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,9 +45,12 @@ public class SwipeFrameLayout extends ViewGroup {
 
     private boolean toNormalFromNothing = false;
 
+    private SwipeCallback swipeCallback;
+
     private void init(Context context) {
 
-        viewDragHelper = ViewDragHelper.create(this, 1, new SwipeCallback());
+        swipeCallback = new SwipeCallback();
+        viewDragHelper = ViewDragHelper.create(this, 1, swipeCallback);
 
         menuLayout = new FrameLayout(context);
         this.addView(menuLayout);
@@ -60,12 +64,14 @@ public class SwipeFrameLayout extends ViewGroup {
 
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter) {
+    public void setAdapter(final RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
-        post(new Runnable() {
+        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
-            public void run() {
-                requestLayout();
+            public boolean onPreDraw() {
+                adapter.notifyDataSetChanged();
+                getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
             }
         });
     }
@@ -178,15 +184,27 @@ public class SwipeFrameLayout extends ViewGroup {
             }
         }
 
+        private int minV = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity() * 5;
+
         @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
-            ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
-            int minV = viewConfiguration.getScaledMinimumFlingVelocity() * 5;
-            if (Math.abs(xvel) > minV) {
+            autoSmooth(xvel);
+        }
+
+        void autoSmooth(float xvel) {
+            if (Math.abs(xvel) >= minV) {
                 smoothSlideViewTo(xvel < 0);
             } else {
                 smoothSlideViewToWithNV();
+            }
+        }
+
+        public void autoOpen() {
+            if (isLeftPos) {
+                autoSmooth(minV);
+            } else {
+                autoSmooth(-minV);
             }
         }
 
@@ -225,6 +243,14 @@ public class SwipeFrameLayout extends ViewGroup {
      */
     public void reset() {
         smoothSlideViewToByTarget(0, 0);
+    }
+
+    /**
+     * open state
+     */
+    public void open() {
+//        swipeCallback.autoOpen();
+        smoothSlideViewToByTarget(isLeftPos ? menuLayout.getWidth() : -menuLayout.getWidth(), 0);
     }
 
     private View getTarget() {
