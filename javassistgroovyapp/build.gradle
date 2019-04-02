@@ -7,7 +7,6 @@ Map<String, String> dCfg = rootProject.ext.dependencies
 
 android {
     compileSdkVersion cfg.compileSdkVersion
-    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
         applicationId "com.lyb.besttimer.javassistgroovyapp"
