@@ -66,14 +66,7 @@ public class SwipeFrameLayout extends ViewGroup {
 
     public void setAdapter(final RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
-        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                adapter.notifyDataSetChanged();
-                getViewTreeObserver().removeOnPreDrawListener(this);
-                return false;
-            }
-        });
+        adapter.notifyDataSetChanged();
     }
 
     public void setLeftPos(boolean leftPos) {
@@ -133,7 +126,7 @@ public class SwipeFrameLayout extends ViewGroup {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            return true;
+            return recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() > 0;
         }
 
         @Override
@@ -242,7 +235,19 @@ public class SwipeFrameLayout extends ViewGroup {
      * reset state
      */
     public void reset() {
-        smoothSlideViewToByTarget(0, 0);
+        reset(true);
+    }
+
+    /**
+     * reset state
+     */
+    public void reset(boolean hasAnimation) {
+        if (hasAnimation) {
+            smoothSlideViewToByTarget(0, 0);
+        } else {
+            ViewCompat.offsetLeftAndRight(getTarget(), 0 - getTarget().getLeft());
+            ViewCompat.offsetTopAndBottom(getTarget(), 0 - getTarget().getTop());
+        }
     }
 
     /**
@@ -294,6 +299,14 @@ public class SwipeFrameLayout extends ViewGroup {
             menuLayout.layout(getPaddingLeft() + target.getMeasuredWidth(), getPaddingTop(), getPaddingLeft() + target.getMeasuredWidth() + menuLayout.getMeasuredWidth(), getPaddingTop() + menuLayout.getMeasuredHeight());
         } else {
             menuLayout.layout(getPaddingLeft() - menuLayout.getMeasuredWidth(), getPaddingTop(), getPaddingLeft(), getPaddingTop() + menuLayout.getMeasuredHeight());
+        }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (recyclerView.getAdapter() != null) {
+            recyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 

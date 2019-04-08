@@ -68,7 +68,8 @@
         <activity android:name=".activity.mix.IntentFindActivity" />
         <activity android:name=".activity.processor.RouterActivity" />
         <activity android:name=".activity.processor.RouterTargetActivity" />
-        <activity android:name=".activity.pluginwidget.CommonAdapterActivity"></activity>
+        <activity android:name=".activity.pluginwidget.CommonAdapterActivity" />
+        <activity android:name=".activity.mix.VectorDrawableActivity"></activity>
     </application>
 
 </manifest>

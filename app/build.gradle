@@ -19,10 +19,18 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
 
+        vectorDrawables.useSupportLibrary = true
+
     }
     dataBinding {
         enabled = true
     }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
     buildTypes {
         release {
             minifyEnabled false

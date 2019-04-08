@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_lodaing_1">
+    <target
+        android:name="loading_first"
+        android:animation="@animator/loading_animator"></target>
+</animated-vector>

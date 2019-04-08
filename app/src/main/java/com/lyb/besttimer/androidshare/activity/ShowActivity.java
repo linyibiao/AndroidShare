@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.mix.IntentFindActivity;
+import com.lyb.besttimer.androidshare.activity.mix.VectorDrawableActivity;
 import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
 import com.lyb.besttimer.androidshare.activity.mvvm.SimpleMVVMActivity;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
@@ -147,6 +148,7 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "混合");
             lvData.getLvDatas().add(new LVData(IntentFindActivity.class, "intent_find"));
+            lvData.getLvDatas().add(new LVData(VectorDrawableActivity.class, "vector_drawable"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "processor");
