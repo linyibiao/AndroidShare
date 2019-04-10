@@ -1,10 +1,13 @@
-package com.lyb.besttimer.camera1app;
+package com.lyb.besttimer.cameracore.camera1;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
-import android.view.ViewTreeObserver;
+
+import com.lyb.besttimer.cameracore.LifeCaller;
+import com.lyb.besttimer.cameracore.WorkStateFragment;
 
 public class CameraSurfaceView extends SurfaceView {
     public CameraSurfaceView(Context context) {
@@ -28,7 +31,7 @@ public class CameraSurfaceView extends SurfaceView {
 
     private void init() {
         FragmentActivity activity = (FragmentActivity) getContext();
-        cameraMsgManager = new CameraMsgManager(activity, this,null);
+        cameraMsgManager = new CameraMsgManager(activity, this);
         WorkStateFragment.addToManager(activity.getSupportFragmentManager()).setLifeCaller(new LifeCaller() {
             @Override
             public void onCreate() {
@@ -37,22 +40,25 @@ public class CameraSurfaceView extends SurfaceView {
 
             @Override
             public void onResume() {
-                cameraMsgManager.startPreview();
+                cameraMsgManager.resumePreview();
+                cameraMsgManager.registerSensorManager();
             }
 
             @Override
             public void onPause() {
-                cameraMsgManager.stopPreview();
-            }
-        });
-        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-
-                getViewTreeObserver().removeOnPreDrawListener(this);
-                return false;
+                cameraMsgManager.pausePreview();
+                cameraMsgManager.unregisterSensorManager();
             }
         });
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_UP:
+                cameraMsgManager.clickShow(event.getX(), event.getY());
+                break;
+        }
+        return true;
+    }
 }

@@ -1,4 +1,4 @@
-package com.lyb.besttimer.camera1app;
+package com.lyb.besttimer.cameracore;
 
 public interface LifeCaller {
 

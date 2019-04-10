@@ -1,6 +1,8 @@
-package com.lyb.besttimer.camera1app;
+package com.lyb.besttimer.cameracore.camera1;
 
 import android.view.SurfaceHolder;
+
+import com.lyb.besttimer.cameracore.camera1.CameraMsgManager;
 
 public class CameraSurfaceCallback implements SurfaceHolder.Callback {
 

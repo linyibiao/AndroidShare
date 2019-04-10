@@ -1,2 +1,2 @@
-include ':app', ':pluginwidget', ':network', ':rxandroid', ':serialport', ':x5webcore', ':javassistgroovy', ':javassistgroovyapp', ':camera2app', ':camera1app'
+include ':app', ':pluginwidget', ':network', ':rxandroid', ':serialport', ':x5webcore', ':javassistgroovy', ':javassistgroovyapp', ':camera2app', ':camera1app', ':cameracore'
 include ':annotation_compiler', ':annotation_bean', ':annotation_api', ':javassistgroovylibrary'
