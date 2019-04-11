@@ -17,6 +17,7 @@ import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.util.Pair;
+import android.util.Size;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,6 +30,7 @@ import com.lyb.besttimer.cameracore.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.graphics.Bitmap.createBitmap;
@@ -146,18 +148,37 @@ public class CameraMsgManager {
             Camera.Parameters parameters = mCamera.getParameters();
             chooseFixedPreviewFps(parameters, 10);
             mCamera.setDisplayOrientation(calculateCameraPreviewOrientation(activity));
-            Camera.Size size_preview;
+
+//            Camera.Size size_picture;
+//            if (changeSizeOrientation()) {
+//                size_picture = calculatePerfectSize(parameters.getSupportedPictureSizes(), surfaceView.getHeight(), surfaceView.getWidth());
+//            } else {
+//                size_picture = calculatePerfectSize(parameters.getSupportedPictureSizes(), surfaceView.getWidth(), surfaceView.getHeight());
+//            }
+
+//            Camera.Size size_preview;
+//            if (changeSizeOrientation()) {
+//                size_preview = calculatePerfectSize(parameters.getSupportedPreviewSizes(), size_picture.height, size_picture.width);
+//            } else {
+//                size_preview = calculatePerfectSize(parameters.getSupportedPreviewSizes(), size_picture.width, size_picture.height);
+//            }
+
+            Pair<Camera.Size, Camera.Size> size_pre_pic;
             if (changeSizeOrientation()) {
-                size_preview = calculatePerfectSize(parameters.getSupportedPreviewSizes(), surfaceView.getHeight(), surfaceView.getWidth());
+                size_pre_pic = calculatePerfectSize(parameters.getSupportedPreviewSizes(),parameters.getSupportedPictureSizes(), surfaceView.getHeight(), surfaceView.getWidth());
             } else {
-                size_preview = calculatePerfectSize(parameters.getSupportedPreviewSizes(), surfaceView.getWidth(), surfaceView.getHeight());
+                size_pre_pic = calculatePerfectSize(parameters.getSupportedPreviewSizes(),parameters.getSupportedPictureSizes(), surfaceView.getWidth(), surfaceView.getHeight());
             }
-            Camera.Size size_picture;
-            if (changeSizeOrientation()) {
-                size_picture = calculatePerfectSize(parameters.getSupportedPictureSizes(), size_preview.height, size_preview.width);
-            } else {
-                size_picture = calculatePerfectSize(parameters.getSupportedPictureSizes(), size_preview.width, size_preview.height);
-            }
+            Camera.Size size_preview=size_pre_pic.first;
+            Camera.Size size_picture=size_pre_pic.second;
+
+//            Camera.Size size_picture;
+//            if (changeSizeOrientation()) {
+//                size_picture = calculatePerfectSize(parameters.getSupportedPictureSizes(), size_preview.height, size_preview.width);
+//            } else {
+//                size_picture = calculatePerfectSize(parameters.getSupportedPictureSizes(), size_preview.width, size_preview.height);
+//            }
+
             parameters.setPreviewSize(size_preview.width, size_preview.height);
             parameters.setPictureSize(size_picture.width, size_picture.height);
             if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
@@ -203,6 +224,17 @@ public class CameraMsgManager {
     public void unregisterSensorManager() {
         SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         sm.unregisterListener(sensorEventListener);
+    }
+
+    static class CompareSizesByArea implements Comparator<Camera.Size> {
+
+        @Override
+        public int compare(Camera.Size lhs, Camera.Size rhs) {
+            // We cast here to ensure the multiplications won't overflow
+            return Long.signum((long) lhs.width * lhs.height -
+                    (long) rhs.width * rhs.height);
+        }
+
     }
 
     private int calculateCameraPreviewOrientation(Activity activity) {
@@ -365,7 +397,9 @@ public class CameraMsgManager {
             params.setMeteringAreas(meteringAreas);
         }
         String currentFocusMode = params.getFocusMode();
-        params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        if (params.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
         mCamera.cancelAutoFocus();
         mCamera.setParameters(params);
         mCamera.autoFocus(new Camera.AutoFocusCallback() {
@@ -393,7 +427,7 @@ public class CameraMsgManager {
                         matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
                     } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                         matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
-                        matrix.postScale(-1, 1);
+//                        matrix.postScale(-1, 1);
                     }
                     bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
                     String path = FileUtil.saveBitmap(activity, "BesttimerCamera", bitmap);

@@ -17,13 +17,13 @@ public class WorkStateFragment extends Fragment {
     private static final String TAG = "WorkStateFragment";
 
     public static WorkStateFragment addToManager(FragmentManager fragmentManager) {
-        WorkStateFragment httpStateFragment = (WorkStateFragment) fragmentManager.findFragmentByTag(TAG);
-        if (httpStateFragment == null) {
+        WorkStateFragment workStateFragment = (WorkStateFragment) fragmentManager.findFragmentByTag(TAG);
+        if (workStateFragment == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(httpStateFragment = new WorkStateFragment(), TAG);
+            fragmentTransaction.add(workStateFragment = new WorkStateFragment(), TAG);
             fragmentTransaction.commit();
         }
-        return httpStateFragment;
+        return workStateFragment;
     }
 
     private LifeCaller lifeCaller;

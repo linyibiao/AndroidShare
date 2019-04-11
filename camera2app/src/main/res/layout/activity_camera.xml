@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.lyb.besttimer.cameracore.camera1.CameraSurfaceView
-        android:id="@+id/surfaceView"
+    <com.lyb.besttimer.cameracore.camera2.CameraTextureView
+        android:id="@+id/textureView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
