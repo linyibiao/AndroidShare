@@ -19,24 +19,28 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.lyb.besttimer.cameracore.AngleUtil;
 import com.lyb.besttimer.cameracore.FileUtil;
@@ -62,7 +66,9 @@ public class CameraMsgManager {
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
     private ImageReader mImageReader;
+    private MediaRecorder mMediaRecorder;
     private Size size_preview;
+    private Size size_video;
 
     private CaptureRequest.Builder mPreviewRequestBuilder;
     private CameraCaptureSession mCaptureSession;
@@ -148,6 +154,7 @@ public class CameraMsgManager {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
+            mMediaRecorder = new MediaRecorder();
             manager.openCamera(mCameraId, mStateCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -170,6 +177,10 @@ public class CameraMsgManager {
             if (null != mImageReader) {
                 mImageReader.close();
                 mImageReader = null;
+            }
+            if (null != mMediaRecorder) {
+                mMediaRecorder.release();
+                mMediaRecorder = null;
             }
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera closing.", e);
@@ -263,6 +274,9 @@ public class CameraMsgManager {
 
     private void createCameraPreviewSession() {
         try {
+
+            closePreviewSession();
+
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
 
@@ -290,20 +304,7 @@ public class CameraMsgManager {
 
                             // When the session is ready, we start displaying the preview.
                             mCaptureSession = cameraCaptureSession;
-                            try {
-                                // Auto focus should be continuous for camera preview.
-                                mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                                        CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                                // Flash is automatically enabled when necessary.
-//                                setAutoFlash(mPreviewRequestBuilder);
-
-                                // Finally, we start displaying the camera preview.
-                                mPreviewRequest = mPreviewRequestBuilder.build();
-                                mCaptureSession.setRepeatingRequest(mPreviewRequest,
-                                        mCaptureCallback, mBackgroundHandler);
-                            } catch (CameraAccessException e) {
-                                e.printStackTrace();
-                            }
+                            updatePreview();
                         }
 
                         @Override
@@ -313,6 +314,22 @@ public class CameraMsgManager {
                         }
                     }, null
             );
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updatePreview() {
+        if (null == mCameraDevice) {
+            return;
+        }
+        try {
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+//            HandlerThread thread = new HandlerThread("CameraPreview");
+//            thread.start();
+            mPreviewRequest = mPreviewRequestBuilder.build();
+            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -347,6 +364,8 @@ public class CameraMsgManager {
                 }
                 size_preview = size_pre_pic.first;
                 Size size_picture = size_pre_pic.second;
+
+                size_video = calculatePerfectSize(map.getOutputSizes(MediaRecorder.class), size_preview.getWidth(), size_preview.getHeight());
 
                 ViewGroup.LayoutParams layoutParams = textureView.getLayoutParams();
                 if (changeSizeOrientation()) {
@@ -584,12 +603,10 @@ public class CameraMsgManager {
         sm.unregisterListener(sensorEventListener);
     }
 
-    /**
-     * 拍照
-     */
-    public void takePicture() {
+    private void closePreviewSession() {
         if (mCaptureSession != null) {
-            captureStillPicture();
+            mCaptureSession.close();
+            mCaptureSession = null;
         }
     }
 
@@ -604,12 +621,7 @@ public class CameraMsgManager {
      * finished.
      */
     private void unlockFocus() {
-        try {
-            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback,
-                    mBackgroundHandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
+        updatePreview();
     }
 
     private void captureStillPicture() {
@@ -657,6 +669,140 @@ public class CameraMsgManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setUpMediaRecorder() throws IOException {
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+
+        String videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
+        File parentFile = FileUtil.getDir(activity, "BesttimerVideo2");
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
+        mMediaRecorder.setOutputFile(videoPath = new File(parentFile, videoFileName).getPath());
+
+        mMediaRecorder.setVideoEncodingBitRate(10000000);
+        mMediaRecorder.setVideoFrameRate(30);
+        mMediaRecorder.setVideoSize(size_video.getWidth(), size_video.getHeight());
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+        try {
+            int rotationValue = (sensorRotation - activity.getWindowManager().getDefaultDisplay().getRotation() + 4) % 4;
+            CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
+            Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+            if (facing == CameraCharacteristics.LENS_FACING_BACK) {
+                mMediaRecorder.setOrientationHint((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
+            } else if (facing == CameraCharacteristics.LENS_FACING_FRONT) {
+                mMediaRecorder.setOrientationHint((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
+//            matrix.postScale(-1, 1);
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+
+        mMediaRecorder.prepare();
+    }
+
+    /**
+     * 拍照
+     */
+    public void takePicture() {
+        if (mCaptureSession != null) {
+            captureStillPicture();
+        }
+    }
+
+    private String videoPath;
+
+    /**
+     * 视频
+     */
+    public void takeRecord() {
+        if (mCaptureSession != null) {
+            if (!TextUtils.isEmpty(videoPath)) {//正在录制视频
+                stopRecord();
+            } else {//还没开始录制视频
+                startRecord();
+            }
+        }
+    }
+
+    private void startRecord() {
+        try {
+            closePreviewSession();
+            setUpMediaRecorder();
+
+            SurfaceTexture texture = textureView.getSurfaceTexture();
+            assert texture != null;
+            texture.setDefaultBufferSize(size_preview.getWidth(), size_preview.getHeight());
+            mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            List<Surface> surfaces = new ArrayList<>();
+
+            // Set up Surface for the camera preview
+            Surface previewSurface = new Surface(texture);
+            surfaces.add(previewSurface);
+            mPreviewRequestBuilder.addTarget(previewSurface);
+
+            // Set up Surface for the MediaRecorder
+            Surface recorderSurface = mMediaRecorder.getSurface();
+            surfaces.add(recorderSurface);
+            mPreviewRequestBuilder.addTarget(recorderSurface);
+
+            // Start a capture session
+            // Once the session starts, we can update the UI and start recording
+            mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
+
+                @Override
+                public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                    mCaptureSession = cameraCaptureSession;
+                    updatePreview();
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // UI
+//                            mButtonVideo.setText(R.string.stop);
+//                            mIsRecordingVideo = true;
+
+                            // Start recording
+                            mMediaRecorder.start();
+                        }
+                    });
+                }
+
+                @Override
+                public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+//                    Activity activity = getActivity();
+//                    if (null != activity) {
+//                    Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+//                    }
+                }
+            }, mBackgroundHandler);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stopRecord() {
+
+        closePreviewSession();
+
+        mMediaRecorder.stop();
+        mMediaRecorder.reset();
+
+        // 最后通知图库更新
+        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+
+        videoPath = null;
+
+        createCameraPreviewSession();
+
     }
 
 }

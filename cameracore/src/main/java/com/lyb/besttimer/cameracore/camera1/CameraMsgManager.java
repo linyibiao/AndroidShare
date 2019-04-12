@@ -16,8 +16,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Pair;
-import android.util.Size;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -165,12 +165,12 @@ public class CameraMsgManager {
 
             Pair<Camera.Size, Camera.Size> size_pre_pic;
             if (changeSizeOrientation()) {
-                size_pre_pic = calculatePerfectSize(parameters.getSupportedPreviewSizes(),parameters.getSupportedPictureSizes(), surfaceView.getHeight(), surfaceView.getWidth());
+                size_pre_pic = calculatePerfectSize(parameters.getSupportedPreviewSizes(), parameters.getSupportedPictureSizes(), surfaceView.getHeight(), surfaceView.getWidth());
             } else {
-                size_pre_pic = calculatePerfectSize(parameters.getSupportedPreviewSizes(),parameters.getSupportedPictureSizes(), surfaceView.getWidth(), surfaceView.getHeight());
+                size_pre_pic = calculatePerfectSize(parameters.getSupportedPreviewSizes(), parameters.getSupportedPictureSizes(), surfaceView.getWidth(), surfaceView.getHeight());
             }
-            Camera.Size size_preview=size_pre_pic.first;
-            Camera.Size size_picture=size_pre_pic.second;
+            Camera.Size size_preview = size_pre_pic.first;
+            Camera.Size size_picture = size_pre_pic.second;
 
 //            Camera.Size size_picture;
 //            if (changeSizeOrientation()) {
@@ -412,6 +412,23 @@ public class CameraMsgManager {
         });
     }
 
+    public void offsetZoom(int offsetZoom) {
+        if (mCamera != null) {
+            try {
+                Camera.Parameters parameter = mCamera.getParameters();
+//            if (parameter.isSmoothZoomSupported()) {
+                if (parameter.isZoomSupported()) {
+                    int zoom = parameter.getZoom() + offsetZoom;
+                    zoom = Math.min(Math.max(zoom, 0), parameter.getMaxZoom());
+                    parameter.setZoom(zoom);
+                    mCamera.setParameters(parameter);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void takePicture() {
         if (mCamera != null) {
             mCamera.takePicture(null, null, new Camera.PictureCallback() {
@@ -440,7 +457,7 @@ public class CameraMsgManager {
 
     public void takeRecord() {
         if (mCamera != null) {
-            if (mediaRecorder != null) {//正在录制视频
+            if (!TextUtils.isEmpty(videoPath)) {//正在录制视频
                 stopRecord();
             } else {//还没开始录制视频
                 startRecord();
@@ -480,9 +497,10 @@ public class CameraMsgManager {
                 size_video = calculatePerfectSize(parameters.getSupportedVideoSizes(), surfaceView.getWidth(), surfaceView.getHeight());
             }
         }
+
         mediaRecorder.setVideoSize(size_video.width, size_video.height);
 
-        mediaRecorder.setVideoFrameRate(20);
+//        mediaRecorder.setVideoFrameRate(20);
 
         int rotationValue = (sensorRotation - activity.getWindowManager().getDefaultDisplay().getRotation() + 4) % 4;
         Camera.CameraInfo info = new Camera.CameraInfo();
@@ -523,6 +541,7 @@ public class CameraMsgManager {
                 mediaRecorder.release();
             }
             mediaRecorder = null;
+            videoPath = null;
             onStarted();
 
             // 最后通知图库更新

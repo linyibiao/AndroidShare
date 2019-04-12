@@ -19,6 +19,12 @@ public class CameraActivity extends AppCompatActivity {
                 cameraTextureView.getCameraMsgManager().takePicture();
             }
         });
+        findViewById(R.id.btn_video).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraTextureView.getCameraMsgManager().takeRecord();
+            }
+        });
         findViewById(R.id.btn_reverse).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
