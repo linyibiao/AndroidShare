@@ -412,15 +412,24 @@ public class CameraMsgManager {
         });
     }
 
+    private int initZoom = 0;
+
+    public void initZoom() {
+        if (mCamera != null) {
+            Camera.Parameters parameter = mCamera.getParameters();
+            initZoom = parameter.getZoom();
+        }
+    }
+
     public void offsetZoom(int offsetZoom) {
         if (mCamera != null) {
             try {
                 Camera.Parameters parameter = mCamera.getParameters();
 //            if (parameter.isSmoothZoomSupported()) {
                 if (parameter.isZoomSupported()) {
-                    int zoom = parameter.getZoom() + offsetZoom;
-                    zoom = Math.min(Math.max(zoom, 0), parameter.getMaxZoom());
-                    parameter.setZoom(zoom);
+                    int currZoom = initZoom + offsetZoom;
+                    currZoom = Math.min(Math.max(currZoom, 0), parameter.getMaxZoom());
+                    parameter.setZoom(currZoom);
                     mCamera.setParameters(parameter);
                 }
             } catch (Exception e) {

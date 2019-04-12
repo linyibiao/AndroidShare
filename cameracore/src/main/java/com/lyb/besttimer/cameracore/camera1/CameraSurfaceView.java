@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import com.lyb.besttimer.cameracore.LifeCaller;
+import com.lyb.besttimer.cameracore.TouchMode;
 import com.lyb.besttimer.cameracore.WorkStateFragment;
 
 public class CameraSurfaceView extends SurfaceView {
@@ -53,10 +54,6 @@ public class CameraSurfaceView extends SurfaceView {
         });
     }
 
-    enum TouchMode {
-        FOCUS, ZOOM
-    }
-
     private TouchMode touchMode = TouchMode.FOCUS;
 
     private Pair<Pair<Float, Float>, Pair<Float, Float>> initTouch;
@@ -88,10 +85,12 @@ public class CameraSurfaceView extends SurfaceView {
             case MotionEvent.ACTION_DOWN:
                 touchMode = TouchMode.FOCUS;
                 initTouch(event);
+                cameraMsgManager.initZoom();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 touchMode = TouchMode.ZOOM;
                 initTouch(event);
+                cameraMsgManager.initZoom();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerCount() >= 2) {

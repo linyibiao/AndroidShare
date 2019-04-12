@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.Sensor;
@@ -40,7 +41,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.lyb.besttimer.cameracore.AngleUtil;
 import com.lyb.besttimer.cameracore.FileUtil;
@@ -287,8 +287,10 @@ public class CameraMsgManager {
             Surface surface = new Surface(texture);
 
             // We set up a CaptureRequest.Builder with the output Surface.
-            mPreviewRequestBuilder
+            CaptureRequest.Builder newBuilder
                     = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+            copyCapture(newBuilder, mPreviewRequestBuilder);
+            mPreviewRequestBuilder = newBuilder;
             mPreviewRequestBuilder.addTarget(surface);
 
             // Here, we create a CameraCaptureSession for camera preview.
@@ -316,6 +318,12 @@ public class CameraMsgManager {
             );
         } catch (CameraAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void copyCapture(CaptureRequest.Builder newCaptureRequestBuilder, CaptureRequest.Builder oldCaptureRequestBuilder) {
+        if (newCaptureRequestBuilder != null && oldCaptureRequestBuilder != null) {
+            newCaptureRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, oldCaptureRequestBuilder.get(CaptureRequest.SCALER_CROP_REGION));
         }
     }
 
@@ -621,13 +629,15 @@ public class CameraMsgManager {
      * finished.
      */
     private void unlockFocus() {
-        updatePreview();
+        createCameraPreviewSession();
     }
 
     private void captureStillPicture() {
         if (mCaptureSession != null) {
             try {
                 CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                copyCapture(captureBuilder, mPreviewRequestBuilder);
+                mPreviewRequestBuilder = captureBuilder;
                 captureBuilder.addTarget(mImageReader.getSurface());
 
                 // Use the same AE and AF modes as the preview.
@@ -707,6 +717,53 @@ public class CameraMsgManager {
         mMediaRecorder.prepare();
     }
 
+    private Rect cropRegionForZoom(CameraCharacteristics characteristics, float zoom) {
+        Rect sensor = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        int xCenter = sensor.width() / 2;
+        int yCenter = sensor.height() / 2;
+        int xDelta = (int) (0.5f * sensor.width() / zoom);
+        int yDelta = (int) (0.5f * sensor.height() / zoom);
+        return new Rect(xCenter - xDelta, yCenter - yDelta, xCenter + xDelta, yCenter + yDelta);
+    }
+
+    private float initZoom = 1f;
+
+    public void initZoom() {
+        if (mCaptureSession != null) {
+            try {
+                CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+                CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
+                Rect sensor = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+                Rect currRect = mPreviewRequestBuilder.get(CaptureRequest.SCALER_CROP_REGION);
+                initZoom = 1;
+                if (currRect != null) {
+                    initZoom = sensor.width() * 1.0f / currRect.width();
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void offsetZoom(float offsetZoom) {
+        if (mCaptureSession != null) {
+            try {
+                CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+                CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
+                Float maxZoom = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+                if (maxZoom != null && maxZoom > 1) {
+                    float currZoom = initZoom + offsetZoom;
+                    currZoom = Math.min(Math.max(currZoom, 1f), maxZoom);
+                    mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, cropRegionForZoom(characteristics, currZoom));
+                    mPreviewRequest = mPreviewRequestBuilder.build();
+                    mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, mBackgroundHandler);
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * 拍照
      */
@@ -739,7 +796,9 @@ public class CameraMsgManager {
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
             texture.setDefaultBufferSize(size_preview.getWidth(), size_preview.getHeight());
-            mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            CaptureRequest.Builder newBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            copyCapture(newBuilder, mPreviewRequestBuilder);
+            mPreviewRequestBuilder = newBuilder;
             List<Surface> surfaces = new ArrayList<>();
 
             // Set up Surface for the camera preview
