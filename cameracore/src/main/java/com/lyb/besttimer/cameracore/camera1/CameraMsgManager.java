@@ -452,7 +452,7 @@ public class CameraMsgManager {
                     if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                         matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
                     } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                        matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
+                        matrix.setRotate((360 + rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
 //                        matrix.postScale(-1, 1);
                     }
                     bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
@@ -517,7 +517,7 @@ public class CameraMsgManager {
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
             mediaRecorder.setOrientationHint((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
         } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            mediaRecorder.setOrientationHint((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
+            mediaRecorder.setOrientationHint((360 + rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
 //            matrix.postScale(-1, 1);
         }
 
@@ -543,19 +543,26 @@ public class CameraMsgManager {
 
     private void stopRecord() {
 
-        try {
-            mediaRecorder.stop();
-        } finally {
-            if (mediaRecorder != null) {
-                mediaRecorder.release();
+        if (mediaRecorder != null) {
+            try {
+                mediaRecorder.stop();
+            } catch (IllegalStateException e) {
+                // TODO 如果当前java状态和jni里面的状态不一致，
+                e.printStackTrace();
+                mediaRecorder = null;
+                mediaRecorder = new MediaRecorder();
+            } finally {
+                if (mediaRecorder != null) {
+                    mediaRecorder.release();
+                }
+                mediaRecorder = null;
+                videoPath = null;
+                onStarted();
+
+                // 最后通知图库更新
+                activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+
             }
-            mediaRecorder = null;
-            videoPath = null;
-            onStarted();
-
-            // 最后通知图库更新
-            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
-
         }
 
     }

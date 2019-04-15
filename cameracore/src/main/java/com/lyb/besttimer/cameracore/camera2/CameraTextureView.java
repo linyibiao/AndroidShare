@@ -70,7 +70,7 @@ public class CameraTextureView extends TextureView {
         if (initTouch != null && event.getPointerCount() >= 2) {
             float dxy = getDistance(event.getX(0), event.getY(0), event.getX(1), event.getY(1)) -
                     getDistance(initTouch.first.first, initTouch.first.second, initTouch.second.first, initTouch.second.second);
-            return dxy / 50;
+            return dxy / 200;
         }
         return 0;
     }
@@ -100,7 +100,7 @@ public class CameraTextureView extends TextureView {
                 break;
             case MotionEvent.ACTION_UP:
                 if (touchMode == TouchMode.FOCUS) {
-//                    cameraMsgManager.clickShow(event.getX(), event.getY());
+                    cameraMsgManager.clickShow(event.getX(), event.getY());
                 }
                 break;
             case MotionEvent.ACTION_POINTER_UP:
