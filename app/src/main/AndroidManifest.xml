@@ -9,6 +9,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.pluginwidget.ProgressBarActivity"></activity>
         <activity android:name=".activity.ShowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,7 +70,7 @@
         <activity android:name=".activity.processor.RouterActivity" />
         <activity android:name=".activity.processor.RouterTargetActivity" />
         <activity android:name=".activity.pluginwidget.CommonAdapterActivity" />
-        <activity android:name=".activity.mix.VectorDrawableActivity"></activity>
+        <activity android:name=".activity.mix.VectorDrawableActivity" />
     </application>
 
 </manifest>
