@@ -43,6 +43,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.lyb.besttimer.cameracore.AngleUtil;
+import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.CameraState;
 import com.lyb.besttimer.cameracore.FileUtil;
 
@@ -60,6 +61,7 @@ public class CameraMsgManager {
 
     private final Activity activity;
     private final TextureView textureView;
+    private CameraResultCaller cameraResultCaller;
     private Surface surface;
     private String mCameraId;
     private int mFacing = CameraCharacteristics.LENS_FACING_BACK;
@@ -73,7 +75,6 @@ public class CameraMsgManager {
 
     private CaptureRequest.Builder mCaptureRequestBuilder;
     private CameraCaptureSession mCaptureSession;
-    private CaptureRequest mPreviewRequest;
     private int sensorRotation;
 
     private Semaphore mCameraOpenCloseLock = new Semaphore(1);
@@ -83,7 +84,10 @@ public class CameraMsgManager {
     public CameraMsgManager(Activity activity, TextureView textureView) {
         this.activity = activity;
         this.textureView = textureView;
-//        this.surface=new Surface(textureView.getSurfaceTexture());
+    }
+
+    public void setCameraResultCaller(CameraResultCaller cameraResultCaller) {
+        this.cameraResultCaller = cameraResultCaller;
     }
 
     private SensorEventListener sensorEventListener = new SensorEventListener() {
@@ -100,13 +104,15 @@ public class CameraMsgManager {
     };
 
     public void switchCamera() {
-        if (mFacing == CameraCharacteristics.LENS_FACING_BACK) {
-            mFacing = CameraCharacteristics.LENS_FACING_FRONT;
-        } else {
-            mFacing = CameraCharacteristics.LENS_FACING_BACK;
+        if (cameraState == CameraState.PREVIEW) {
+            if (mFacing == CameraCharacteristics.LENS_FACING_BACK) {
+                mFacing = CameraCharacteristics.LENS_FACING_FRONT;
+            } else {
+                mFacing = CameraCharacteristics.LENS_FACING_BACK;
+            }
+            onPause();
+            onResume();
         }
-        onPause();
-        onResume();
     }
 
     public void onResume() {
@@ -267,7 +273,9 @@ public class CameraMsgManager {
                 parentFile.mkdirs();
             }
             String picFileName = "picture_" + System.currentTimeMillis() + ".jpg";
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), new File(parentFile, picFileName)));
+            File picFile = new File(parentFile, picFileName);
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), picFile));
+
         }
 
     };
@@ -306,49 +314,60 @@ public class CameraMsgManager {
     }
 
     private void createSession(CameraState cameraState, CameraCaptureSession.StateCallback stateCallback) {
-        if (mCameraDevice == null) {
-            return;
-        }
-        try {
-            closePreviewSession();
-            List<Surface> outputs = new ArrayList<>();
-            SurfaceTexture texture = textureView.getSurfaceTexture();
-            texture.setDefaultBufferSize(size_preview.getWidth(), size_preview.getHeight());
-            surface = new Surface(texture);
-            if (cameraState == CameraState.PREVIEW) {
-                outputs.add(surface);
-            } else if (cameraState == CameraState.PHOTO) {
-                outputs.add(surface);
-                outputs.add(mImageReader.getSurface());
-            } else if (cameraState == CameraState.VIDEO) {
-                outputs.add(surface);
-                outputs.add(mMediaRecorder.getSurface());
-            }
-            mCameraDevice.createCaptureSession(outputs,
-                    new CameraCaptureSession.StateCallback() {
-                        @Override
-                        public void onConfigured(@NonNull CameraCaptureSession session) {
-                            // The camera is already closed
-                            if (null == mCameraDevice) {
-                                return;
-                            }
-                            mCaptureSession = session;
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    stateCallback.onConfigured(session);
-                                }
-                            });
-                        }
+        createSession(cameraState, stateCallback, false);
+    }
 
-                        @Override
-                        public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-                            stateCallback.onConfigureFailed(session);
-                        }
-                    }, mBackgroundHandler
-            );
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
+    private void createSession(CameraState cameraState, CameraCaptureSession.StateCallback stateCallback, boolean syncThread) {
+        try {
+            mCameraOpenCloseLock.acquire();
+            if (mCameraDevice == null) {
+                return;
+            }
+            try {
+                closePreviewSession();
+                List<Surface> outputs = new ArrayList<>();
+                SurfaceTexture texture = textureView.getSurfaceTexture();
+                texture.setDefaultBufferSize(size_preview.getWidth(), size_preview.getHeight());
+                surface = new Surface(texture);
+                if (cameraState == CameraState.PREVIEW) {
+                    outputs.add(surface);
+                } else if (cameraState == CameraState.PHOTO) {
+                    outputs.add(surface);
+                    outputs.add(mImageReader.getSurface());
+                } else if (cameraState == CameraState.VIDEO) {
+                    outputs.add(surface);
+                    outputs.add(mMediaRecorder.getSurface());
+                }
+                mCameraDevice.createCaptureSession(outputs,
+                        new CameraCaptureSession.StateCallback() {
+                            @Override
+                            public void onConfigured(@NonNull CameraCaptureSession session) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // The camera is already closed
+                                        if (null == mCameraDevice) {
+                                            return;
+                                        }
+                                        mCaptureSession = session;
+                                        stateCallback.onConfigured(session);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+                                stateCallback.onConfigureFailed(session);
+                            }
+                        }, syncThread ? null : mBackgroundHandler
+                );
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
+        } finally {
+            mCameraOpenCloseLock.release();
         }
     }
 
@@ -405,8 +424,6 @@ public class CameraMsgManager {
                         ImageFormat.JPEG, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
-
-                mMediaRecorder = new MediaRecorder();
 
                 // Check if the flash is supported.
 //                Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
@@ -490,20 +507,26 @@ public class CameraMsgManager {
         }
         Pair<Size, Size> result = null;
         double targetRatio = expectWidth * 1.0 / expectHeight;
-        for (Pair<Size, Size> size : availableSizes) {
-            if (result == null) {
-                result = size;
-            } else {
-                double resultRatio = result.first.getWidth() * 1.0 / result.first.getHeight();
-                double currRatio = size.first.getWidth() * 1.0 / size.first.getHeight();
-                if (Math.abs(resultRatio - targetRatio) > Math.abs(currRatio - targetRatio)) {
+        if (availableSizes.size() > 0) {
+            for (Pair<Size, Size> size : availableSizes) {
+                if (result == null) {
                     result = size;
-                } else if (Math.abs(resultRatio - targetRatio) == Math.abs(currRatio - targetRatio)) {
-                    if (size.first.getWidth() * size.first.getHeight() > result.first.getWidth() * result.first.getHeight()) {
+                } else {
+                    double resultRatio = result.first.getWidth() * 1.0 / result.first.getHeight();
+                    double currRatio = size.first.getWidth() * 1.0 / size.first.getHeight();
+                    if (Math.abs(resultRatio - targetRatio) > Math.abs(currRatio - targetRatio)) {
                         result = size;
+                    } else if (Math.abs(resultRatio - targetRatio) == Math.abs(currRatio - targetRatio)) {
+                        if (size.first.getWidth() * size.first.getHeight() > result.first.getWidth() * result.first.getHeight()) {
+                            result = size;
+                        }
                     }
                 }
             }
+        } else {
+            Size size_preview = calculatePerfectSize(sizes_preview, expectWidth, expectHeight);
+            Size size_picture = calculatePerfectSize(sizes_picture, size_preview.getWidth(), size_preview.getHeight());
+            result = new Pair<>(size_preview, size_picture);
         }
         return result;
     }
@@ -610,6 +633,16 @@ public class CameraMsgManager {
                 }
                 // 最后通知图库更新
                 activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + mFile.getPath())));
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (cameraResultCaller != null) {
+                            cameraResultCaller.onResult(mFile.getPath(), CameraResultCaller.ResultType.PICTURE);
+                        }
+                    }
+                });
+
             }
         }
 
@@ -690,6 +723,9 @@ public class CameraMsgManager {
     }
 
     private void setUpMediaRecorder() throws IOException {
+
+        mMediaRecorder = new MediaRecorder();
+
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -782,6 +818,12 @@ public class CameraMsgManager {
 
     private float initZoom = 1f;
 
+    public void initZoomByMode() {
+        if (cameraState != CameraState.PREVIEW) {
+            initZoom();
+        }
+    }
+
     public void initZoom() {
         if (mCaptureSession != null) {
             try {
@@ -799,6 +841,12 @@ public class CameraMsgManager {
         }
     }
 
+    public void offsetZoomByMode(float offsetZoom) {
+        if (cameraState == CameraState.PREVIEW) {
+            offsetZoom(offsetZoom);
+        }
+    }
+
     public void offsetZoom(float offsetZoom) {
         if (mCaptureSession != null) {
             try {
@@ -809,10 +857,12 @@ public class CameraMsgManager {
                     float currZoom = initZoom + offsetZoom;
                     currZoom = Math.min(Math.max(currZoom, 1f), maxZoom);
                     mCaptureRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, cropRegionForZoom(characteristics, currZoom));
-                    mPreviewRequest = mCaptureRequestBuilder.build();
+                    CaptureRequest mPreviewRequest = mCaptureRequestBuilder.build();
                     mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, mBackgroundHandler);
                 }
             } catch (CameraAccessException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
         }
@@ -861,10 +911,14 @@ public class CameraMsgManager {
 
                         mCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_VIDEO);
 
-                        mPreviewRequest = mCaptureRequestBuilder.build();
+                        CaptureRequest mPreviewRequest = mCaptureRequestBuilder.build();
                         mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, mBackgroundHandler);
 
                         mMediaRecorder.start();
+
+                        if (cameraResultCaller != null) {
+                            cameraResultCaller.onStartVideo();
+                        }
 
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
@@ -873,7 +927,6 @@ public class CameraMsgManager {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-
                 }
             });
         } catch (IOException e) {
@@ -890,6 +943,10 @@ public class CameraMsgManager {
 
         // 最后通知图库更新
         activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+
+        if (cameraResultCaller != null) {
+            cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.VIDEO);
+        }
 
         createCameraPreviewSession();
 

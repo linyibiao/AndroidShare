@@ -19,6 +19,7 @@ import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
 import com.lyb.besttimer.androidshare.activity.mvvm.SimpleMVVMActivity;
 import com.lyb.besttimer.androidshare.activity.network.GlideActivity;
 import com.lyb.besttimer.androidshare.activity.network.SimpleRetrofitActivity;
+import com.lyb.besttimer.androidshare.activity.pluginwidget.CameraShowActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CardViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CommonAdapterActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.CountUpTimerActivity;
@@ -155,6 +156,10 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "processor");
             lvData.getLvDatas().add(new LVData(RouterActivity.class, "router"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "相机");
+            lvData.getLvDatas().add(new LVData(CameraShowActivity.class, "相机"));
             lvDatas.add(lvData);
 
         }

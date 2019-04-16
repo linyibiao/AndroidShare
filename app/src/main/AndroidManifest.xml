@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.pluginwidget.ProgressBarActivity"></activity>
+        <activity android:name=".activity.pluginwidget.CameraShowActivity"></activity>
         <activity android:name=".activity.ShowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

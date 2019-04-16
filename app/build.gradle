@@ -43,6 +43,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:${dCfg.supportVersion}"
     implementation project(':pluginwidget')
+    implementation project(':cameracore')
     implementation project(':network')
     implementation project(':rxandroid')
     implementation project(':serialport')

@@ -1,9 +1,16 @@
 package com.lyb.besttimer.pluginwidget.view.loading;
 
 public interface LoadingCaller {
-    void init();
 
-    void offset(float offsetValue);
+    void takeOneShot();
 
-    void offset(int offsetValue);
+    void startLoading();
+
+    void endLoading();
+
+    void moveInit();
+
+    void moveOffset(float offsetValue);
+
+    void moveOffset(int offsetValue);
 }

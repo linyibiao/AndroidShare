@@ -9,7 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 public class LoadingView extends View {
     public LoadingView(Context context) {
@@ -25,7 +26,7 @@ public class LoadingView extends View {
         init();
     }
 
-    enum LoadingMode {
+    public enum LoadingMode {
         IDLE, LOADING
     }
 
@@ -35,19 +36,25 @@ public class LoadingView extends View {
     private LoadingCaller loadingCaller;
 
     private Paint paint;
-    private RectF rectF;
+    private RectF rectF = new RectF();
+
+    public LoadingMode getLoadingMode() {
+        return loadingMode;
+    }
 
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(0xffff0000);
-        paint.setStrokeWidth(10);
+        paint.setColor(0xff3cb264);
+        paint.setStrokeWidth(20);
         paint.setStyle(Paint.Style.STROKE);
 
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (loadingMode == LoadingMode.IDLE) {
-                    Toast.makeText(v.getContext(), "点击", Toast.LENGTH_LONG).show();
+                    if (loadingCaller != null) {
+                        loadingCaller.takeOneShot();
+                    }
                 }
             }
         });
@@ -64,6 +71,20 @@ public class LoadingView extends View {
 
     }
 
+    private void showPressAnimation() {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0.8f, 1, 0.8f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setDuration(100);
+        startAnimation(scaleAnimation);
+    }
+
+    private void showReleaseAnimation() {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1, 0.8f, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setDuration(100);
+        startAnimation(scaleAnimation);
+    }
+
     public void setLoadingCaller(LoadingCaller loadingCaller) {
         this.loadingCaller = loadingCaller;
     }
@@ -76,7 +97,19 @@ public class LoadingView extends View {
             }
             loadingTime = new LoadingTime();
             loadingTime.start();
+            if (loadingCaller != null) {
+                loadingCaller.startLoading();
+            }
         }
+    }
+
+    public void reStartLoading() {
+        loadingMode = LoadingMode.LOADING;
+        if (loadingTime != null) {
+            loadingTime.cancel();
+        }
+        loadingTime = new LoadingTime();
+        loadingTime.start();
     }
 
     private void endLoading() {
@@ -84,6 +117,9 @@ public class LoadingView extends View {
             loadingMode = LoadingMode.IDLE;
             loadingTime.cancel();
             postInvalidate();
+            if (loadingCaller != null) {
+                loadingCaller.endLoading();
+            }
         }
     }
 
@@ -112,24 +148,61 @@ public class LoadingView extends View {
             percent = 1;
             loadingMode = LoadingMode.IDLE;
             postInvalidate();
+            if (loadingCaller != null) {
+                loadingCaller.endLoading();
+            }
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int maxWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int maxHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int minValue = Math.min(maxWidth, maxHeight);
+        super.onMeasure(MeasureSpec.makeMeasureSpec(minValue, MeasureSpec.getMode(widthMeasureSpec)), MeasureSpec.makeMeasureSpec(minValue, MeasureSpec.getMode(heightMeasureSpec)));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (rectF == null) {
-            float padding = paint.getStrokeWidth() / 2;
-            rectF = new RectF(0 + padding, 0 + padding, getWidth() - padding, getHeight() - padding);
-        }
+
+        paint.setColor(0x77ffffff);
+        paint.setStyle(Paint.Style.FILL);
         if (loadingMode == LoadingMode.LOADING) {
+            float outSize = getWidth();
+            float radius = outSize / 2f;
+            rectF.set(outSize / 2 - radius, outSize / 2 - radius, outSize / 2 + radius, outSize / 2 + radius);
+            canvas.drawCircle(outSize / 2, outSize / 2, radius, paint);
+        } else {
+            float outSize = getWidth();
+            float radius = outSize / 2f * 2 / 3;
+            rectF.set(outSize / 2 - radius, outSize / 2 - radius, outSize / 2 + radius, outSize / 2 + radius);
+            canvas.drawCircle(outSize / 2, outSize / 2, radius, paint);
+        }
+
+        paint.setColor(0xffffffff);
+        paint.setStyle(Paint.Style.FILL);
+        if (loadingMode == LoadingMode.LOADING) {
+            float outSize = getWidth();
+            float radius = outSize / 2f * 5 / 12;
+            rectF.set(outSize / 2 - radius, outSize / 2 - radius, outSize / 2 + radius, outSize / 2 + radius);
+            canvas.drawCircle(outSize / 2, outSize / 2, radius, paint);
+        } else {
+            float outSize = getWidth();
+            float radius = outSize / 2f * 1 / 2;
+            rectF.set(outSize / 2 - radius, outSize / 2 - radius, outSize / 2 + radius, outSize / 2 + radius);
+            canvas.drawCircle(outSize / 2, outSize / 2, radius, paint);
+        }
+
+        if (loadingMode == LoadingMode.LOADING) {
+            paint.setColor(0xff3cb264);
+            paint.setStrokeWidth(20);
+            paint.setStyle(Paint.Style.STROKE);
+            float padding = paint.getStrokeWidth() / 2;
+            rectF.set(0 + padding, 0 + padding, getWidth() - padding, getHeight() - padding);
             canvas.drawArc(rectF, -90, loadingTime.getPercent() * 360, false, paint);
         }
+
     }
 
     private float initY;
@@ -137,7 +210,7 @@ public class LoadingView extends View {
     private void initTouch(MotionEvent event) {
         initY = event.getY(0);
         if (loadingCaller != null) {
-            loadingCaller.init();
+            loadingCaller.moveInit();
         }
     }
 
@@ -145,6 +218,7 @@ public class LoadingView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                showPressAnimation();
                 initTouch(event);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
@@ -160,12 +234,13 @@ public class LoadingView extends View {
                     float currY = event.getY(0);
                     float dy = Math.max(initY - currY, 0);
                     if (loadingCaller != null) {
-                        loadingCaller.offset(dy / 200);
-                        loadingCaller.offset((int) (dy / 50));
+                        loadingCaller.moveOffset(dy / 200);
+                        loadingCaller.moveOffset((int) (dy / 50));
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                showReleaseAnimation();
                 if (loadingMode == LoadingMode.LOADING) {
                     endLoading();
                 }

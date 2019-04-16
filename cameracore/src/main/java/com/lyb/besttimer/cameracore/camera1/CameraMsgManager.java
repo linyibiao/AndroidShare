@@ -16,7 +16,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Pair;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -25,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.lyb.besttimer.cameracore.AngleUtil;
+import com.lyb.besttimer.cameracore.CameraResultCaller;
+import com.lyb.besttimer.cameracore.CameraState;
 import com.lyb.besttimer.cameracore.FileUtil;
 
 import java.io.File;
@@ -39,6 +40,7 @@ public class CameraMsgManager {
 
     private final Activity activity;
     private final SurfaceView surfaceView;
+    private CameraResultCaller cameraResultCaller;
     private Camera mCamera;
     private int mCameraId;
     private int mFacing = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -46,9 +48,15 @@ public class CameraMsgManager {
     private int sensorRotation;
     private MediaRecorder mediaRecorder;
 
+    private CameraState cameraState = CameraState.PREVIEW;
+
     public CameraMsgManager(Activity activity, SurfaceView surfaceView) {
         this.activity = activity;
         this.surfaceView = surfaceView;
+    }
+
+    public void setCameraResultCaller(CameraResultCaller cameraResultCaller) {
+        this.cameraResultCaller = cameraResultCaller;
     }
 
     private SensorEventListener sensorEventListener = new SensorEventListener() {
@@ -93,6 +101,7 @@ public class CameraMsgManager {
             mCamera.setPreviewCallback(previewCallback);
             mCamera.lock();
             resumePreview();
+            cameraState = CameraState.PREVIEW;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,10 +123,12 @@ public class CameraMsgManager {
     }
 
     public void switchCamera() {
-        if (mFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-            switchCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-        } else {
-            switchCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+        if (cameraState == CameraState.PREVIEW) {
+            if (mFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                switchCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            } else {
+                switchCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+            }
         }
     }
 
@@ -328,20 +339,26 @@ public class CameraMsgManager {
         }
         Pair<Camera.Size, Camera.Size> result = null;
         double targetRatio = expectWidth * 1.0 / expectHeight;
-        for (Pair<Camera.Size, Camera.Size> size : availableSizes) {
-            if (result == null) {
-                result = size;
-            } else {
-                double resultRatio = result.first.width * 1.0 / result.first.height;
-                double currRatio = size.first.width * 1.0 / size.first.height;
-                if (Math.abs(resultRatio - targetRatio) > Math.abs(currRatio - targetRatio)) {
+        if (availableSizes.size() > 0) {
+            for (Pair<Camera.Size, Camera.Size> size : availableSizes) {
+                if (result == null) {
                     result = size;
-                } else if (Math.abs(resultRatio - targetRatio) == Math.abs(currRatio - targetRatio)) {
-                    if (size.first.width * size.first.height > result.first.width * result.first.height) {
+                } else {
+                    double resultRatio = result.first.width * 1.0 / result.first.height;
+                    double currRatio = size.first.width * 1.0 / size.first.height;
+                    if (Math.abs(resultRatio - targetRatio) > Math.abs(currRatio - targetRatio)) {
                         result = size;
+                    } else if (Math.abs(resultRatio - targetRatio) == Math.abs(currRatio - targetRatio)) {
+                        if (size.first.width * size.first.height > result.first.width * result.first.height) {
+                            result = size;
+                        }
                     }
                 }
             }
+        } else {
+            Camera.Size size_preview = calculatePerfectSize(sizes_preview, expectWidth, expectHeight);
+            Camera.Size size_picture = calculatePerfectSize(sizes_picture, size_preview.width, size_preview.height);
+            result = new Pair<>(size_preview, size_picture);
         }
         return result;
     }
@@ -414,10 +431,22 @@ public class CameraMsgManager {
 
     private int initZoom = 0;
 
+    public void initZoomByMode() {
+        if (cameraState != CameraState.PREVIEW) {
+            initZoom();
+        }
+    }
+
     public void initZoom() {
         if (mCamera != null) {
             Camera.Parameters parameter = mCamera.getParameters();
             initZoom = parameter.getZoom();
+        }
+    }
+
+    public void offsetZoomByMode(int offsetZoom) {
+        if (cameraState == CameraState.PREVIEW) {
+            offsetZoom(offsetZoom);
         }
     }
 
@@ -440,36 +469,43 @@ public class CameraMsgManager {
 
     public void takePicture() {
         if (mCamera != null) {
-            mCamera.takePicture(null, null, new Camera.PictureCallback() {
-                @Override
-                public void onPictureTaken(byte[] data, Camera camera) {
-                    onStarted();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    int rotationValue = (sensorRotation - activity.getWindowManager().getDefaultDisplay().getRotation() + 4) % 4;
-                    Matrix matrix = new Matrix();
-                    Camera.CameraInfo info = new Camera.CameraInfo();
-                    Camera.getCameraInfo(mCameraId, info);
-                    if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                        matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
-                    } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                        matrix.setRotate((360 + rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
+            if (cameraState == CameraState.PREVIEW) {
+                mCamera.takePicture(null, null, new Camera.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] data, Camera camera) {
+                        onStarted();
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        int rotationValue = (sensorRotation - activity.getWindowManager().getDefaultDisplay().getRotation() + 4) % 4;
+                        Matrix matrix = new Matrix();
+                        Camera.CameraInfo info = new Camera.CameraInfo();
+                        Camera.getCameraInfo(mCameraId, info);
+                        if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                            matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
+                        } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                            matrix.setRotate((360 + rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
 //                        matrix.postScale(-1, 1);
+                        }
+                        bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        String path = FileUtil.saveBitmap(activity, "BesttimerCamera", bitmap);
+                        // 最后通知图库更新
+                        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+
+                        if (cameraResultCaller != null) {
+                            cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.PICTURE);
+                        }
+
                     }
-                    bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                    String path = FileUtil.saveBitmap(activity, "BesttimerCamera", bitmap);
-                    // 最后通知图库更新
-                    activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-                }
-            });
+                });
+            }
         }
     }
 
     public void takeRecord() {
         if (mCamera != null) {
-            if (!TextUtils.isEmpty(videoPath)) {//正在录制视频
-                stopRecord();
-            } else {//还没开始录制视频
+            if (cameraState == CameraState.PREVIEW) {
                 startRecord();
+            } else if (cameraState == CameraState.VIDEO) {
+                stopRecord();
             }
         }
     }
@@ -533,8 +569,12 @@ public class CameraMsgManager {
         mediaRecorder.setOutputFile(videoPath = new File(parentFile, videoFileName).getPath());
 
         try {
+            cameraState = CameraState.VIDEO;
             mediaRecorder.prepare();
             mediaRecorder.start();
+            if (cameraResultCaller != null) {
+                cameraResultCaller.onStartVideo();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -556,11 +596,14 @@ public class CameraMsgManager {
                     mediaRecorder.release();
                 }
                 mediaRecorder = null;
-                videoPath = null;
                 onStarted();
 
                 // 最后通知图库更新
                 activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+
+                if (cameraResultCaller != null) {
+                    cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.VIDEO);
+                }
 
             }
         }

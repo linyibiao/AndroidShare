@@ -2,14 +2,15 @@ package com.lyb.besttimer.cameracore.camera1;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
-import com.lyb.besttimer.cameracore.LifeCaller;
+import com.lyb.besttimer.pluginwidget.view.fragment.LifeCaller;
 import com.lyb.besttimer.cameracore.TouchMode;
-import com.lyb.besttimer.cameracore.WorkStateFragment;
+import com.lyb.besttimer.pluginwidget.view.fragment.WorkStateFragment;
 
 public class CameraSurfaceView extends SurfaceView {
     public CameraSurfaceView(Context context) {
@@ -34,7 +35,10 @@ public class CameraSurfaceView extends SurfaceView {
     private void init() {
         FragmentActivity activity = (FragmentActivity) getContext();
         cameraMsgManager = new CameraMsgManager(activity, this);
-        WorkStateFragment.addToManager(activity.getSupportFragmentManager()).setLifeCaller(new LifeCaller() {
+    }
+
+    public void registerLifeCycle(FragmentManager fragmentManager) {
+        WorkStateFragment.addToManager(fragmentManager).setLifeCaller(new LifeCaller() {
             @Override
             public void onCreate() {
                 getHolder().addCallback(new CameraSurfaceCallback(cameraMsgManager));
@@ -85,17 +89,17 @@ public class CameraSurfaceView extends SurfaceView {
             case MotionEvent.ACTION_DOWN:
                 touchMode = TouchMode.FOCUS;
                 initTouch(event);
-                cameraMsgManager.initZoom();
+                cameraMsgManager.initZoomByMode();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 touchMode = TouchMode.ZOOM;
                 initTouch(event);
-                cameraMsgManager.initZoom();
+                cameraMsgManager.initZoomByMode();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerCount() >= 2) {
                     int offsetZoom = getOffsetZoom(event);
-                    cameraMsgManager.offsetZoom(offsetZoom);
+                    cameraMsgManager.offsetZoomByMode(offsetZoom);
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -105,6 +109,7 @@ public class CameraSurfaceView extends SurfaceView {
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 initTouch(event);
+                cameraMsgManager.initZoomByMode();
                 break;
         }
         return true;

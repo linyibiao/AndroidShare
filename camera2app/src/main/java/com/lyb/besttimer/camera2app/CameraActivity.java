@@ -13,6 +13,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         CameraTextureView cameraTextureView = findViewById(R.id.textureView);
+        cameraTextureView.registerLifeCycle(getSupportFragmentManager());
         findViewById(R.id.btn_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,4 +1,4 @@
-package com.lyb.besttimer.cameracore;
+package com.lyb.besttimer.pluginwidget.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

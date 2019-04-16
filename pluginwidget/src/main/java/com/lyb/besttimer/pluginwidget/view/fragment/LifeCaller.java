@@ -1,4 +1,4 @@
-package com.lyb.besttimer.cameracore;
+package com.lyb.besttimer.pluginwidget.view.fragment;
 
 public interface LifeCaller {
 
