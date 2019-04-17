@@ -35,6 +35,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.util.Size;
 import android.view.Surface;
@@ -936,19 +937,38 @@ public class CameraMsgManager {
 
     private void stopRecord() {
 
-        closePreviewSession();
+        try {
+            mCaptureSession.stopRepeating();
+            mCaptureSession.abortCaptures();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
 
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
-
-        // 最后通知图库更新
-        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
-
-        if (cameraResultCaller != null) {
-            cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.VIDEO);
+        if (mMediaRecorder != null) {
+            try {
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+            } catch (Exception e) {
+                // TODO 如果当前java状态和jni里面的状态不一致，
+                e.printStackTrace();
+                mMediaRecorder = null;
+                videoPath = null;
+                mMediaRecorder = new MediaRecorder();
+            }
         }
 
         createCameraPreviewSession();
+
+        if (!TextUtils.isEmpty(videoPath)) {
+
+            // 最后通知图库更新
+            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+
+            if (cameraResultCaller != null) {
+                cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.VIDEO);
+            }
+
+        }
 
     }
 

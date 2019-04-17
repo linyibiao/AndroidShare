@@ -16,6 +16,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -586,10 +587,11 @@ public class CameraMsgManager {
         if (mediaRecorder != null) {
             try {
                 mediaRecorder.stop();
-            } catch (IllegalStateException e) {
+            } catch (Exception e) {
                 // TODO 如果当前java状态和jni里面的状态不一致，
                 e.printStackTrace();
                 mediaRecorder = null;
+                videoPath = null;
                 mediaRecorder = new MediaRecorder();
             } finally {
                 if (mediaRecorder != null) {
@@ -598,11 +600,15 @@ public class CameraMsgManager {
                 mediaRecorder = null;
                 onStarted();
 
-                // 最后通知图库更新
-                activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+                if (!TextUtils.isEmpty(videoPath)) {
 
-                if (cameraResultCaller != null) {
-                    cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.VIDEO);
+                    // 最后通知图库更新
+                    activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + videoPath)));
+
+                    if (cameraResultCaller != null) {
+                        cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.VIDEO);
+                    }
+
                 }
 
             }

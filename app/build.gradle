@@ -43,7 +43,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:${dCfg.supportVersion}"
     implementation project(':pluginwidget')
+//    api 'com.lyb.besttimer:pluginwidget:0.0.134'
     implementation project(':cameracore')
+//    api 'com.lyb.besttimer:cameracore:0.0.1'
+//    api 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation project(':network')
     implementation project(':rxandroid')
     implementation project(':serialport')
