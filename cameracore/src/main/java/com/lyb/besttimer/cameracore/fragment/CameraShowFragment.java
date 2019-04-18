@@ -1,6 +1,5 @@
 package com.lyb.besttimer.cameracore.fragment;
 
-import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -11,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.VideoView;
 
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.R;
-import com.lyb.besttimer.cameracore.databinding.FragmentCameraShowBinding;
 
 public class CameraShowFragment extends Fragment {
 
@@ -25,13 +25,16 @@ public class CameraShowFragment extends Fragment {
         return bundle;
     }
 
-    private FragmentCameraShowBinding binding;
+    private VideoView vvVideo;
+    private ImageView ivPic;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.bind(inflater.inflate(R.layout.fragment_camera_show, container, false));
-        return binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_camera_show, container, false);
+        vvVideo = view.findViewById(R.id.vv_video);
+        ivPic = view.findViewById(R.id.iv_pic);
+        return view;
     }
 
     @Override
@@ -43,53 +46,53 @@ public class CameraShowFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        binding.vvVideo.resume();
+        vvVideo.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        binding.vvVideo.pause();
+        vvVideo.pause();
     }
 
     private void handle() {
-        String fileUrl = getArguments().getString("fileUrl");
+        final String fileUrl = getArguments().getString("fileUrl");
         CameraResultCaller.ResultType resultType = (CameraResultCaller.ResultType) getArguments().getSerializable("resultType");
         if (resultType == CameraResultCaller.ResultType.PICTURE) {
-            binding.getRoot().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    binding.ivPic.setVisibility(View.VISIBLE);
-                    binding.vvVideo.setVisibility(View.GONE);
+                    ivPic.setVisibility(View.VISIBLE);
+                    vvVideo.setVisibility(View.GONE);
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
                     BitmapFactory.decodeFile(fileUrl, options);
                     // 调用上面定义的方法计算inSampleSize值
-                    options.inSampleSize = calculateInSampleSize(options, binding.getRoot().getWidth(), binding.getRoot().getHeight());
+                    options.inSampleSize = calculateInSampleSize(options, getView().getWidth(), getView().getHeight());
                     // 使用获取到的inSampleSize值再次解析图片
                     options.inJustDecodeBounds = false;
-                    binding.ivPic.setImageBitmap(BitmapFactory.decodeFile(fileUrl, options));
-                    binding.getRoot().getViewTreeObserver().removeOnPreDrawListener(this);
+                    ivPic.setImageBitmap(BitmapFactory.decodeFile(fileUrl, options));
+                    getView().getViewTreeObserver().removeOnPreDrawListener(this);
                     return false;
                 }
             });
         } else if (resultType == CameraResultCaller.ResultType.VIDEO) {
-            binding.ivPic.setVisibility(View.GONE);
-            binding.vvVideo.setVisibility(View.VISIBLE);
-            binding.vvVideo.setVideoPath(fileUrl);
-            binding.vvVideo.start();
-            binding.vvVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            ivPic.setVisibility(View.GONE);
+            vvVideo.setVisibility(View.VISIBLE);
+            vvVideo.setVideoPath(fileUrl);
+            vvVideo.start();
+            vvVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
                     mp.setLooping(true);
                 }
             });
-            binding.vvVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            vvVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    binding.vvVideo.setVideoPath(fileUrl);
-                    binding.vvVideo.start();
+                    vvVideo.setVideoPath(fileUrl);
+                    vvVideo.start();
                 }
             });
         }

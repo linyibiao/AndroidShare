@@ -1,7 +1,5 @@
 package com.lyb.besttimer.cameracore.fragment;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,16 +13,18 @@ import com.lyb.besttimer.cameracore.R;
 import com.lyb.besttimer.pluginwidget.utils.FragmentUtil;
 
 public class CameraFragment extends Fragment {
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewDataBinding viewDataBinding = DataBindingUtil.bind(inflater.inflate(R.layout.camera, container, false));
+        View view = inflater.inflate(R.layout.camera, container, false);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             FragmentUtil.replace(getChildFragmentManager(), R.id.layout_camera, CameraOldFragment.class, null, null);
         } else {
             FragmentUtil.replace(getChildFragmentManager(), R.id.layout_camera, CameraNewFragment.class, null, null);
         }
-        return viewDataBinding.getRoot();
+        return view;
     }
 
     public void takePicture() {

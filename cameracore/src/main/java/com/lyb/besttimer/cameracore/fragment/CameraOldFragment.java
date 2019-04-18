@@ -1,6 +1,5 @@
 package com.lyb.besttimer.cameracore.fragment;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,50 +10,51 @@ import android.view.ViewGroup;
 
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.R;
-import com.lyb.besttimer.cameracore.databinding.CameraOldBinding;
+import com.lyb.besttimer.cameracore.camera1.CameraSurfaceView;
 
 public class CameraOldFragment extends Fragment {
 
-    private CameraOldBinding cameraOldBinding;
+    private CameraSurfaceView cameraOld;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        cameraOldBinding = DataBindingUtil.bind(inflater.inflate(R.layout.camera_old, container, false));
-        cameraOldBinding.cameraOld.registerLifeCycle(getChildFragmentManager());
+        View view = inflater.inflate(R.layout.camera_old, container, false);
+        cameraOld = view.findViewById(R.id.camera_old);
+        cameraOld.registerLifeCycle(getChildFragmentManager());
         if (getActivity() instanceof CameraResultCaller) {
-            cameraOldBinding.cameraOld.getCameraMsgManager().setCameraResultCaller((CameraResultCaller) getActivity());
+            cameraOld.getCameraMsgManager().setCameraResultCaller((CameraResultCaller) getActivity());
         } else {
             Fragment parent = getParentFragment();
             while (parent != null) {
                 if (parent instanceof CameraResultCaller) {
-                    cameraOldBinding.cameraOld.getCameraMsgManager().setCameraResultCaller((CameraResultCaller) parent);
+                    cameraOld.getCameraMsgManager().setCameraResultCaller((CameraResultCaller) parent);
                     break;
                 }
                 parent = parent.getParentFragment();
             }
         }
-        return cameraOldBinding.getRoot();
+        return view;
     }
 
     public void takePicture() {
-        cameraOldBinding.cameraOld.getCameraMsgManager().takePicture();
+        cameraOld.getCameraMsgManager().takePicture();
     }
 
     public void takeRecord() {
-        cameraOldBinding.cameraOld.getCameraMsgManager().takeRecord();
+        cameraOld.getCameraMsgManager().takeRecord();
     }
 
     public void switchCamera() {
-        cameraOldBinding.cameraOld.getCameraMsgManager().switchCamera();
+        cameraOld.getCameraMsgManager().switchCamera();
     }
 
     public void moveInit() {
-        cameraOldBinding.cameraOld.getCameraMsgManager().initZoom();
+        cameraOld.getCameraMsgManager().initZoom();
     }
 
     public void moveOffset(int offsetValue) {
-        cameraOldBinding.cameraOld.getCameraMsgManager().offsetZoom(offsetValue);
+        cameraOld.getCameraMsgManager().offsetZoom(offsetValue);
     }
 
 }

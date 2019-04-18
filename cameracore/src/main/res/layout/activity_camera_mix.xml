@@ -1,69 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/layout_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="140dp"
+        android:layout_gravity="bottom">
 
         <FrameLayout
-            android:id="@+id/layout_show"
+            android:id="@+id/layout_capture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_gravity="bottom">
-
-            <FrameLayout
-                android:id="@+id/layout_capture"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.lyb.besttimer.pluginwidget.view.loading.LoadingView
-                    android:id="@+id/loadv_go"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/iv_back"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/camera_icon_back" />
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/iv_reverse"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:src="@drawable/camera_icon_reverse" />
-                    </FrameLayout>
-                </LinearLayout>
-            </FrameLayout>
+            <com.lyb.besttimer.pluginwidget.view.loading.LoadingView
+                android:id="@+id/loadv_go"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp" />
 
             <LinearLayout
-                android:id="@+id/layout_check"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -74,11 +36,12 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/iv_cancel"
+                        android:id="@+id/iv_back"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/camera_icon_cancel" />
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/camera_icon_back" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -87,14 +50,48 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/iv_ensure"
+                        android:id="@+id/iv_reverse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/camera_icon_ensure" />
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/camera_icon_reverse" />
                 </FrameLayout>
             </LinearLayout>
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/layout_check"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/camera_icon_cancel" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_ensure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/camera_icon_ensure" />
+            </FrameLayout>
+        </LinearLayout>
     </FrameLayout>
-</layout>
+
+</FrameLayout>
