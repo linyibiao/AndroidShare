@@ -29,6 +29,8 @@ cameracore
 
 示范路径：相机-->>>相机
 
+![image](https://github.com/linyibiao/AndroidShare/blob/master/files/cameracore.gif)
+
 接入：
 
     compile 'com.lyb.besttimer:cameracore:0.0.3'
