@@ -32,6 +32,7 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':commonutil')
     testImplementation 'junit:junit:4.12'
     api 'com.google.code.gson:gson:2.8.0'
     api 'com.squareup.retrofit2:retrofit:2.3.0'

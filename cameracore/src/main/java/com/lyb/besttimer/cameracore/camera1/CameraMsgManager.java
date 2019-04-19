@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 import com.lyb.besttimer.cameracore.AngleUtil;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.CameraState;
-import com.lyb.besttimer.cameracore.FileUtil;
+import com.lyb.besttimer.commonutil.utils.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

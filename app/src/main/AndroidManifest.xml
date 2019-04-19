@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lyb.besttimer.androidshare">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".ShareApp"
         android:allowBackup="true"
@@ -9,8 +14,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.pluginwidget.ProgressBarActivity"></activity>
-        <activity android:name=".activity.pluginwidget.CameraShowActivity"></activity>
+        <activity android:name=".activity.media.MediaControlActivity"></activity>
+        <activity android:name=".activity.pluginwidget.ProgressBarActivity" />
+        <activity android:name=".activity.pluginwidget.CameraShowActivity" />
         <activity android:name=".activity.ShowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

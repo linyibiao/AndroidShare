@@ -1,10 +1,7 @@
 package com.lyb.besttimer.androidshare.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.media.MediaControlActivity;
 import com.lyb.besttimer.androidshare.activity.mix.IntentFindActivity;
 import com.lyb.besttimer.androidshare.activity.mix.VectorDrawableActivity;
 import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
@@ -160,6 +158,10 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "相机");
             lvData.getLvDatas().add(new LVData(CameraShowActivity.class, "相机"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "多媒体");
+            lvData.getLvDatas().add(new LVData(MediaControlActivity.class, "媒体控制"));
             lvDatas.add(lvData);
 
         }

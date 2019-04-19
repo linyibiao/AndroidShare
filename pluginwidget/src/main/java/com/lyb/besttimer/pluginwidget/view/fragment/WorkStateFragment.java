@@ -16,11 +16,16 @@ public class WorkStateFragment extends Fragment {
 
     private static final String TAG = "WorkStateFragment";
 
+    public static boolean hadAdd(FragmentManager fragmentManager) {
+        return fragmentManager.findFragmentByTag(TAG) instanceof WorkStateFragment;
+    }
+
     public static WorkStateFragment addToManager(FragmentManager fragmentManager) {
         WorkStateFragment workStateFragment = (WorkStateFragment) fragmentManager.findFragmentByTag(TAG);
         if (workStateFragment == null) {
+            workStateFragment = new WorkStateFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(workStateFragment = new WorkStateFragment(), TAG);
+            fragmentTransaction.add(workStateFragment, TAG);
             fragmentTransaction.commit();
         }
         return workStateFragment;
@@ -53,6 +58,14 @@ public class WorkStateFragment extends Fragment {
         super.onPause();
         if (lifeCaller != null) {
             lifeCaller.onPause();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (lifeCaller != null) {
+            lifeCaller.onDestroy();
         }
     }
 

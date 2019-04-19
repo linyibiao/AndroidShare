@@ -34,6 +34,7 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':commonutil')
     testImplementation 'junit:junit:4.12'
     compile "com.android.support:recyclerview-v7:${dCfg.supportVersion}"
     compile 'com.nineoldandroids:library:2.4.0'

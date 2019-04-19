@@ -1,4 +1,4 @@
-package com.lyb.besttimer.cameracore;
+package com.lyb.besttimer.commonutil.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

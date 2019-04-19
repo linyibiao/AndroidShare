@@ -8,4 +8,6 @@ public interface LifeCaller {
 
     void onPause();
 
+    void onDestroy();
+
 }
