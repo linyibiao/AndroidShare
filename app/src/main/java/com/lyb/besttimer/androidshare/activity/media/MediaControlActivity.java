@@ -66,7 +66,6 @@ public class MediaControlActivity extends AppCompatActivity {
                         }
                     });
                 }
-                mediaRecorderHelper.startRecord();
             }
         });
         findViewById(R.id.btn_record_audio_end).setOnClickListener(new View.OnClickListener() {

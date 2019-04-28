@@ -44,8 +44,8 @@ dependencies {
 
     api 'com.github.tbruyelle:rxpermissions:0.10.2'
 
-    api 'com.lyb.besttimer:pluginwidget:0.0.134'
-//    implementation project(':pluginwidget')
+//    api 'com.lyb.besttimer:pluginwidget:0.0.134'
+    implementation project(':pluginwidget')
 
 }
 

@@ -492,7 +492,7 @@ public class CameraMsgManager {
                         activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
 
                         if (cameraResultCaller != null) {
-                            cameraResultCaller.onResult(videoPath, CameraResultCaller.ResultType.PICTURE);
+                            cameraResultCaller.onResult(path, CameraResultCaller.ResultType.PICTURE);
                         }
 
                     }
