@@ -24,6 +24,7 @@ import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 import com.lyb.besttimer.pluginwidget.view.swipelayout.SwipeFrameLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemTouchActivity extends BaseActivity {
@@ -217,8 +218,16 @@ public class ItemTouchActivity extends BaseActivity {
                         Toast.makeText(v.getContext(), rvData.show, Toast.LENGTH_SHORT).show();
                     }
                 });
-                getRecyclerView().getContext();
+                ((SwipeFrameLayout) itemView).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), "666", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 ((SwipeFrameLayout) itemView).setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+                    private List<String>strings=new ArrayList<>(Collections.singleton("666"));
+
                     @Override
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         return new RecyclerView.ViewHolder(new Button(parent.getContext())) {
@@ -232,21 +241,22 @@ public class ItemTouchActivity extends BaseActivity {
 
                     @Override
                     public int getItemCount() {
-                        return 1;
+                        return strings.size();
                     }
                 });
-                ((SwipeFrameLayout) itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int position = treeDataManager.indexOf(itemTree);
-                        int itemCount = treeDataManager.flex(treeDataManager.indexOf(itemTree));
-                        if (itemCount > 0) {
-                            notifyItemRangeInserted(position + 1, itemCount);
-                        } else {
-                            notifyItemRangeRemoved(position + 1, -itemCount);
-                        }
-                    }
-                });
+                ((SwipeFrameLayout) itemView).reset(false);
+//                ((SwipeFrameLayout) itemView).getChildAt(1).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        int position = treeDataManager.indexOf(itemTree);
+//                        int itemCount = treeDataManager.flex(treeDataManager.indexOf(itemTree));
+//                        if (itemCount > 0) {
+//                            notifyItemRangeInserted(position + 1, itemCount);
+//                        } else {
+//                            notifyItemRangeRemoved(position + 1, -itemCount);
+//                        }
+//                    }
+//                });
             }
         }
 

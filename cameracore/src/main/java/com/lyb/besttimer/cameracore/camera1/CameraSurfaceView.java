@@ -55,6 +55,11 @@ public class CameraSurfaceView extends SurfaceView {
                 cameraMsgManager.pausePreview();
                 cameraMsgManager.unregisterSensorManager();
             }
+
+            @Override
+            public void onDestroy() {
+
+            }
         });
     }
 

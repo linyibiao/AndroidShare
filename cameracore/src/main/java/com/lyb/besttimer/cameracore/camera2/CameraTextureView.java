@@ -54,6 +54,11 @@ public class CameraTextureView extends TextureView {
                 cameraMsgManager.onPause();
                 cameraMsgManager.unregisterSensorManager();
             }
+
+            @Override
+            public void onDestroy() {
+
+            }
         });
     }
 

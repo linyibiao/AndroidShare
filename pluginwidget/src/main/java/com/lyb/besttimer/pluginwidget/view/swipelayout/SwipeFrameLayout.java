@@ -19,7 +19,7 @@ import android.widget.HorizontalScrollView;
  * swipe layout
  * Created by linyibiao on 2016/8/26.
  */
-public class SwipeFrameLayout extends ViewGroup {
+public class SwipeFrameLayout extends FrameLayout {
 
     private ViewDragHelper viewDragHelper;
 
@@ -53,7 +53,7 @@ public class SwipeFrameLayout extends ViewGroup {
         viewDragHelper = ViewDragHelper.create(this, 1, swipeCallback);
 
         menuLayout = new FrameLayout(context);
-        this.addView(menuLayout);
+        this.addView(menuLayout, new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         HorizontalScrollView horizontalScrollView = new HorizontalScrollView(context);
         menuLayout.addView(horizontalScrollView, new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
@@ -99,6 +99,8 @@ public class SwipeFrameLayout extends ViewGroup {
                 align(menuLayout, target, isLeftPos);
             } else if (viewDragHelper.getCapturedView() == menuLayout) {
                 align(target, menuLayout, !isLeftPos);
+            } else {
+                align(menuLayout, target, isLeftPos);
             }
             return true;
         }
@@ -277,37 +279,8 @@ public class SwipeFrameLayout extends ViewGroup {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        View target = getTarget();
-        LayoutParams targetParams = target.getLayoutParams();
-        int targetWidthSpec = getChildMeasureSpec(widthMeasureSpec, getPaddingLeft() + getPaddingRight(), targetParams.width);
-        int targetHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingTop() + getPaddingBottom(), targetParams.height);
-        target.measure(targetWidthSpec, targetHeightSpec);
-
-        setMeasuredDimension(target.getMeasuredWidth(), target.getMeasuredHeight());
-
-        menuLayout.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(target.getHeight(), MeasureSpec.EXACTLY));
-
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        View target = getTarget();
-        target.layout(getPaddingLeft(), getPaddingTop(), getPaddingLeft() + target.getMeasuredWidth(), getPaddingTop() + target.getMeasuredHeight());
-        if (isLeftPos) {
-            menuLayout.layout(getPaddingLeft() + target.getMeasuredWidth(), getPaddingTop(), getPaddingLeft() + target.getMeasuredWidth() + menuLayout.getMeasuredWidth(), getPaddingTop() + menuLayout.getMeasuredHeight());
-        } else {
-            menuLayout.layout(getPaddingLeft() - menuLayout.getMeasuredWidth(), getPaddingTop(), getPaddingLeft(), getPaddingTop() + menuLayout.getMeasuredHeight());
-        }
-    }
-
-    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (recyclerView.getAdapter() != null) {
-            recyclerView.getAdapter().notifyDataSetChanged();
-        }
     }
 
     @Override
