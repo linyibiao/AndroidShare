@@ -3,6 +3,8 @@ package android.support.v7.widget.helper;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 
+import java.lang.reflect.Field;
+
 /**
  * 具有更大修改空间的ItemTouchHelper
  * Created by linyibiao on 2017/9/18.
@@ -17,10 +19,23 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
         this.handleEventWithXY = handleEventWithXY;
     }
 
+    private int getPreActionState() {
+        try {
+            Field preActionState = getClass().getSuperclass().getDeclaredField("mActionState");
+            preActionState.setAccessible(true);
+            return preActionState.getInt(this);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return ItemTouchHelper.ACTION_STATE_IDLE;
+    }
+
     @Override
     void moveIfNecessary(RecyclerView.ViewHolder viewHolder) {
         super.moveIfNecessary(viewHolder);
-        if (mActionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+        if (getPreActionState() == ItemTouchHelper.ACTION_STATE_DRAG) {
             if (handleEventWithXY != null) {
                 handleEventWithXY.handleMove(mRecyclerView, mSelected, currRawX, currRawY);
             }
@@ -29,12 +44,12 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
 
     @Override
     void select(RecyclerView.ViewHolder selected, int actionState) {
-        if (mSelected == null && actionState == ItemTouchHelper.ACTION_STATE_DRAG && mActionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+        if (mSelected == null && actionState == ItemTouchHelper.ACTION_STATE_DRAG && getPreActionState() == ItemTouchHelper.ACTION_STATE_IDLE) {
             //长按刚要移动holder
             if (handleEventWithXY != null) {
                 handleEventWithXY.handleDown(mRecyclerView, selected, currRawX, currRawY);
             }
-        } else if (mSelected != null && selected == null && actionState == ItemTouchHelper.ACTION_STATE_IDLE && mActionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+        } else if (mSelected != null && selected == null && actionState == ItemTouchHelper.ACTION_STATE_IDLE && getPreActionState() == ItemTouchHelper.ACTION_STATE_DRAG) {
             //拖拽后刚松手
             if (handleEventWithXY != null) {
                 handleEventWithXY.handleUp(mRecyclerView, mSelected, currRawX, currRawY);
