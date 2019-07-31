@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 Map<String, String> cfg = rootProject.ext.android
 Map<String, String> dCfg = rootProject.ext.dependencies
@@ -62,5 +64,9 @@ dependencies {
     api 'com.android.support:multidex:1.0.3'
     api project(':annotation_api')
     annotationProcessor project(':annotation_compiler')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 apply from: '../groovytest.gradle'
+repositories {
+    mavenCentral()
+}

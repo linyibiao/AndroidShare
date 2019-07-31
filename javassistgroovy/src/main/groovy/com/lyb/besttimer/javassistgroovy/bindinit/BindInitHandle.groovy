@@ -196,10 +196,12 @@ public class BindInitHandle {
             if (targetClass.isFrozen()) {
                 targetClass.defrost()
             }
+            println('targetClass here:' + targetPath)
             for (CtClass oneInitClass : initClassList) {
                 if (oneInitClass.isFrozen()) {
                     oneInitClass.defrost()
                 }
+                println('initClass here:' + oneInitClass.getName())
                 methodStr += "new " + oneInitClass.getName() + "().init(this);"
             }
             methodStr += "}"
@@ -240,13 +242,18 @@ public class BindInitHandle {
                     String entryClassPath = entryName.replace("\\", ".").replace("/", ".")
                     entryClassPath = entryClassPath.substring(0, entryClassPath.length() - SdkConstants.DOT_CLASS.length())
 
-                    CtClass entryClass = pool.getCtClass(entryClassPath)
+                    try {
+                        CtClass entryClass = pool.getCtClass(entryClassPath)
 
-                    if (targetClass == entryClass) {
-                        println('generate code into:' + entryName)
-                        jarOutputStream.write(targetClass.toBytecode())
-                    } else {
-                        jarOutputStream.write(IOUtils.toByteArray(inputStream))
+                        if (targetClass == entryClass) {
+                            println('generate code into:' + entryName)
+                            jarOutputStream.write(targetClass.toBytecode())
+                        } else {
+                            jarOutputStream.write(IOUtils.toByteArray(inputStream))
+                        }
+                    } catch (NotFoundException e) {
+                        println("class error path:" + entryClassPath)
+                        e.printStackTrace()
                     }
                     inputStream.close()
                     jarOutputStream.closeEntry()
