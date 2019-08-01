@@ -85,10 +85,12 @@ public class BindInitHandle {
             }
         }
 
-        List<KeyValue> targetClassAndPathList = new ArrayList<>()//目标信息列表
+        String appInitRegisterPath = null//目标路径
         List<CtClass> initClassList = new ArrayList<>()//需要初始化列表
 
         CtClass appInitClass = pool.getCtClass("com.lyb.besttimer.annotation_bean.IAppInit")
+        CtClass appInitRegisterClass = pool.getCtClass("com.lyb.besttimer.annotation_bean.AppInitRegister")
+        CtClass contextClass = pool.getCtClass("android.content.Context")
 
         inputs.each { TransformInput input ->
             input.jarInputs.each { JarInput jarInput ->
@@ -116,9 +118,9 @@ public class BindInitHandle {
                                 CtClass ctClass = pool.getCtClass(classPath)
                                 CtClass[] interfaces = ctClass.getInterfaces()
 
-                                if (applicationClassList.contains(ctClass)) {
+                                if (appInitRegisterClass == ctClass) {
                                     println("target:" + filePath)
-                                    targetClassAndPathList.add(new KeyValue(ctClass, dest.absolutePath))
+                                    appInitRegisterPath = dest.absolutePath
                                 } else if (interfaces != null) {
                                     if (interfaces.contains(appInitClass)) {
                                         println("toInit:" + filePath)
@@ -169,9 +171,9 @@ public class BindInitHandle {
                             CtClass ctClass = pool.getCtClass(classPath)
                             CtClass[] interfaces = ctClass.getInterfaces()
 
-                            if (applicationClassList.contains(ctClass)) {
+                            if (appInitRegisterClass == ctClass) {
                                 println("target:" + filePath)
-                                targetClassAndPathList.add(new KeyValue(ctClass, dirPath))
+                                appInitRegisterPath = dirPath
                             } else if (interfaces != null) {
                                 if (interfaces.contains(appInitClass)) {
                                     println("toInit:" + filePath)
@@ -188,93 +190,68 @@ public class BindInitHandle {
             }
         }
 
-        //加一个bindInit方法到目标
-        for (KeyValue targetClassAndPath : targetClassAndPathList) {
-            CtClass targetClass = targetClassAndPath.key
-            String targetPath = targetClassAndPath.value
-            String methodStr = "void bindInit(){"
-            if (targetClass.isFrozen()) {
-                targetClass.defrost()
+        String insertInitStr = ""
+        for (CtClass oneInitClass : initClassList) {
+            if (oneInitClass.isFrozen()) {
+                oneInitClass.defrost()
             }
-            println('targetClass here:' + targetPath)
-            for (CtClass oneInitClass : initClassList) {
-                if (oneInitClass.isFrozen()) {
-                    oneInitClass.defrost()
-                }
-                println('initClass here:' + oneInitClass.getName())
-                methodStr += "new " + oneInitClass.getName() + "().init(this);"
-            }
-            methodStr += "}"
-            CtMethod initMethod = CtMethod.make(methodStr, targetClass)
-            targetClass.addMethod(initMethod)
+            println('initClass here:' + oneInitClass.getName())
+            insertInitStr += "new " + oneInitClass.getName() + "().init(applicationContext);"
+        }
+        if (appInitRegisterClass.isFrozen()) {
+            appInitRegisterClass.defrost()
+        }
+        CtClass[] ctClasses = new CtClass[1]
+        ctClasses[0] = contextClass
+        CtMethod registerMethod = appInitRegisterClass.getDeclaredMethod("register", ctClasses)
+        registerMethod.insertAfter(insertInitStr)
+        if (appInitRegisterPath.endsWith(".jar")) {
+            File jarFile = new File(appInitRegisterPath)
+            def optJar = new File(jarFile.getParent(), jarFile.name + ".opt")
+            if (optJar.exists())
+                optJar.delete()
+            def file = new JarFile(jarFile)
+            Enumeration enumeration = file.entries()
+            JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(optJar))
 
-            CtMethod createMethod
-            try {
-                createMethod = targetClass.getDeclaredMethod("onCreate")
-            } catch (Exception ignored) {
-                String createStr = "public void onCreate() {"
-                if (targetClass.isFrozen()) {
-                    targetClass.defrost()
-                }
-                createStr += "super.onCreate();}"
-                createStr += "}"
-                createMethod = CtMethod.make(createStr, targetClass)
-                targetClass.addMethod(createMethod)
-            }
-            createMethod.insertAfter("""bindInit();""")
+            while (enumeration.hasMoreElements()) {
+                JarEntry jarEntry = (JarEntry) enumeration.nextElement()
+                String entryName = jarEntry.getName()
+                ZipEntry zipEntry = new ZipEntry(entryName)
+                InputStream inputStream = file.getInputStream(jarEntry)
+                jarOutputStream.putNextEntry(zipEntry)
 
-            if (targetPath.endsWith(".jar")) {
-                File jarFile = new File(targetPath)
-                def optJar = new File(jarFile.getParent(), jarFile.name + ".opt")
-                if (optJar.exists())
-                    optJar.delete()
-                def file = new JarFile(jarFile)
-                Enumeration enumeration = file.entries()
-                JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(optJar))
+                String entryClassPath = entryName.replace("\\", ".").replace("/", ".")
+                entryClassPath = entryClassPath.substring(0, entryClassPath.length() - SdkConstants.DOT_CLASS.length())
 
-                while (enumeration.hasMoreElements()) {
-                    JarEntry jarEntry = (JarEntry) enumeration.nextElement()
-                    String entryName = jarEntry.getName()
-                    ZipEntry zipEntry = new ZipEntry(entryName)
-                    InputStream inputStream = file.getInputStream(jarEntry)
-                    jarOutputStream.putNextEntry(zipEntry)
+                try {
+                    CtClass entryClass = pool.getCtClass(entryClassPath)
 
-                    String entryClassPath = entryName.replace("\\", ".").replace("/", ".")
-                    entryClassPath = entryClassPath.substring(0, entryClassPath.length() - SdkConstants.DOT_CLASS.length())
-
-                    try {
-                        CtClass entryClass = pool.getCtClass(entryClassPath)
-
-                        if (targetClass == entryClass) {
-                            println('generate code into:' + entryName)
-                            jarOutputStream.write(targetClass.toBytecode())
-                        } else {
-                            jarOutputStream.write(IOUtils.toByteArray(inputStream))
-                        }
-                    } catch (NotFoundException e) {
-                        println("class error path:" + entryClassPath)
-                        e.printStackTrace()
+                    if (appInitRegisterClass == entryClass) {
+                        println('generate code into:' + entryName)
+                        jarOutputStream.write(appInitRegisterClass.toBytecode())
+                    } else {
+                        jarOutputStream.write(IOUtils.toByteArray(inputStream))
                     }
-                    inputStream.close()
-                    jarOutputStream.closeEntry()
+                } catch (NotFoundException e) {
+                    println("class error path:" + entryClassPath)
+                    e.printStackTrace()
                 }
-                jarOutputStream.close()
-                file.close()
-
-                if (jarFile.exists()) {
-                    jarFile.delete()
-                }
-                optJar.renameTo(jarFile)
-            } else {
-                targetClass.writeFile(targetPath)
+                inputStream.close()
+                jarOutputStream.closeEntry()
             }
+            jarOutputStream.close()
+            file.close()
 
+            if (jarFile.exists()) {
+                jarFile.delete()
+            }
+            optJar.renameTo(jarFile)
+        } else {
+            appInitRegisterClass.writeFile(appInitRegisterPath)
         }
 
-        for (KeyValue targetClassAndPath : targetClassAndPathList) {
-            targetClassAndPath.key.detach()
-        }
-        targetClassAndPathList.clear()
+        appInitRegisterClass.detach()
 
         for (CtClass ctClass : initClassList) {
             ctClass.detach()

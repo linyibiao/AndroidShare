@@ -8,5 +8,4 @@ public class Constants {
 
     public static final String packageName_clazz = "com.lyb.besttimer.processor.clazz";
 
-    public static final String packageName_init = "com.lyb.besttimer.processor.init";
 }
