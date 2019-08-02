@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
+import com.lyb.besttimer.androidshare.activity.alipaymenu.AlipayMenuActivity;
 import com.lyb.besttimer.androidshare.activity.media.MediaControlActivity;
 import com.lyb.besttimer.androidshare.activity.mix.IntentFindActivity;
 import com.lyb.besttimer.androidshare.activity.mix.VectorDrawableActivity;
@@ -162,6 +163,10 @@ public class ShowActivity extends BaseActivity {
 
             lvData = new LVData(ShowActivity.class, "多媒体");
             lvData.getLvDatas().add(new LVData(MediaControlActivity.class, "媒体控制"));
+            lvDatas.add(lvData);
+
+            lvData = new LVData(ShowActivity.class, "支付宝菜单编辑");
+            lvData.getLvDatas().add(new LVData(AlipayMenuActivity.class, "支付宝菜单编辑"));
             lvDatas.add(lvData);
 
         }
