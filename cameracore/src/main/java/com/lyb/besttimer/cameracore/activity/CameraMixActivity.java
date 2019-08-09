@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.lyb.besttimer.cameracore.CameraConstants;
+import com.lyb.besttimer.cameracore.CameraMode;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.R;
 import com.lyb.besttimer.cameracore.fragment.CameraFragment;
@@ -24,6 +25,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class CameraMixActivity extends AppCompatActivity implements CameraResultCaller {
+
+    public static Bundle getBundle(long millisforDuration, CameraMode cameraMode) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(CameraConstants.millisInFuture, millisforDuration);
+        bundle.putSerializable(CameraConstants.cameraMode, cameraMode);
+        return bundle;
+    }
 
     private LoadingView loadvGo;
     private ImageView ivBack;
@@ -40,6 +48,14 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_mix);
 
+        long millisInFuture = getIntent().getLongExtra(CameraConstants.millisInFuture, 10 * 1000);
+        CameraMode cameraMode;
+        if (getIntent().hasExtra(CameraConstants.cameraMode)) {
+            cameraMode = (CameraMode) getIntent().getSerializableExtra(CameraConstants.cameraMode);
+        } else {
+            cameraMode = CameraMode.ALL;
+        }
+
         loadvGo = findViewById(R.id.loadv_go);
         ivBack = findViewById(R.id.iv_back);
         ivReverse = findViewById(R.id.iv_reverse);
@@ -48,31 +64,42 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
         layoutCapture = findViewById(R.id.layout_capture);
         layoutCheck = findViewById(R.id.layout_check);
 
+        loadvGo.setMillisInFuture(millisInFuture);
+        if (!(cameraMode == CameraMode.ALL || cameraMode == CameraMode.VIDEO)) {
+            loadvGo.setCanLoad(false);
+        }
+
         rxPermissions = new RxPermissions(this);
         showCamera();
         loadvGo.setLoadingCaller(new LoadingCaller() {
 
             @Override
             public void takeOneShot() {
-                Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).takePicture();
+                if (cameraMode == CameraMode.ALL || cameraMode == CameraMode.PICTURE) {
+                    Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
+                    if (fragment instanceof CameraFragment) {
+                        ((CameraFragment) fragment).takePicture();
+                    }
                 }
             }
 
             @Override
             public void startLoading() {
-                Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).takeRecord();
+                if (cameraMode == CameraMode.ALL || cameraMode == CameraMode.VIDEO) {
+                    Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
+                    if (fragment instanceof CameraFragment) {
+                        ((CameraFragment) fragment).takeRecord();
+                    }
                 }
             }
 
             @Override
             public void endLoading() {
-                Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).takeRecord();
+                if (cameraMode == CameraMode.ALL || cameraMode == CameraMode.VIDEO) {
+                    Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
+                    if (fragment instanceof CameraFragment) {
+                        ((CameraFragment) fragment).takeRecord();
+                    }
                 }
             }
 

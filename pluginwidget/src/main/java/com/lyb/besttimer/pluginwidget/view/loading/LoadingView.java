@@ -42,6 +42,17 @@ public class LoadingView extends View {
         return loadingMode;
     }
 
+    private long millisInFuture = 10 * 1000;
+    private boolean canLoad = true;
+
+    public void setMillisInFuture(long millisInFuture) {
+        this.millisInFuture = millisInFuture;
+    }
+
+    public void setCanLoad(boolean canLoad) {
+        this.canLoad = canLoad;
+    }
+
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0xff3cb264);
@@ -63,7 +74,9 @@ public class LoadingView extends View {
             @Override
             public boolean onLongClick(View v) {
                 if (loadingMode == LoadingMode.IDLE) {
-                    startLoading();
+                    if (canLoad) {
+                        startLoading();
+                    }
                 }
                 return true;
             }
@@ -125,7 +138,6 @@ public class LoadingView extends View {
 
     private class LoadingTime extends CountDownTimer {
 
-        private static final long millisInFuture = 10 * 1000;
         private static final long countDownInterval = 10 * 1000 / 360;
         private float percent = 0;
 

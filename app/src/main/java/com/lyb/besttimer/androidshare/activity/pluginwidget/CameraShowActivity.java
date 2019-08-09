@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.cameracore.CameraConstants;
+import com.lyb.besttimer.cameracore.CameraMode;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.activity.CameraMixActivity;
 
@@ -18,7 +19,7 @@ public class CameraShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_show);
-        startActivityForResult(new Intent(this, CameraMixActivity.class), cameraMixCode);
+        startActivityForResult(new Intent(this, CameraMixActivity.class).putExtras(CameraMixActivity.getBundle(20 * 1000, CameraMode.PICTURE)), cameraMixCode);
     }
 
     @Override
