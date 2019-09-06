@@ -2,6 +2,7 @@ package com.lyb.besttimer.cameracore.fragment;
 
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.widget.VideoView;
 
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.R;
+
+import java.io.File;
 
 public class CameraShowFragment extends Fragment {
 
@@ -59,23 +62,26 @@ public class CameraShowFragment extends Fragment {
         final String fileUrl = getArguments().getString("fileUrl");
         CameraResultCaller.ResultType resultType = (CameraResultCaller.ResultType) getArguments().getSerializable("resultType");
         if (resultType == CameraResultCaller.ResultType.PICTURE) {
-            getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    ivPic.setVisibility(View.VISIBLE);
-                    vvVideo.setVisibility(View.GONE);
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(fileUrl, options);
-                    // 调用上面定义的方法计算inSampleSize值
-                    options.inSampleSize = calculateInSampleSize(options, getView().getWidth(), getView().getHeight());
-                    // 使用获取到的inSampleSize值再次解析图片
-                    options.inJustDecodeBounds = false;
-                    ivPic.setImageBitmap(BitmapFactory.decodeFile(fileUrl, options));
-                    getView().getViewTreeObserver().removeOnPreDrawListener(this);
-                    return false;
-                }
-            });
+            ivPic.setVisibility(View.VISIBLE);
+            vvVideo.setVisibility(View.GONE);
+            ivPic.setImageURI(Uri.fromFile(new File(fileUrl)));
+//            getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//                @Override
+//                public boolean onPreDraw() {
+//                    ivPic.setVisibility(View.VISIBLE);
+//                    vvVideo.setVisibility(View.GONE);
+//                    BitmapFactory.Options options = new BitmapFactory.Options();
+//                    options.inJustDecodeBounds = true;
+//                    BitmapFactory.decodeFile(fileUrl, options);
+//                    // 调用上面定义的方法计算inSampleSize值
+//                    options.inSampleSize = calculateInSampleSize(options, getView().getWidth(), getView().getHeight());
+//                    // 使用获取到的inSampleSize值再次解析图片
+//                    options.inJustDecodeBounds = false;
+//                    ivPic.setImageBitmap(BitmapFactory.decodeFile(fileUrl, options));
+//                    getView().getViewTreeObserver().removeOnPreDrawListener(this);
+//                    return false;
+//                }
+//            });
         } else if (resultType == CameraResultCaller.ResultType.VIDEO) {
             ivPic.setVisibility(View.GONE);
             vvVideo.setVisibility(View.VISIBLE);

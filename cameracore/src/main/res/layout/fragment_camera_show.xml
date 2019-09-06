@@ -7,8 +7,10 @@
     <ImageView
         android:id="@+id/iv_pic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerInside" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
 
     <VideoView
         android:id="@+id/vv_video"
