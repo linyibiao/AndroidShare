@@ -19,7 +19,7 @@ public class CameraShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_show);
-        startActivityForResult(new Intent(this, CameraMixActivity.class).putExtras(CameraMixActivity.getBundle(20 * 1000, CameraMode.PICTURE)), cameraMixCode);
+        startActivityForResult(new Intent(this, CameraMixActivity.class).putExtras(CameraMixActivity.getBundle(20 * 1000, CameraMode.ALL)), cameraMixCode);
     }
 
     @Override

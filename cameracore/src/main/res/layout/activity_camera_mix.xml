@@ -16,7 +16,8 @@
         <FrameLayout
             android:id="@+id/layout_capture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <com.lyb.besttimer.pluginwidget.view.loading.LoadingView
                 android:id="@+id/loadv_go"
@@ -64,7 +65,8 @@
             android:id="@+id/layout_check"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <FrameLayout
                 android:layout_width="0dp"

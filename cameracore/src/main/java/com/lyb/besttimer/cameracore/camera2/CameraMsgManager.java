@@ -165,7 +165,7 @@ public class CameraMsgManager {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            manager.openCamera(mCameraId, mStateCallback, mBackgroundHandler);
+            manager.openCamera(mCameraId, mStateCallback, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -282,17 +282,10 @@ public class CameraMsgManager {
     };
 
     private void createCameraPreviewSession() {
-        closePreviewSession();
         createSession(cameraState = CameraState.PREVIEW, new CameraCaptureSession.StateCallback() {
             @Override
             public void onConfigured(@NonNull CameraCaptureSession session) {
                 try {
-
-                    CaptureRequest.Builder newBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-                    copyCapture(newBuilder, mCaptureRequestBuilder);
-                    mCaptureRequestBuilder = newBuilder;
-                    mCaptureRequestBuilder.addTarget(surface);
-
                     mCaptureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
                     CaptureRequest mPreviewRequest = mCaptureRequestBuilder.build();
                     mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, mBackgroundHandler);
@@ -315,10 +308,6 @@ public class CameraMsgManager {
     }
 
     private void createSession(CameraState cameraState, CameraCaptureSession.StateCallback stateCallback) {
-        createSession(cameraState, stateCallback, false);
-    }
-
-    private void createSession(CameraState cameraState, CameraCaptureSession.StateCallback stateCallback, boolean syncThread) {
         try {
             mCameraOpenCloseLock.acquire();
             if (mCameraDevice == null) {
@@ -338,6 +327,28 @@ public class CameraMsgManager {
                 } else if (cameraState == CameraState.VIDEO) {
                     outputs.add(surface);
                     outputs.add(mMediaRecorder.getSurface());
+                }
+                if (cameraState == CameraState.PREVIEW) {
+                    CaptureRequest.Builder newBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+                    copyCapture(newBuilder, mCaptureRequestBuilder);
+                    mCaptureRequestBuilder = newBuilder;
+                    for (Surface surface : outputs) {
+                        mCaptureRequestBuilder.addTarget(surface);
+                    }
+                } else if (cameraState == CameraState.PHOTO) {
+                    CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                    copyCapture(captureBuilder, mCaptureRequestBuilder);
+                    mCaptureRequestBuilder = captureBuilder;
+                    mCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+                            CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                    mCaptureRequestBuilder.addTarget(mImageReader.getSurface());
+                } else if (cameraState == CameraState.VIDEO) {
+                    CaptureRequest.Builder newBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+                    copyCapture(newBuilder, mCaptureRequestBuilder);
+                    mCaptureRequestBuilder = newBuilder;
+                    for (Surface surface : outputs) {
+                        mCaptureRequestBuilder.addTarget(surface);
+                    }
                 }
                 mCameraDevice.createCaptureSession(outputs,
                         new CameraCaptureSession.StateCallback() {
@@ -360,7 +371,7 @@ public class CameraMsgManager {
                             public void onConfigureFailed(@NonNull CameraCaptureSession session) {
                                 stateCallback.onConfigureFailed(session);
                             }
-                        }, syncThread ? null : mBackgroundHandler
+                        }, mBackgroundHandler
                 );
             } catch (CameraAccessException e) {
                 e.printStackTrace();
@@ -673,13 +684,6 @@ public class CameraMsgManager {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
-                        CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-                        copyCapture(captureBuilder, mCaptureRequestBuilder);
-                        mCaptureRequestBuilder = captureBuilder;
-
-                        mCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                                CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                        mCaptureRequestBuilder.addTarget(mImageReader.getSurface());
 
                         int rotationValue = (sensorRotation - activity.getWindowManager().getDefaultDisplay().getRotation() + 4) % 4;
                         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
@@ -708,7 +712,7 @@ public class CameraMsgManager {
 
                         mCaptureSession.stopRepeating();
                         mCaptureSession.abortCaptures();
-                        mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+                        mCaptureSession.capture(mCaptureRequestBuilder.build(), CaptureCallback, null);
 
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
@@ -725,7 +729,9 @@ public class CameraMsgManager {
 
     private void setUpMediaRecorder() throws IOException {
 
-        mMediaRecorder = new MediaRecorder();
+        if (mMediaRecorder == null) {
+            mMediaRecorder = new MediaRecorder();
+        }
 
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
@@ -897,18 +903,12 @@ public class CameraMsgManager {
 
     private void startRecord() {
         try {
+            closePreviewSession();
             setUpMediaRecorder();
             createSession(cameraState = CameraState.VIDEO, new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
-                        CaptureRequest.Builder newBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-                        copyCapture(newBuilder, mCaptureRequestBuilder);
-                        mCaptureRequestBuilder = newBuilder;
-
-                        mCaptureRequestBuilder.addTarget(surface);
-                        Surface recorderSurface = mMediaRecorder.getSurface();
-                        mCaptureRequestBuilder.addTarget(recorderSurface);
 
                         mCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_VIDEO);
 
