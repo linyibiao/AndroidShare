@@ -26,7 +26,7 @@ public class WorkStateFragment extends Fragment {
             workStateFragment = new WorkStateFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(workStateFragment, TAG);
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
         }
         return workStateFragment;
     }

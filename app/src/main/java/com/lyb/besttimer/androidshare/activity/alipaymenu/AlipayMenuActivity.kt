@@ -114,7 +114,7 @@ class AlipayMenuActivity : AppCompatActivity() {
 
         val itemTouchHelper = BetterItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
 
-            override fun getDragDirs(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
+            override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
                 if (viewHolder != null) {
                     val bean = (recyclerView!!.adapter as CommonAdapter).commonAdapterBeans[viewHolder.adapterPosition]
                     if (bean.workType == 1 || bean.viewType == 1) {
@@ -124,7 +124,7 @@ class AlipayMenuActivity : AppCompatActivity() {
                 return super.getDragDirs(recyclerView, viewHolder)
             }
 
-            override fun canDropOver(recyclerView: RecyclerView?, current: RecyclerView.ViewHolder?, target: RecyclerView.ViewHolder?): Boolean {
+            override fun canDropOver(recyclerView: RecyclerView, current: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 val beans = (recyclerView!!.adapter as CommonAdapter).commonAdapterBeans
                 return beans[current!!.adapterPosition].workType == beans[target!!.adapterPosition].workType
             }
@@ -133,7 +133,7 @@ class AlipayMenuActivity : AppCompatActivity() {
                 return false
             }
 
-            override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder) {
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
             }
 
@@ -146,7 +146,7 @@ class AlipayMenuActivity : AppCompatActivity() {
                 val sourcePos = viewHolder.adapterPosition
                 val targetPos = target.adapterPosition
                 strings.add(targetPos, strings.removeAt(sourcePos))
-                recyclerView.adapter.notifyItemMoved(sourcePos, targetPos)
+                recyclerView.adapter?.notifyItemMoved(sourcePos, targetPos)
                 return true
             }
 

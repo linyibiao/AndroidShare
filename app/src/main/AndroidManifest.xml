@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.alipaymenu.AlipayMenuActivity"></activity>
+        <activity android:name=".activity.mix.Header9Activity"></activity>
+        <activity android:name=".activity.alipaymenu.AlipayMenuActivity" />
         <activity android:name=".activity.media.MediaControlActivity" />
         <activity android:name=".activity.pluginwidget.ProgressBarActivity" />
         <activity android:name=".activity.pluginwidget.CameraShowActivity" />

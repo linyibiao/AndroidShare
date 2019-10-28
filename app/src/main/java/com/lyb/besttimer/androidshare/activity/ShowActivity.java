@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.alipaymenu.AlipayMenuActivity;
 import com.lyb.besttimer.androidshare.activity.media.MediaControlActivity;
+import com.lyb.besttimer.androidshare.activity.mix.Header9Activity;
 import com.lyb.besttimer.androidshare.activity.mix.IntentFindActivity;
 import com.lyb.besttimer.androidshare.activity.mix.VectorDrawableActivity;
 import com.lyb.besttimer.androidshare.activity.monitorCheck.MemoryCheckActivity;
@@ -151,6 +152,7 @@ public class ShowActivity extends BaseActivity {
             lvData = new LVData(ShowActivity.class, "混合");
             lvData.getLvDatas().add(new LVData(IntentFindActivity.class, "intent_find"));
             lvData.getLvDatas().add(new LVData(VectorDrawableActivity.class, "vector_drawable"));
+            lvData.getLvDatas().add(new LVData(Header9Activity.class, "头像组合显示"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "processor");
