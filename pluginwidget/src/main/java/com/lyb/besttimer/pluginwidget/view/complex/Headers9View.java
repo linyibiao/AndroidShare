@@ -21,8 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -149,10 +150,27 @@ public class Headers9View extends View implements WorkStateAppSaver.Result<Bitma
                                 })
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Consumer<Bitmap>() {
+                                .subscribe(new Observer<Bitmap>() {
                                     @Override
-                                    public void accept(Bitmap bitmap) throws Exception {
-                                        saver.result(header, bitmap);
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(Bitmap value) {
+                                        if (value != null) {
+                                            saver.result(header, value);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
                                     }
                                 });
                     }
