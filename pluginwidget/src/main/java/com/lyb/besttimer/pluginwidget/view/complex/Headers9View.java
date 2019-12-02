@@ -42,7 +42,7 @@ public class Headers9View extends View implements WorkStateAppSaver.Result<Bitma
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
-    private WorkStateAppSaver<String, Bitmap, Headers9View> saver = new WorkStateAppSaver<>();
+    private static WorkStateAppSaver<String, Bitmap, Headers9View> saver = new WorkStateAppSaver<>();
 
     private List<RectF> locations = new ArrayList<>(Arrays.asList(new RectF(), new RectF(), new RectF(), new RectF(), new RectF(), new RectF(), new RectF(), new RectF(), new RectF()));
     private List<String> headers = new ArrayList<>();
@@ -165,7 +165,7 @@ public class Headers9View extends View implements WorkStateAppSaver.Result<Bitma
 
                                     @Override
                                     public void onError(Throwable e) {
-
+                                        saver.error(header);
                                     }
 
                                     @Override
