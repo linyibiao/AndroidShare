@@ -81,6 +81,21 @@ public class WorkStateAppSaver<KEY, RESULT, CALLBACK extends WorkStateAppSaver.R
      */
 
     public synchronized void workWithLife(FragmentManager fragmentManager, KEY key, Worker worker, CALLBACK callback) {
+        workWithLife(fragmentManager, key, false, worker, callback);
+    }
+
+    /**
+     * @param fragmentManager fragment管理器，是否有值决定是否加入生命周期
+     * @param key             键
+     * @param worker          工作类
+     * @param callback        回调类
+     */
+
+    public synchronized void workWithLife(FragmentManager fragmentManager, KEY key, boolean noCache, Worker worker, CALLBACK callback) {
+
+        if (noCache) {
+            removeResult(key);
+        }
 
         RESULT result = getResult(key);
         if (result != null) {
