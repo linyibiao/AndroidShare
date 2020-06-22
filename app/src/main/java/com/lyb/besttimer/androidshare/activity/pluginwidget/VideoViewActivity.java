@@ -1,7 +1,7 @@
 package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.VideoView;
 
 import com.lyb.besttimer.androidshare.R;

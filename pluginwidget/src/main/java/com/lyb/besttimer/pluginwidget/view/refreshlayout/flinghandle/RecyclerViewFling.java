@@ -1,7 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.refreshlayout.flinghandle;
 
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lyb.besttimer.pluginwidget.view.refreshlayout.VerticalDragCallback;
 
