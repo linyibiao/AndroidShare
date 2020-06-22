@@ -1,7 +1,7 @@
 package com.lyb.besttimer.androidshare.activity.mix;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.pluginwidget.view.complex.Headers9View;

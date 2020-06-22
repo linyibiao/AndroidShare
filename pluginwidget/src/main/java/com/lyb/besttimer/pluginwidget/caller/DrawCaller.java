@@ -2,8 +2,8 @@ package com.lyb.besttimer.pluginwidget.caller;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.support.annotation.ColorInt;
 
+import androidx.annotation.ColorInt;
 /**
  * draw callback
  * Created by linyibiao on 2016/8/16.

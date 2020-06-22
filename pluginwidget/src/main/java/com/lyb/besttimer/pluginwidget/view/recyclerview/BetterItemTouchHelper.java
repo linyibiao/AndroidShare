@@ -1,7 +1,11 @@
-package android.support.v7.widget.helper;
+package com.lyb.besttimer.pluginwidget.view.recyclerview;
 
-import android.support.v7.widget.RecyclerView;
+
 import android.view.MotionEvent;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Field;
 
@@ -11,8 +15,20 @@ import java.lang.reflect.Field;
  */
 
 public class BetterItemTouchHelper extends ItemTouchHelper {
+    /**
+     * Creates an ItemTouchHelper that will work with the given Callback.
+     * <p>
+     * You can attach ItemTouchHelper to a RecyclerView via
+     * {@link #attachToRecyclerView(RecyclerView)}. Upon attaching, it will add an item decoration,
+     * an onItemTouchListener and a Child attach / detach listener to the RecyclerView.
+     *
+     * @param callback The Callback which controls the behavior of this touch helper.
+     */
+    public BetterItemTouchHelper(@NonNull Callback callback) {
+        super(callback);
+    }
 
-    private HandleEventWithXY handleEventWithXY;
+    /*private HandleEventWithXY handleEventWithXY;
 
     public BetterItemTouchHelper(Callback callback, HandleEventWithXY handleEventWithXY) {
         super(callback);
@@ -74,5 +90,5 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
 
         void handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY);
     }
-
+*/
 }

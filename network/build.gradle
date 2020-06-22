@@ -33,10 +33,10 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api project(':commonutil')
-    testImplementation 'junit:junit:4.12'
-    api 'com.google.code.gson:gson:2.8.0'
-    api 'com.squareup.retrofit2:retrofit:2.3.0'
-    api 'com.squareup.retrofit2:converter-gson:2.3.0'
+    testImplementation 'junit:junit:4.13'
+    api 'com.google.code.gson:gson:2.8.6'
+    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    api 'com.squareup.retrofit2:converter-gson:2.5.0'
 //    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
 //    compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
 //    compile 'com.squareup.retrofit2:converter-protobuf:2.1.0'
@@ -47,9 +47,9 @@ dependencies {
 //        exclude group: 'stax', module: 'stax'
 //    }
 //    compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
-    api 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    api 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    api 'io.reactivex.rxjava2:rxjava:2.1.5'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api 'io.reactivex.rxjava2:rxjava:2.2.12'
 }
 
 //def siteUrl = 'https://github.com/linyibiao/AndroidShare'      // 项目的主页   这个是说明，可随便填

@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -29,7 +29,7 @@ public class TextViewActivity extends BaseActivity {
         final BaseTextView btv = findViewById(R.id.btv);
         btv.getDrawCallerManager().addBGDrawCaller(new OneDrawCaller());
 
-        final String sourceText = "666666666666666666666666666<img src='" + R.drawable.leak_canary_icon + "'/>6666666666666666666666666666666"
+        final String sourceText = "666666666666666666666666666<img src='" + R.drawable.camera_icon_back + "'/>6666666666666666666666666666666"
                 + "<img src='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1512558246169&di=efcdbb5bce823a14a4769f8e5326e22f&imgtype=0&src=http%3A%2F%2Fimg5q.duitang.com%2Fuploads%2Fitem%2F201504%2F24%2F20150424H0622_82mkM.jpeg'></img>"
                 + "66666666666666666666666666666666666666";
 

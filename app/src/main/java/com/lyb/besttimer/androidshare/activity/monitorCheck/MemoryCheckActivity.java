@@ -2,7 +2,7 @@ package com.lyb.besttimer.androidshare.activity.monitorCheck;
 
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
 

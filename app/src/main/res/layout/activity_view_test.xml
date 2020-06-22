@@ -12,5 +12,5 @@
         android:adjustViewBounds="true"
         android:maxHeight="80dp"
         android:maxWidth="40dp"
-        android:src="@drawable/leak_canary_icon" />
+         />
 </RelativeLayout>

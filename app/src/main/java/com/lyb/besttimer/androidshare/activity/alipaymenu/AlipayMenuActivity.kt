@@ -1,12 +1,11 @@
 package com.lyb.besttimer.androidshare.activity.alipaymenu
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.BetterItemTouchHelper
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lyb.besttimer.androidshare.R
 import com.lyb.besttimer.androidshare.utils.adapter.CommonAdapter
 import com.lyb.besttimer.androidshare.utils.adapter.CommonAdapterBean
@@ -112,7 +111,7 @@ class AlipayMenuActivity : AppCompatActivity() {
         datas.add(CommonAdapterBean.convert(2, 2, Item("课程8")))
         datas.add(CommonAdapterBean.convert(2, 2, Item("课程9")))
 
-        val itemTouchHelper = BetterItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
+        /*val itemTouchHelper = BetterItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
 
             override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
                 if (viewHolder != null) {
@@ -173,7 +172,7 @@ class AlipayMenuActivity : AppCompatActivity() {
 //                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //            }
 //        }).attachToRecyclerView(rv_data)
-        itemTouchHelper.attachToRecyclerView(rv_data)
+        itemTouchHelper.attachToRecyclerView(rv_data)*/
 
     }
 }

@@ -2,7 +2,8 @@ package com.lyb.besttimer.androidshare;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
+
+import androidx.multidex.MultiDex;
 
 import com.lyb.besttimer.x5webcore.X5Init;
 import com.squareup.leakcanary.LeakCanary;
