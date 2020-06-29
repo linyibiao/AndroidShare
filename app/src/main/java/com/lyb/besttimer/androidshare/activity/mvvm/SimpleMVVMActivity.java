@@ -1,8 +1,8 @@
 package com.lyb.besttimer.androidshare.activity.mvvm;
 
-import androidx.databinding.DataBindingUtil;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.databinding.ActivitySimpleMvvmBinding;

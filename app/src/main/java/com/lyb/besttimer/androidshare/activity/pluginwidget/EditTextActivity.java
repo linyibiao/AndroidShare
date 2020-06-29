@@ -2,8 +2,8 @@ package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;

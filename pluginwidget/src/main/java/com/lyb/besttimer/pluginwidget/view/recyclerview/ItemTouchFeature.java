@@ -1,7 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.recyclerview;
 
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 /**
  * RecyclerView touch feature

@@ -3,7 +3,7 @@ package com.lyb.besttimer.pluginwidget.utils;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import androidx.core.content.ContextCompat;
+import android.support.v4.content.ContextCompat;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.lyb.besttimer.pluginwidget.view.pullrefresh;
 
-import androidx.annotation.DrawableRes;
+import android.support.annotation.DrawableRes;
 import android.view.View;
 
 /**

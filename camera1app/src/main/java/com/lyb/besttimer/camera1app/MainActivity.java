@@ -1,9 +1,9 @@
 package com.lyb.besttimer.camera1app;
 
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.lyb.besttimer.camera1app.databinding.ActivityMainBinding;

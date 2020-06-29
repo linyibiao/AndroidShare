@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:layout_marginLeft="86dp"
         app:layout_constraintBottom_toBottomOf="@+id/start"
         android:layout_marginBottom="-7dp" />
-    <androidx.appcompat.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/appTV"
         android:text="第几步"
         android:layout_width="wrap_content"
@@ -36,4 +36,4 @@
         app:layout_constraintTop_toBottomOf="@+id/stop"
         app:layout_constraintRight_toLeftOf="@+id/stop"
         android:layout_marginRight="29dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

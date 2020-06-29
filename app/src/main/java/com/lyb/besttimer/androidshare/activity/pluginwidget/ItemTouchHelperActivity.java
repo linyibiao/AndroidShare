@@ -1,10 +1,11 @@
 package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.BetterItemTouchHelper;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.lyb.besttimer.androidshare.R;
-import com.lyb.besttimer.pluginwidget.view.recyclerview.BetterItemTouchHelper;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseAdapter;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.BaseItemDecoration;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.decoration.ColorDecorateDetail;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_touch_helper);
-        /*final Button btn_delete = (Button) findViewById(R.id.btn_delete);
+        final Button btn_delete = (Button) findViewById(R.id.btn_delete);
         final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new GridLayoutManager(this, 4));
         List<String> strings = new ArrayList<>();
@@ -124,7 +125,7 @@ public class ItemTouchHelperActivity extends AppCompatActivity {
                 selectedToDelete = false;
             }
         });
-        itemTouchHelper.attachToRecyclerView(rv);*/
+        itemTouchHelper.attachToRecyclerView(rv);
     }
 
     private static class TouchAdapter extends BaseAdapter<TouchAdapter.TouchHolder> {

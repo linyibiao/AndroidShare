@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -40,7 +40,7 @@ dependencies {
 
     api project(':commonutil')
 
-    implementation "androidx.appcompat:appcompat:${dCfg.androidXVersion}"
+    implementation "com.android.support:appcompat-v7:${dCfg.supportVersion}"
 
     api 'com.github.tbruyelle:rxpermissions:0.10.2'
 

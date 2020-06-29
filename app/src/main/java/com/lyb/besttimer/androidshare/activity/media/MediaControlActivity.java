@@ -2,7 +2,7 @@ package com.lyb.besttimer.androidshare.activity.media;
 
 import android.Manifest;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 

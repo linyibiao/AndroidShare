@@ -15,6 +15,6 @@
         android:id="@+id/brv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="2" />
 </RelativeLayout>

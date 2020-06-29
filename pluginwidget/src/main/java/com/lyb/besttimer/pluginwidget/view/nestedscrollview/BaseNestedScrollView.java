@@ -1,7 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.nestedscrollview;
 
 import android.content.Context;
-import androidx.core.widget.NestedScrollView;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 
 /**

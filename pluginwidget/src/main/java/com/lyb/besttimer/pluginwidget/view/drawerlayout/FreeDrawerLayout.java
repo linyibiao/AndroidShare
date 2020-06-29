@@ -2,9 +2,8 @@ package com.lyb.besttimer.pluginwidget.view.drawerlayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.core.view.ViewCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.drawerlayout.widget.DrawerLayout;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;

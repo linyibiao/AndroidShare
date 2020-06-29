@@ -1,12 +1,12 @@
 package com.lyb.besttimer.androidshare.utils.adapter
 
+import android.support.v7.widget.RecyclerView
 import android.util.Pair
 import android.util.SparseArray
 import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 /**

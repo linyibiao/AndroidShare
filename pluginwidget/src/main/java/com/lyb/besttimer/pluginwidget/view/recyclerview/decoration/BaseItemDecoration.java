@@ -2,7 +2,7 @@ package com.lyb.besttimer.pluginwidget.view.recyclerview.decoration;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**

@@ -2,7 +2,7 @@ package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
 import com.lyb.besttimer.androidshare.R;

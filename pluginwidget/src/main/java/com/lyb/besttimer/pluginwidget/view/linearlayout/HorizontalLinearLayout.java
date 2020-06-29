@@ -1,7 +1,7 @@
 package com.lyb.besttimer.pluginwidget.view.linearlayout;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 

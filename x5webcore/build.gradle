@@ -30,5 +30,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(':commonutil')
 
-    implementation "androidx.appcompat:appcompat:${dCfg.supportVersion}"
+    implementation 'com.android.support:appcompat-v7:${dCfg.supportVersion}'
 }

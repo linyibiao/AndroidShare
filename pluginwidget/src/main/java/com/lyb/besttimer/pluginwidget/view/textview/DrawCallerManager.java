@@ -2,7 +2,7 @@ package com.lyb.besttimer.pluginwidget.view.textview;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import androidx.annotation.ColorInt;
+import android.support.annotation.ColorInt;
 
 import com.lyb.besttimer.pluginwidget.caller.DrawCaller;
 
