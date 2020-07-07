@@ -1,8 +1,8 @@
 package com.lyb.besttimer.androidshare.activity.pluginwidget;
 
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
+import com.lyb.besttimer.androidshare.view.SpanResBg;
 import com.lyb.besttimer.pluginwidget.data.ItemTree;
 import com.lyb.besttimer.pluginwidget.data.TreeDataManager;
 import com.lyb.besttimer.pluginwidget.view.recyclerview.BaseRecyclerView;
@@ -20,6 +21,7 @@ import com.lyb.besttimer.pluginwidget.view.recyclerview.adapter.BaseHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ItemTreeActivity extends BaseActivity {
 
@@ -124,11 +126,18 @@ public class ItemTreeActivity extends BaseActivity {
                 brv_datas = (BaseRecyclerView) itemView.findViewById(R.id.brv_datas);
             }
 
+            private SpanResBg spanResBg = new SpanResBg(itemView.getContext(), R.drawable.shape_rectangle_corner_5dp_solid_ffffff, 100, 10);
+            private SpanResBg spanResBg2 = new SpanResBg(itemView.getContext(), R.drawable.shape_rectangle_corner_5dp_solid_ffffff, 0, 0);
+
             @Override
             public void fillView(ItemTree data, int position) {
                 super.fillView(data, position);
                 RVData rvData = (RVData) data.getObject();
-                tv.setText(rvData.show);
+                SpannableString sp = new SpannableString(rvData.show);
+//                new Random().nextInt(1);
+                sp.setSpan(spanResBg, 0, new Random().nextInt(2) + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                sp.setSpan(spanResBg2, 2, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv.setText(sp);
                 btn.setOnClickListener(this);
                 itemView.setOnClickListener(this);
             }
