@@ -10,7 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:adjustViewBounds="true"
-        android:maxHeight="80dp"
         android:maxWidth="40dp"
+        android:maxHeight="80dp"
         android:src="@drawable/leak_canary_icon" />
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
