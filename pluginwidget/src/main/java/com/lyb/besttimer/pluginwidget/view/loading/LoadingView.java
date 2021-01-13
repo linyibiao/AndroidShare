@@ -246,8 +246,7 @@ public class LoadingView extends View {
                     float currY = event.getY(0);
                     float dy = Math.max(initY - currY, 0);
                     if (loadingCaller != null) {
-                        loadingCaller.moveOffset(dy / 200);
-                        loadingCaller.moveOffset((int) (dy / 50));
+                        loadingCaller.moveOffset((int) (dy / (getWidth() / 100f)));
                     }
                 }
                 break;
@@ -257,6 +256,7 @@ public class LoadingView extends View {
                     endLoading();
                 }
                 break;
+            default:
         }
         return super.onTouchEvent(event);
     }

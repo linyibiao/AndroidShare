@@ -21,6 +21,7 @@ import com.lyb.besttimer.pluginwidget.view.loading.LoadingCaller;
 import com.lyb.besttimer.pluginwidget.view.loading.LoadingView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -43,13 +44,14 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
 
     private RxPermissions rxPermissions;
 
+    private CameraMode cameraMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_mix);
 
         long millisInFuture = getIntent().getLongExtra(CameraConstants.millisInFuture, 10 * 1000);
-        CameraMode cameraMode;
         if (getIntent().hasExtra(CameraConstants.cameraMode)) {
             cameraMode = (CameraMode) getIntent().getSerializableExtra(CameraConstants.cameraMode);
         } else {
@@ -112,14 +114,6 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             }
 
             @Override
-            public void moveOffset(float offsetValue) {
-                Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).moveOffset(offsetValue);
-                }
-            }
-
-            @Override
             public void moveOffset(int offsetValue) {
                 Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
                 if (fragment instanceof CameraFragment) {
@@ -163,7 +157,13 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
     }
 
     private void showCamera() {
-        Disposable disposable = rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO).subscribe(new Consumer<Boolean>() {
+        Observable<Boolean> observable;
+        if (cameraMode == CameraMode.PICTURE) {
+            observable = rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            observable = rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+        }
+        Disposable disposable = observable.subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {

@@ -17,12 +17,12 @@ import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.lyb.besttimer.cameracore.AngleUtil;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
@@ -32,13 +32,13 @@ import com.lyb.besttimer.commonutil.utils.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static android.graphics.Bitmap.createBitmap;
-
 public class CameraMsgManager {
 
+    private static final String TAG = "CameraMsgManager";
     private final Activity activity;
     private final SurfaceView surfaceView;
     private CameraResultCaller cameraResultCaller;
@@ -61,6 +61,7 @@ public class CameraMsgManager {
     }
 
     private SensorEventListener sensorEventListener = new SensorEventListener() {
+        @Override
         public void onSensorChanged(SensorEvent event) {
             if (Sensor.TYPE_ACCELEROMETER != event.sensor.getType()) {
                 return;
@@ -69,6 +70,7 @@ public class CameraMsgManager {
             sensorRotation = AngleUtil.getSensorRotation(values[SensorManager.DATA_X], values[SensorManager.DATA_Y]);
         }
 
+        @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
     };
@@ -85,13 +87,19 @@ public class CameraMsgManager {
         switchCamera(mFacing);
         Camera.Size size = mCamera.getParameters().getPreviewSize();
         ViewGroup.LayoutParams layoutParams = surfaceView.getLayoutParams();
+        int previewWidth;
+        int previewHeight;
         if (changeSizeOrientation()) {
-            layoutParams.height = (int) (surfaceView.getWidth() * 1.0 * size.width / size.height);
+            previewWidth = size.height;
+            previewHeight = size.width;
         } else {
-            layoutParams.height = (int) (surfaceView.getWidth() * 1.0 * size.height / size.width);
+            previewWidth = size.width;
+            previewHeight = size.height;
         }
-        if (layoutParams instanceof LinearLayout.LayoutParams) {
-            ((LinearLayout.LayoutParams) layoutParams).weight = 0;
+        if (surfaceView.getWidth() * previewHeight > previewWidth * surfaceView.getHeight()) {
+            layoutParams.height = (int) (surfaceView.getWidth() * previewHeight / previewWidth);
+        } else {
+            layoutParams.width = (int) (surfaceView.getHeight() * previewWidth / previewHeight);
         }
         surfaceView.setLayoutParams(layoutParams);
     }
@@ -266,6 +274,7 @@ public class CameraMsgManager {
                 break;
             case Surface.ROTATION_270:
                 degrees = 270;
+            default:
         }
 
         int result = 0;
@@ -296,6 +305,7 @@ public class CameraMsgManager {
                 break;
             case Surface.ROTATION_270:
                 degrees = 270;
+            default:
         }
         return (degrees + info.orientation) % 180 != 0;
     }
@@ -321,47 +331,44 @@ public class CameraMsgManager {
         return result;
     }
 
+    private Camera.Size choosePictureSize(List<Camera.Size> sizes_picture) {
+        return Collections.max(sizes_picture, new CompareSizesByArea());
+    }
+
     private Pair<Camera.Size, Camera.Size> calculatePerfectSize(List<Camera.Size> sizes_preview, List<Camera.Size> sizes_picture, int expectWidth, int expectHeight) {
-        List<Pair<Camera.Size, Camera.Size>> availableSizes = new ArrayList<>();
-        for (Camera.Size size_preview : sizes_preview) {
-            Camera.Size pictureSize = null;
-            for (Camera.Size size_picture : sizes_picture) {
-                if (size_preview.width * size_picture.height == size_preview.height * size_picture.width) {
-                    if (pictureSize == null) {
-                        pictureSize = size_picture;
-                    } else if (size_picture.width * size_picture.height > pictureSize.width * pictureSize.height) {
-                        pictureSize = size_picture;
-                    }
-                }
-            }
-            if (pictureSize != null) {
-                availableSizes.add(new Pair<>(size_preview, pictureSize));
-            }
-        }
-        Pair<Camera.Size, Camera.Size> result = null;
-        double targetRatio = expectWidth * 1.0 / expectHeight;
-        if (availableSizes.size() > 0) {
-            for (Pair<Camera.Size, Camera.Size> size : availableSizes) {
-                if (result == null) {
-                    result = size;
+
+        Camera.Size pictureSize = choosePictureSize(sizes_picture);
+
+        List<Camera.Size> bigEnough = new ArrayList<>();
+        List<Camera.Size> notBigEnough = new ArrayList<>();
+        int w = pictureSize.width;
+        int h = pictureSize.height;
+        for (Camera.Size option : sizes_preview) {
+            if (option.width <= 1920 && option.height <= 1080 &&
+                    option.height * w == option.width * h) {
+                if (option.width >= expectWidth &&
+                        option.height >= expectHeight) {
+                    bigEnough.add(option);
                 } else {
-                    double resultRatio = result.first.width * 1.0 / result.first.height;
-                    double currRatio = size.first.width * 1.0 / size.first.height;
-                    if (Math.abs(resultRatio - targetRatio) > Math.abs(currRatio - targetRatio)) {
-                        result = size;
-                    } else if (Math.abs(resultRatio - targetRatio) == Math.abs(currRatio - targetRatio)) {
-                        if (size.first.width * size.first.height > result.first.width * result.first.height) {
-                            result = size;
-                        }
-                    }
+                    notBigEnough.add(option);
                 }
             }
-        } else {
-            Camera.Size size_preview = calculatePerfectSize(sizes_preview, expectWidth, expectHeight);
-            Camera.Size size_picture = calculatePerfectSize(sizes_picture, size_preview.width, size_preview.height);
-            result = new Pair<>(size_preview, size_picture);
         }
-        return result;
+
+        // Pick the smallest of those big enough. If there is no one big enough, pick the
+        // largest of those not big enough.
+        Camera.Size previewSize;
+        if (bigEnough.size() > 0) {
+            previewSize = Collections.min(bigEnough, new CompareSizesByArea());
+        } else if (notBigEnough.size() > 0) {
+            previewSize = Collections.max(notBigEnough, new CompareSizesByArea());
+        } else {
+            Log.e(TAG, "Couldn't find any suitable preview size");
+            previewSize = sizes_preview.get(0);
+        }
+
+        return new Pair<>(previewSize, pictureSize);
+
     }
 
     private void chooseFixedPreviewFps(Camera.Parameters parameters, int expectedThoudandFps) {
@@ -432,12 +439,6 @@ public class CameraMsgManager {
 
     private int initZoom = 0;
 
-    public void initZoomByMode() {
-        if (cameraState != CameraState.PREVIEW) {
-            initZoom();
-        }
-    }
-
     public void initZoom() {
         if (mCamera != null) {
             Camera.Parameters parameter = mCamera.getParameters();
@@ -477,17 +478,49 @@ public class CameraMsgManager {
                         onStarted();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                         int rotationValue = (sensorRotation - activity.getWindowManager().getDefaultDisplay().getRotation() + 4) % 4;
+
+                        float viewWidth = ((ViewGroup) surfaceView.getParent()).getWidth();
+                        float viewHeight = ((ViewGroup) surfaceView.getParent()).getHeight();
+
                         Matrix matrix = new Matrix();
                         Camera.CameraInfo info = new Camera.CameraInfo();
                         Camera.getCameraInfo(mCameraId, info);
                         if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                            matrix.setRotate((360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360);
+                            int degrees = (360 - rotationValue * 90 + calculateCameraPreviewOrientation(activity)) % 360;
+                            matrix.setRotate(degrees);
+                            if (degrees % 180 == 0) {
+                                float temp = viewWidth;
+                                viewWidth = viewHeight;
+                                viewHeight = temp;
+                            }
                         } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                            matrix.setRotate((360 + rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360);
-//                        matrix.postScale(-1, 1);
+                            int degrees = (360 + rotationValue * 90 + calculateCameraPreviewOrientation(activity) + 180) % 360;
+                            matrix.setRotate(degrees);
+                            if (degrees % 180 == 0) {
+                                float temp = viewWidth;
+                                viewWidth = viewHeight;
+                                viewHeight = temp;
+                            }
                         }
-                        bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                        String path = FileUtil.saveBitmap(activity, "BesttimerCamera", bitmap);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+                        float bitmapWidth = bitmap.getWidth();
+                        float bitmapHeight = bitmap.getHeight();
+                        float widthRatio = viewWidth / bitmapWidth;
+                        float heightRatio = viewHeight / bitmapHeight;
+                        if (widthRatio > heightRatio) {
+                            heightRatio = heightRatio / widthRatio;
+                            widthRatio = 1;
+                        } else {
+                            widthRatio = widthRatio / heightRatio;
+                            heightRatio = 1;
+                        }
+                        bitmap = Bitmap.createBitmap(bitmap,
+                                (int) ((1 - widthRatio) / 2 * bitmapWidth),
+                                (int) ((1 - heightRatio) / 2 * bitmapHeight),
+                                (int) (widthRatio * bitmapWidth),
+                                (int) (heightRatio * bitmapHeight));
+                        String path = FileUtil.saveBitmap(activity, "htjyCamera", bitmap);
                         // 最后通知图库更新
                         activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
 
@@ -538,9 +571,9 @@ public class CameraMsgManager {
             size_video = parameters.getPreviewSize();
         } else {
             if (changeSizeOrientation()) {
-                size_video = calculatePerfectSize(parameters.getSupportedVideoSizes(), surfaceView.getHeight(), surfaceView.getWidth());
+                size_video = calculatePerfectSize(parameters.getSupportedVideoSizes(), ((ViewGroup) surfaceView.getParent()).getHeight(), ((ViewGroup) surfaceView.getParent()).getWidth());
             } else {
-                size_video = calculatePerfectSize(parameters.getSupportedVideoSizes(), surfaceView.getWidth(), surfaceView.getHeight());
+                size_video = calculatePerfectSize(parameters.getSupportedVideoSizes(), ((ViewGroup) surfaceView.getParent()).getWidth(), ((ViewGroup) surfaceView.getParent()).getHeight());
             }
         }
 
