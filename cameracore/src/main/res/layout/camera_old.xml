@@ -6,5 +6,6 @@
     <com.lyb.besttimer.cameracore.camera1.CameraSurfaceView
         android:id="@+id/camera_old"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 </FrameLayout>

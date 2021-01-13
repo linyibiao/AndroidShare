@@ -11,8 +11,8 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
-import com.lyb.besttimer.pluginwidget.view.fragment.LifeCaller;
 import com.lyb.besttimer.cameracore.TouchMode;
+import com.lyb.besttimer.pluginwidget.view.fragment.LifeCaller;
 import com.lyb.besttimer.pluginwidget.view.fragment.WorkStateFragment;
 
 public class CameraSurfaceView extends SurfaceView {
@@ -82,7 +82,7 @@ public class CameraSurfaceView extends SurfaceView {
         if (initTouch != null && event.getPointerCount() >= 2) {
             float dxy = getDistance(event.getX(0), event.getY(0), event.getX(1), event.getY(1)) -
                     getDistance(initTouch.first.first, initTouch.first.second, initTouch.second.first, initTouch.second.second);
-            return (int) (dxy / 50);
+            return (int) (dxy / (getWidth() / 100f));
         }
         return 0;
     }
@@ -97,12 +97,12 @@ public class CameraSurfaceView extends SurfaceView {
             case MotionEvent.ACTION_DOWN:
                 touchMode = TouchMode.FOCUS;
                 initTouch(event);
-                cameraMsgManager.initZoomByMode();
+                cameraMsgManager.initZoom();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 touchMode = TouchMode.ZOOM;
                 initTouch(event);
-                cameraMsgManager.initZoomByMode();
+                cameraMsgManager.initZoom();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerCount() >= 2) {
@@ -117,8 +117,9 @@ public class CameraSurfaceView extends SurfaceView {
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 initTouch(event);
-                cameraMsgManager.initZoomByMode();
+                cameraMsgManager.initZoom();
                 break;
+            default:
         }
         return true;
     }

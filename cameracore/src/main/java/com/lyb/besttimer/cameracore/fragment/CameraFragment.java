@@ -19,11 +19,11 @@ public class CameraFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.camera, container, false);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            FragmentUtil.replace(getChildFragmentManager(), R.id.layout_camera, CameraOldFragment.class, null, null);
-        } else {
-            FragmentUtil.replace(getChildFragmentManager(), R.id.layout_camera, CameraNewFragment.class, null, null);
-        }
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        FragmentUtil.replace(getChildFragmentManager(), R.id.layout_camera, CameraOldFragment.class, null, null);
+//        } else {
+//            FragmentUtil.replace(getChildFragmentManager(), R.id.layout_camera, CameraNewFragment.class, null, null);
+//        }
         return view;
     }
 
@@ -31,8 +31,6 @@ public class CameraFragment extends Fragment {
         Fragment fragment = FragmentUtil.findFragment(getChildFragmentManager(), R.id.layout_camera, null);
         if (fragment instanceof CameraOldFragment) {
             ((CameraOldFragment) fragment).takePicture();
-        } else if (fragment instanceof CameraNewFragment) {
-            ((CameraNewFragment) fragment).takePicture();
         }
     }
 
@@ -40,8 +38,6 @@ public class CameraFragment extends Fragment {
         Fragment fragment = FragmentUtil.findFragment(getChildFragmentManager(), R.id.layout_camera, null);
         if (fragment instanceof CameraOldFragment) {
             ((CameraOldFragment) fragment).takeRecord();
-        } else if (fragment instanceof CameraNewFragment) {
-            ((CameraNewFragment) fragment).takeRecord();
         }
     }
 
@@ -49,8 +45,6 @@ public class CameraFragment extends Fragment {
         Fragment fragment = FragmentUtil.findFragment(getChildFragmentManager(), R.id.layout_camera, null);
         if (fragment instanceof CameraOldFragment) {
             ((CameraOldFragment) fragment).switchCamera();
-        } else if (fragment instanceof CameraNewFragment) {
-            ((CameraNewFragment) fragment).switchCamera();
         }
     }
 
@@ -58,15 +52,6 @@ public class CameraFragment extends Fragment {
         Fragment fragment = FragmentUtil.findFragment(getChildFragmentManager(), R.id.layout_camera, null);
         if (fragment instanceof CameraOldFragment) {
             ((CameraOldFragment) fragment).moveInit();
-        } else if (fragment instanceof CameraNewFragment) {
-            ((CameraNewFragment) fragment).moveInit();
-        }
-    }
-
-    public void moveOffset(float offsetValue) {
-        Fragment fragment = FragmentUtil.findFragment(getChildFragmentManager(), R.id.layout_camera, null);
-        if (fragment instanceof CameraNewFragment) {
-            ((CameraNewFragment) fragment).moveOffset(offsetValue);
         }
     }
 

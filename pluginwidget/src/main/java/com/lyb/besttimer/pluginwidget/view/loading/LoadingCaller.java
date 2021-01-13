@@ -10,7 +10,5 @@ public interface LoadingCaller {
 
     void moveInit();
 
-    void moveOffset(float offsetValue);
-
     void moveOffset(int offsetValue);
 }
