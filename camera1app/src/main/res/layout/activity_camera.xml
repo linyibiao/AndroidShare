@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.lyb.besttimer.cameracore.camera1.CameraSurfaceView
-        android:id="@+id/surfaceView"
+    <FrameLayout
+        android:id="@+id/layout_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -34,6 +34,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="翻转" />
+
+        <Button
+            android:id="@+id/btn_flash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="闪" />
     </LinearLayout>
 
 </FrameLayout>

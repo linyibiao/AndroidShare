@@ -14,7 +14,7 @@ import com.lyb.besttimer.cameracore.CameraConstants;
 import com.lyb.besttimer.cameracore.CameraMode;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.R;
-import com.lyb.besttimer.cameracore.fragment.CameraFragment;
+import com.lyb.besttimer.cameracore.fragment.CameraOldFragment;
 import com.lyb.besttimer.cameracore.fragment.CameraShowFragment;
 import com.lyb.besttimer.pluginwidget.utils.FragmentUtil;
 import com.lyb.besttimer.pluginwidget.view.loading.LoadingCaller;
@@ -79,8 +79,8 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             public void takeOneShot() {
                 if (cameraMode == CameraMode.ALL || cameraMode == CameraMode.PICTURE) {
                     Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                    if (fragment instanceof CameraFragment) {
-                        ((CameraFragment) fragment).takePicture();
+                    if (fragment instanceof CameraOldFragment) {
+                        ((CameraOldFragment) fragment).takePicture();
                     }
                 }
             }
@@ -89,8 +89,8 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             public void startLoading() {
                 if (cameraMode == CameraMode.ALL || cameraMode == CameraMode.VIDEO) {
                     Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                    if (fragment instanceof CameraFragment) {
-                        ((CameraFragment) fragment).takeRecord();
+                    if (fragment instanceof CameraOldFragment) {
+                        ((CameraOldFragment) fragment).takeRecord();
                     }
                 }
             }
@@ -99,8 +99,8 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             public void endLoading() {
                 if (cameraMode == CameraMode.ALL || cameraMode == CameraMode.VIDEO) {
                     Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                    if (fragment instanceof CameraFragment) {
-                        ((CameraFragment) fragment).takeRecord();
+                    if (fragment instanceof CameraOldFragment) {
+                        ((CameraOldFragment) fragment).takeRecord();
                     }
                 }
             }
@@ -108,16 +108,16 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             @Override
             public void moveInit() {
                 Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).moveInit();
+                if (fragment instanceof CameraOldFragment) {
+                    ((CameraOldFragment) fragment).moveInit();
                 }
             }
 
             @Override
             public void moveOffset(int offsetValue) {
                 Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).moveOffset(offsetValue);
+                if (fragment instanceof CameraOldFragment) {
+                    ((CameraOldFragment) fragment).moveOffset(offsetValue);
                 }
             }
         });
@@ -131,8 +131,8 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             @Override
             public void onClick(View v) {
                 Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
-                if (fragment instanceof CameraFragment) {
-                    ((CameraFragment) fragment).switchCamera();
+                if (fragment instanceof CameraOldFragment) {
+                    ((CameraOldFragment) fragment).switchCamera();
                 }
             }
         });
@@ -167,7 +167,7 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
-                    FragmentUtil.replace(getSupportFragmentManager(), R.id.layout_show, CameraFragment.class, null, null);
+                    FragmentUtil.replace(getSupportFragmentManager(), R.id.layout_show, CameraOldFragment.class, null, null);
                     layoutCapture.setVisibility(View.VISIBLE);
                     layoutCheck.setVisibility(View.GONE);
                 } else {
@@ -182,6 +182,11 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
         FragmentUtil.replace(getSupportFragmentManager(), R.id.layout_show, CameraShowFragment.class, CameraShowFragment.createArg(fileUrl, resultType), null);
         layoutCapture.setVisibility(View.GONE);
         layoutCheck.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onCameraReady() {
+
     }
 
     @Override

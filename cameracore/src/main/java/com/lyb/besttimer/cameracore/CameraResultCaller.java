@@ -5,6 +5,8 @@ public interface CameraResultCaller {
         PICTURE, VIDEO
     }
 
+    void onCameraReady();
+
     void onStartVideo();
 
     void onResult(String fileUrl, ResultType resultType);

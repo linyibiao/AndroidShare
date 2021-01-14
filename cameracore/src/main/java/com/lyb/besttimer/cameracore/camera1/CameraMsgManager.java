@@ -210,6 +210,10 @@ public class CameraMsgManager {
             }
             mCamera.setParameters(parameters);
 
+            if (cameraResultCaller != null) {
+                cameraResultCaller.onCameraReady();
+            }
+
             if (toStartPreview) {
                 onStarted();
             }
@@ -467,6 +471,50 @@ public class CameraMsgManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 控制flash模式
+     *
+     * @param value 参考
+     *              {@link Camera.Parameters#FLASH_MODE_AUTO}
+     *              {@link Camera.Parameters#FLASH_MODE_OFF}
+     *              {@link Camera.Parameters#FLASH_MODE_ON}
+     *              {@link Camera.Parameters#FLASH_MODE_RED_EYE}
+     *              {@link Camera.Parameters#FLASH_MODE_TORCH}
+     */
+    public void controlFlashMode(String value) {
+        if (mCamera != null) {
+            try {
+                Camera.Parameters parameters = mCamera.getParameters();
+                parameters.setFlashMode(value);
+                mCamera.setParameters(parameters);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 控制flash模式
+     *
+     * @return 参考
+     * {@link Camera.Parameters#FLASH_MODE_AUTO}
+     * {@link Camera.Parameters#FLASH_MODE_OFF}
+     * {@link Camera.Parameters#FLASH_MODE_ON}
+     * {@link Camera.Parameters#FLASH_MODE_RED_EYE}
+     * {@link Camera.Parameters#FLASH_MODE_TORCH}
+     */
+    public String getFlashMode() {
+        if (mCamera != null) {
+            try {
+                Camera.Parameters parameters = mCamera.getParameters();
+                return parameters.getFlashMode();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public void takePicture() {
