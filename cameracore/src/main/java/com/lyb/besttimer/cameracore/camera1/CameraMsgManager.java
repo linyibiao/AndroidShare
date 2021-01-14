@@ -16,6 +16,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -59,6 +60,11 @@ public class CameraMsgManager {
     public void setCameraResultCaller(CameraResultCaller cameraResultCaller) {
         this.cameraResultCaller = cameraResultCaller;
     }
+
+    /**
+     * 是否使用控制方向陀螺感应器
+     */
+    private boolean useSensor = true;
 
     private SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
@@ -239,13 +245,39 @@ public class CameraMsgManager {
         }
     }
 
+    /**
+     * 是否使用控制方向陀螺感应器
+     */
+    public void controlSensor(boolean enabled) {
+        this.useSensor = enabled;
+        if (enabled) {
+            unregisterSensorManagerInner();
+            registerSensorManagerInner();
+        } else {
+            unregisterSensorManagerInner();
+            sensorRotation = 0;
+        }
+    }
+
     public void registerSensorManager() {
+        if (useSensor) {
+            registerSensorManagerInner();
+        }
+    }
+
+    public void registerSensorManagerInner() {
         SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager
                 .SENSOR_DELAY_NORMAL);
     }
 
     public void unregisterSensorManager() {
+        if (useSensor) {
+            unregisterSensorManagerInner();
+        }
+    }
+
+    public void unregisterSensorManagerInner() {
         SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         sm.unregisterListener(sensorEventListener);
     }
@@ -335,21 +367,31 @@ public class CameraMsgManager {
         return result;
     }
 
-    private Camera.Size choosePictureSize(List<Camera.Size> sizes_picture) {
-        return Collections.max(sizes_picture, new CompareSizesByArea());
+    private Camera.Size choosePictureSize(List<Camera.Size> sizes_picture, int expectWidth, int expectHeight) {
+        return calculatePerfectSize(sizes_picture, null, null, null, expectWidth, expectHeight);
     }
 
     private Pair<Camera.Size, Camera.Size> calculatePerfectSize(List<Camera.Size> sizes_preview, List<Camera.Size> sizes_picture, int expectWidth, int expectHeight) {
 
-        Camera.Size pictureSize = choosePictureSize(sizes_picture);
+        Camera.Size pictureSize = choosePictureSize(sizes_picture, expectWidth, expectHeight);
+
+        Camera.Size previewSize = calculatePerfectSize(sizes_preview, pictureSize, 1920, 1080, expectWidth, expectHeight);
+
+        return new Pair<>(previewSize, pictureSize);
+
+    }
+
+    private Camera.Size calculatePerfectSize(List<Camera.Size> sizes, @Nullable Camera.Size standardSize, Integer widthLimit, Integer heightLimit, int expectWidth, int expectHeight) {
+
+        Collections.sort(sizes, new CompareSizesByArea());
 
         List<Camera.Size> bigEnough = new ArrayList<>();
         List<Camera.Size> notBigEnough = new ArrayList<>();
-        int w = pictureSize.width;
-        int h = pictureSize.height;
-        for (Camera.Size option : sizes_preview) {
-            if (option.width <= 1920 && option.height <= 1080 &&
-                    option.height * w == option.width * h) {
+        for (Camera.Size option : sizes) {
+            boolean widthPass = widthLimit == null || option.width <= widthLimit;
+            boolean heightPass = heightLimit == null || option.height <= heightLimit;
+            boolean sizePass = standardSize == null || option.height * standardSize.width == option.width * standardSize.height;
+            if (widthPass && heightPass && sizePass) {
                 if (option.width >= expectWidth &&
                         option.height >= expectHeight) {
                     bigEnough.add(option);
@@ -361,17 +403,17 @@ public class CameraMsgManager {
 
         // Pick the smallest of those big enough. If there is no one big enough, pick the
         // largest of those not big enough.
-        Camera.Size previewSize;
+        Camera.Size resultSize;
         if (bigEnough.size() > 0) {
-            previewSize = Collections.min(bigEnough, new CompareSizesByArea());
+            resultSize = Collections.min(bigEnough, new CompareSizesByArea());
         } else if (notBigEnough.size() > 0) {
-            previewSize = Collections.max(notBigEnough, new CompareSizesByArea());
+            resultSize = Collections.max(notBigEnough, new CompareSizesByArea());
         } else {
-            Log.e(TAG, "Couldn't find any suitable preview size");
-            previewSize = sizes_preview.get(0);
+            Log.e(TAG, "Couldn't find any suitable size");
+            resultSize = sizes.get(sizes.size() - 1);
         }
 
-        return new Pair<>(previewSize, pictureSize);
+        return resultSize;
 
     }
 

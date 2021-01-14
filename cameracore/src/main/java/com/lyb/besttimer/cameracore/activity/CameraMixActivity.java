@@ -186,7 +186,10 @@ public class CameraMixActivity extends AppCompatActivity implements CameraResult
 
     @Override
     public void onCameraReady() {
-
+        Fragment fragment = FragmentUtil.findFragment(getSupportFragmentManager(), R.id.layout_show, null);
+        if (fragment instanceof CameraOldFragment) {
+            ((CameraOldFragment) fragment).getCameraOld().getCameraMsgManager().controlSensor(false);
+        }
     }
 
     @Override
