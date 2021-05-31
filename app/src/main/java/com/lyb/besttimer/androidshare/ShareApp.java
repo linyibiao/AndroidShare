@@ -15,6 +15,7 @@ import com.squareup.leakcanary.LeakCanary;
 
 public class ShareApp extends Application {
 
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);

@@ -12,7 +12,7 @@
         android:adjustViewBounds="true"
         android:maxWidth="40dp"
         android:maxHeight="80dp"
-        android:src="@drawable/leak_canary_icon" />
+        android:src="@mipmap/leak_canary_icon" />
 
     <TextView
         android:id="@+id/tv_text"
