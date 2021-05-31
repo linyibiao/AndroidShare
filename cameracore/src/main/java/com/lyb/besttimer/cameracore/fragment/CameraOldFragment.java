@@ -37,6 +37,10 @@ public class CameraOldFragment extends Fragment {
         return view;
     }
 
+    public CameraSurfaceView getCameraOld() {
+        return cameraOld;
+    }
+
     public void takePicture() {
         cameraOld.getCameraMsgManager().takePicture();
     }
