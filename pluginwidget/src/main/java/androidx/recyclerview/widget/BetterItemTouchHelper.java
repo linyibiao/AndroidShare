@@ -1,11 +1,9 @@
-package com.lyb.besttimer.pluginwidget.view.recyclerview;
+package androidx.recyclerview.widget;
 
 
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Field;
 
@@ -28,7 +26,7 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
         super(callback);
     }
 
-    /*private HandleEventWithXY handleEventWithXY;
+    private HandleEventWithXY handleEventWithXY;
 
     public BetterItemTouchHelper(Callback callback, HandleEventWithXY handleEventWithXY) {
         super(callback);
@@ -90,5 +88,5 @@ public class BetterItemTouchHelper extends ItemTouchHelper {
 
         void handleUp(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float currRawX, float currRawY);
     }
-*/
+
 }
