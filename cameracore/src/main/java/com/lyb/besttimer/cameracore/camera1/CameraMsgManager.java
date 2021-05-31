@@ -16,7 +16,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -24,6 +23,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
 
 import com.lyb.besttimer.cameracore.AngleUtil;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
