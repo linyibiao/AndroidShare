@@ -2,7 +2,6 @@ package com.lyb.besttimer.cameracore.fragment;
 
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,14 +9,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.lyb.besttimer.cameracore.CameraResultCaller;
 import com.lyb.besttimer.cameracore.R;
-
-import java.io.File;
 
 public class CameraShowFragment extends Fragment {
 
@@ -64,24 +61,7 @@ public class CameraShowFragment extends Fragment {
         if (resultType == CameraResultCaller.ResultType.PICTURE) {
             ivPic.setVisibility(View.VISIBLE);
             vvVideo.setVisibility(View.GONE);
-            ivPic.setImageURI(Uri.fromFile(new File(fileUrl)));
-//            getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//                @Override
-//                public boolean onPreDraw() {
-//                    ivPic.setVisibility(View.VISIBLE);
-//                    vvVideo.setVisibility(View.GONE);
-//                    BitmapFactory.Options options = new BitmapFactory.Options();
-//                    options.inJustDecodeBounds = true;
-//                    BitmapFactory.decodeFile(fileUrl, options);
-//                    // 调用上面定义的方法计算inSampleSize值
-//                    options.inSampleSize = calculateInSampleSize(options, getView().getWidth(), getView().getHeight());
-//                    // 使用获取到的inSampleSize值再次解析图片
-//                    options.inJustDecodeBounds = false;
-//                    ivPic.setImageBitmap(BitmapFactory.decodeFile(fileUrl, options));
-//                    getView().getViewTreeObserver().removeOnPreDrawListener(this);
-//                    return false;
-//                }
-//            });
+            Glide.with(this).load(fileUrl).into(ivPic);
         } else if (resultType == CameraResultCaller.ResultType.VIDEO) {
             ivPic.setVisibility(View.GONE);
             vvVideo.setVisibility(View.VISIBLE);

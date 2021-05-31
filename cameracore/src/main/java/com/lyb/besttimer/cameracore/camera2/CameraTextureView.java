@@ -115,6 +115,7 @@ public class CameraTextureView extends TextureView {
                 initTouch(event);
                 cameraMsgManager.initZoomByMode();
                 break;
+            default:
         }
         return true;
     }

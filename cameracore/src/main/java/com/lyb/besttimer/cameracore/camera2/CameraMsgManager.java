@@ -784,7 +784,7 @@ public class CameraMsgManager {
                     focusY = (int) (y / textureView.getHeight() * sensor.height());
                 }
                 int radius = 10;
-                Rect focusRect = new Rect(focusX - radius, focusY - radius, focusX + radius, focusY + radius);
+                Rect focusRect = new Rect(Math.max(0, focusX - radius), Math.max(0, focusY - radius), Math.max(0, focusX + radius), Math.max(0, focusY + radius));
 
                 MeteringRectangle[] rectangle = new MeteringRectangle[]{new MeteringRectangle(focusRect, 1000)};
                 // 对焦模式必须设置为AUTO

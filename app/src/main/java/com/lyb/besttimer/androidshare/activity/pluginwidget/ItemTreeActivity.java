@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.lyb.besttimer.androidshare.R;
 import com.lyb.besttimer.androidshare.activity.BaseActivity;
 import com.lyb.besttimer.androidshare.view.SpanResBg;
