@@ -26,6 +26,7 @@ signing {
 
 
 group = 'io.github.htjywl'
+archivesBaseName = PUBLISH_ARTIFACT
 version = PUBLISH_VERSION
 
 uploadArchives {

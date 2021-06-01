@@ -26,6 +26,9 @@ dependencies {
 }
 
 ext {
-    PUBLISH_VERSION = '2.0.0'                    //版本号
+    //artifact
+    PUBLISH_ARTIFACT = 'com.lyb.besttimer.annotation_api'
+    //版本号
+    PUBLISH_VERSION = '2.0.0'
 }
 apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
