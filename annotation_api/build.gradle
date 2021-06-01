@@ -23,5 +23,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':annotation_bean')
 }
+
+ext {
+    PUBLISH_VERSION = '2.0.0'                    //版本号
+}
+apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"

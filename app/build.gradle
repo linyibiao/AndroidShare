@@ -62,8 +62,6 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
     api 'androidx.multidex:multidex:2.0.1'
-    api project(':annotation_api')
-    annotationProcessor project(':annotation_compiler')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 apply from: '../groovytest.gradle'

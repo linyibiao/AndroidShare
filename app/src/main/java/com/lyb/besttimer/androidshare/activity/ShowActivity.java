@@ -56,7 +56,6 @@ import com.lyb.besttimer.androidshare.activity.pluginwidget.TextViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ToolBarActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.VideoViewActivity;
 import com.lyb.besttimer.androidshare.activity.pluginwidget.ViewTestActivity;
-import com.lyb.besttimer.androidshare.activity.processor.RouterActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxBusActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxIntervalActivity;
 import com.lyb.besttimer.androidshare.activity.rxandroid.RxLifeActivity;
@@ -153,10 +152,6 @@ public class ShowActivity extends BaseActivity {
             lvData.getLvDatas().add(new LVData(IntentFindActivity.class, "intent_find"));
             lvData.getLvDatas().add(new LVData(VectorDrawableActivity.class, "vector_drawable"));
             lvData.getLvDatas().add(new LVData(Header9Activity.class, "头像组合显示"));
-            lvDatas.add(lvData);
-
-            lvData = new LVData(ShowActivity.class, "processor");
-            lvData.getLvDatas().add(new LVData(RouterActivity.class, "router"));
             lvDatas.add(lvData);
 
             lvData = new LVData(ShowActivity.class, "相机");

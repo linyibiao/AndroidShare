@@ -1,0 +1,74 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.secretKeyRingFile"] = ''
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+
+group = 'io.github.htjywl'
+version = PUBLISH_VERSION
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Htjy Base Library'
+                packaging 'aar'
+                // optionally artifactId can be defined here
+                description 'A base library for htjy android app.'
+                url 'https://github.com/htjywl/BaseLibrary'
+
+                scm {
+                    connection 'scm:svn:https://github.com/htjywl/BaseLibrary.git'
+                    developerConnection 'scm:svn:https://github.com/htjywl/BaseLibrary.git'
+                    url 'https://github.com/htjywl/BaseLibrary/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'htjywl'
+                        name 'htjywl'
+                        email 'htjywl@163.com'
+                    }
+                }
+            }
+        }
+    }
+}
